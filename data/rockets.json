@@ -11,14 +11,39 @@
       "mars": 4020
     },
     "cost_musd": 90,
-    "flights": 550,
-    "successes": 548,
+    "flights": 701,
+    "successes": 698,
     "note": {
       "uk": "Найдешевша на кілограм. Числа для варіанту без повернення першого ступеня.",
       "en": "Cheapest per kg. Expendable figures."
     },
     "source": "https://www.spacex.com/vehicles/falcon-9/",
-    "simplified": "кількість польотів орієнтовна на 2026 рік; ціна для NASA вища за прайс"
+    "simplified": "ціна для NASA вища за прайс; розміри для малюнка округлені",
+    "visual": {
+      "height_m": 70,
+      "core_d_m": 3.7,
+      "s1_h_m": 41.2,
+      "fairing_d_m": 5.2,
+      "fairing_h_m": 13.1,
+      "core_color": "#f1f1ee",
+      "interstage": "#1d1f24",
+      "grid_fins": true,
+      "legs": true,
+      "boosters": 0
+    },
+    "verified": {
+      "fields": [
+        "flights / successes",
+        "leo_kg",
+        "to_kg.mars",
+        "visual.core_d_m",
+        "visual.height_m"
+      ],
+      "note": "перевірено 2026-11-09 на spacex.com: НОО 22 800 кг, Марс 4 020 кг, висота 70 м, діаметр 3,7 м; 701 запуск, 698 успішних станом на листопад 2026 (Wikipedia)",
+      "urls": [
+        "https://en.wikipedia.org/wiki/Falcon_9"
+      ]
+    }
   },
   {
     "id": "falcon_heavy",
@@ -33,14 +58,42 @@
       "europa": 6100
     },
     "cost_musd": 150,
-    "flights": 11,
-    "successes": 11,
+    "flights": 14,
+    "successes": 14,
     "note": {
       "uk": "Запускала Psyche і Europa Clipper (~6 т до Юпітера з гравітаційними маневрами). Польотів поки мало.",
       "en": "Launched Psyche and Europa Clipper. Few flights so far."
     },
     "source": "https://www.spacex.com/vehicles/falcon-heavy/",
-    "simplified": "ціна — середнє з контрактів NASA"
+    "simplified": "ціна — середнє з контрактів NASA; розміри для малюнка округлені",
+    "visual": {
+      "height_m": 70,
+      "core_d_m": 3.7,
+      "s1_h_m": 41.2,
+      "fairing_d_m": 5.2,
+      "fairing_h_m": 13.1,
+      "core_color": "#f1f1ee",
+      "interstage": "#1d1f24",
+      "grid_fins": true,
+      "legs": true,
+      "boosters": 2,
+      "booster_type": "core",
+      "booster_h_m": 44,
+      "booster_d_m": 3.7
+    },
+    "verified": {
+      "fields": [
+        "cost_musd",
+        "flights / successes",
+        "leo_kg",
+        "to_kg.mars",
+        "visual.height_m"
+      ],
+      "note": "перевірено 2026-11-09 на spacex.com: НОО 63 800 кг, Марс 16 800 кг, висота 70 м, ширина 12,2 м; 14 запусків, 14 успішних; ціна 150 млн $ у варіанті без повернення (2017), контракти NASA: Psyche 117 млн $, Europa Clipper ~178 млн $ (Wikipedia)",
+      "urls": [
+        "https://en.wikipedia.org/wiki/Falcon_Heavy"
+      ]
+    }
   },
   {
     "id": "atlas_v_541",
@@ -53,15 +106,41 @@
     "to_kg": {
       "mars": 4050
     },
-    "cost_musd": 200,
-    "flights": 100,
-    "successes": 99,
+    "cost_musd": 240,
+    "flights": 110,
+    "successes": 109,
     "note": {
       "uk": "Запускала Curiosity і Perseverance. Дуже надійна, але дорога і знімається з експлуатації.",
       "en": "Launched Curiosity and Perseverance. Very reliable, expensive, being retired."
     },
     "source": "https://www.ulalaunch.com/rockets/atlas-v",
-    "simplified": "один частковий збій (2007) зараховано як невдачу"
+    "simplified": "один частковий збій (2007) зараховано як невдачу; розміри для малюнка округлені",
+    "visual": {
+      "height_m": 58.3,
+      "core_d_m": 3.81,
+      "s1_h_m": 32.5,
+      "fairing_d_m": 5.4,
+      "fairing_h_m": 20.7,
+      "core_color": "#c98a4a",
+      "interstage": "#efefea",
+      "boosters": 4,
+      "booster_type": "srb",
+      "booster_h_m": 20,
+      "booster_d_m": 1.6,
+      "booster_color": "#efefea"
+    },
+    "verified": {
+      "fields": [
+        "cost_musd",
+        "flights / successes",
+        "visual.height_m"
+      ],
+      "note": "перевірено 2026-11-09: 110 польотів, 109 успішних; висота 58,3 м, діаметр 3,81 м (Wikipedia); запуск Perseverance коштував NASA 243 млн $ (Wikipedia: Mars 2020); прайс Atlas V 110–153 млн $ (2016)",
+      "urls": [
+        "https://en.wikipedia.org/wiki/Atlas_V",
+        "https://en.wikipedia.org/wiki/Mars_2020"
+      ]
+    }
   },
   {
     "id": "vulcan",
@@ -72,14 +151,39 @@
     "maker": "United Launch Alliance",
     "leo_kg": 27200,
     "cost_musd": 150,
-    "flights": 5,
-    "successes": 5,
+    "flights": 4,
+    "successes": 4,
     "note": {
       "uk": "Нова ракета. Усі польоти вдалі, але їх мало, тому довіра нижча.",
       "en": "New rocket: all flights succeeded, but few of them."
     },
     "source": "https://www.ulalaunch.com/rockets/vulcan-centaur",
-    "simplified": "до Марса — оцінка через k цілі"
+    "simplified": "до Марса — оцінка через k цілі; розміри для малюнка округлені",
+    "visual": {
+      "height_m": 61.6,
+      "core_d_m": 5.4,
+      "s1_h_m": 33.3,
+      "fairing_d_m": 5.4,
+      "fairing_h_m": 15.5,
+      "core_color": "#d4782e",
+      "interstage": "#efefea",
+      "boosters": 4,
+      "booster_type": "srb",
+      "booster_h_m": 22,
+      "booster_d_m": 1.6,
+      "booster_color": "#e8e6e0"
+    },
+    "verified": {
+      "fields": [
+        "flights / successes",
+        "leo_kg",
+        "visual.height_m"
+      ],
+      "note": "перевірено 2026-11-09: НОО 27 200 кг; 4 польоти, 4 успішні; висота 61,6 м, діаметр 5,4 м (Wikipedia)",
+      "urls": [
+        "https://en.wikipedia.org/wiki/Vulcan_Centaur"
+      ]
+    }
   },
   {
     "id": "antares",
@@ -100,6 +204,25 @@
       "en": "First stage built in Ukraine (Pivdenne/Pivdenmash). Moon only in this game."
     },
     "source": "https://www.northropgrumman.com/space/antares-rocket",
-    "simplified": "версія 230 знята з експлуатації у 2023; політ до Місяця — ігрове припущення"
+    "simplified": "версія 230 знята з експлуатації у 2023; політ до Місяця — ігрове припущення; розміри для малюнка округлені",
+    "visual": {
+      "height_m": 42.5,
+      "core_d_m": 3.9,
+      "s1_h_m": 27.6,
+      "fairing_d_m": 3.9,
+      "fairing_h_m": 9.9,
+      "core_color": "#f1f1ee",
+      "interstage": "#2b2d33",
+      "boosters": 0
+    },
+    "verified": {
+      "fields": [
+        "flights / successes"
+      ],
+      "note": "перевірено 2026-11-09: 18 польотів, 17 успішних; діаметр 3,9 м (Wikipedia)",
+      "urls": [
+        "https://en.wikipedia.org/wiki/Antares_(rocket)"
+      ]
+    }
   }
 ]

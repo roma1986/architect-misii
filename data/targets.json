@@ -9,8 +9,8 @@
       "uk": "Червона планета з тонкою атмосферою і пиловими бурями. Політ ~7 місяців, сигнал іде 3–22 хв.",
       "en": "Thin atmosphere, dust storms. ~7 month cruise, 3–22 min signal delay."
     },
-    "sun_au": 1.52,
-    "orbit_au": 1.52,
+    "sun_au": 1.524,
+    "orbit_au": 1.524,
     "period_days": 687,
     "theta0_deg": 75,
     "k_capacity": 0.18,
@@ -89,6 +89,20 @@
       "synodic_days": 780,
       "sigma_days": 45,
       "note": "Наступні вікна до Марса: кінець 2026 і кінець 2028 – початок 2029 року."
+    },
+    "verified": {
+      "fields": [
+        "orbit_au",
+        "period_days",
+        "sun_au",
+        "window.ref (дата найкращого вікна)",
+        "window.synodic_days"
+      ],
+      "note": "перевірено 2026-11-09: 228,0 млн км від Сонця (1,524 а.о.), період 687 діб (NASA NSSDC); вікна кожні 26 місяців; Tianwen-3 планують на вікно грудень 2028 – січень 2029 (Wikipedia)",
+      "urls": [
+        "https://nssdc.gsfc.nasa.gov/planetary/factsheet/",
+        "https://en.wikipedia.org/wiki/Mars_sample-return_mission"
+      ]
     }
   },
   {
@@ -158,6 +172,15 @@
       "base": "#a7a8aa",
       "dark": "#4f5257",
       "features": "craters"
+    },
+    "verified": {
+      "fields": [
+        "earth_dist_au"
+      ],
+      "note": "перевірено 2026-11-09: 0,384 млн км від Землі (NASA NSSDC)",
+      "urls": [
+        "https://nssdc.gsfc.nasa.gov/planetary/factsheet/"
+      ]
     }
   },
   {
@@ -242,12 +265,12 @@
       "en": "Venus"
     },
     "summary": {
-      "uk": "Найближча планета, вкрита хмарами сірчаної кислоти. На поверхні 465 °C і тиск як на глибині 900 м в океані. Камери з орбіти бачать лише хмари.",
+      "uk": "Найближча планета, вкрита хмарами сірчаної кислоти. На поверхні 464 °C і тиск 92 бар, як на глибині ~900 м в океані. Камери з орбіти бачать лише хмари.",
       "en": "Cloud-covered, 465 °C surface. Orbital cameras see only clouds."
     },
-    "sun_au": 0.72,
+    "sun_au": 0.723,
     "orbit_au": 0.723,
-    "period_days": 225,
+    "period_days": 224.7,
     "theta0_deg": 40,
     "k_capacity": 0.24,
     "dv_capture_kms": 1.0,
@@ -318,6 +341,17 @@
       "synodic_days": 584,
       "sigma_days": 35,
       "note": "Вікна до Венери відкриваються раз на ~19 місяців."
+    },
+    "verified": {
+      "fields": [
+        "orbit_au",
+        "period_days",
+        "sun_au"
+      ],
+      "note": "перевірено 2026-11-09: 108,2 млн км (0,723 а.о.), період 224,7 доби, 464 °C, 92 бар (NASA NSSDC)",
+      "urls": [
+        "https://nssdc.gsfc.nasa.gov/planetary/factsheet/"
+      ]
     }
   },
   {
@@ -330,9 +364,9 @@
       "uk": "Супутник Юпітера з океаном під кригою — одне з найімовірніших місць для життя. Політ ~5,5 року, сигнал іде до 53 хв, Сонце дає 4% земного світла, а радіація Юпітера руйнує електроніку.",
       "en": "Jupiter's moon with an ocean under the ice. 5.5-year cruise, harsh radiation."
     },
-    "sun_au": 5.2,
-    "orbit_au": 5.2,
-    "period_days": 4333,
+    "sun_au": 5.204,
+    "orbit_au": 5.204,
+    "period_days": 4331,
     "theta0_deg": 60,
     "k_capacity": 0.07,
     "dv_capture_kms": 0.9,
@@ -369,6 +403,17 @@
       "synodic_days": 399,
       "sigma_days": 30,
       "note": "До Юпітера вікна щороку, але з гравітаційними маневрами біля Землі й Марса."
+    },
+    "verified": {
+      "fields": [
+        "orbit_au",
+        "period_days",
+        "sun_au"
+      ],
+      "note": "перевірено 2026-11-09: Юпітер: 778,5 млн км (5,204 а.о.), період 4331 доба (NASA NSSDC)",
+      "urls": [
+        "https://nssdc.gsfc.nasa.gov/planetary/factsheet/"
+      ]
     }
   }
 ]

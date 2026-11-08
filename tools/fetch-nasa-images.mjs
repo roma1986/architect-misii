@@ -1,4 +1,5 @@
-// Завантажує фото NASA для підсумку і глобальні карти для вибору майданчика.
+// Завантажує фото NASA: для підсумку, глобальні карти для вибору майданчика
+// і фото кожного елемента, який можна обрати (мініатюри й вікно «Детальніше»).
 // Запуск (потрібен інтернет, Node 18+):  node tools/fetch-nasa-images.mjs [--force]
 // Джерело: NASA Image and Video Library API (https://images.nasa.gov), без ключа.
 // Скрипт бере перший підхожий результат пошуку; щоб обрати інший, впишіть "nasa_id" у data/media.json.
@@ -12,6 +13,8 @@ const force = process.argv.includes('--force');
 const API = 'https://images-api.nasa.gov';
 
 const media = JSON.parse(await fs.readFile(mediaPath, 'utf8'));
+const photosPath = path.join(root, 'data', 'photos.json');
+const photos = JSON.parse(await fs.readFile(photosPath, 'utf8'));
 const exists = (f) => fs.access(path.join(root, f)).then(() => true, () => false);
 
 async function getJson(url) {
@@ -67,7 +70,7 @@ async function fetchItem(item) {
       const buf = Buffer.from(await res.arrayBuffer());
       const size = imageSize(buf);
       if (item.aspect && (!size || Math.abs(size.w / size.h - item.aspect) > 0.15)) continue; // карта має бути 2:1
-      if (buf.length > 6_000_000) continue; // не роздуваємо репозиторій
+      if (buf.length > (item.maxBytes || 6_000_000)) continue; // не роздуваємо репозиторій
       await fs.mkdir(path.dirname(path.join(root, item.file)), { recursive: true });
       await fs.writeFile(path.join(root, item.file), buf);
       Object.assign(item, { nasa_id: c.id, title: c.data.title || item.title, credit: c.data.title ? credit(c.data) : item.credit, url: `https://images.nasa.gov/details/${c.id}` });
@@ -77,15 +80,29 @@ async function fetchItem(item) {
       console.log(`  пропуск ${c.id}: ${e.message}`);
     }
   }
-  console.log(`! ${item.file}: не знайдено підхожого зображення за запитом «${item.query}». Знайдіть вручну: ${item.search}`);
+  console.log(`! ${item.file}: не знайдено підхожого зображення за запитом «${item.query}». Знайдіть вручну: ${item.search || `https://images.nasa.gov/search?q=${encodeURIComponent(item.query)}`}`);
 }
 
 if (process.argv[1] === fileURLToPath(import.meta.url)) {
   try {
     for (const item of [...media.items, ...(media.maps || [])]) await fetchItem(item);
+    // Фото для мініатюр і вікна «Детальніше»: усе, що обирається в грі
+    for (const [id, item] of Object.entries(photos)) {
+      if (id.startsWith('_') || item.skip) continue;
+      item.file = item.file || `img/items/${id}.jpg`;
+      item.maxBytes = 2_500_000;
+      await fetchItem(item);
+      delete item.maxBytes;
+      await fs.writeFile(photosPath, JSON.stringify(photos, null, 2));
+    }
   } catch (e) {
     console.error(`Помилка: ${e.message}. Перевірте інтернет.`);
   }
   await fs.writeFile(mediaPath, JSON.stringify(media, null, 2));
+  // Записуємо file лише для тих фото, що справді завантажено
+  for (const [id, item] of Object.entries(photos)) {
+    if (!id.startsWith('_') && item.file && !(await exists(item.file))) delete item.file;
+  }
+  await fs.writeFile(photosPath, JSON.stringify(photos, null, 2));
   console.log('\nГотово. Перегляньте картинки в img/: якщо якась не підходить, впишіть інший nasa_id у data/media.json і запустіть з --force.');
 }

@@ -2,6 +2,7 @@
 import { t, esc, fmt } from './dom.js';
 import { sunShare, platformFits, byId, launchMonths, windowInfo, bestLaunch, flightDays } from '../calc.js';
 import { planetSvg } from './visuals.js';
+import { thumbHtml, zoomButton, bindZoom } from './gallery.js';
 
 export function render(root, app) {
   const { data, build } = app;
@@ -18,15 +19,15 @@ export function render(root, app) {
       <legend>Куди летимо?</legend>
       <div class="choices" data-field="target">
         ${data.targets.map((x) => `
-          <button type="button" class="choice big" data-id="${esc(x.id)}" aria-pressed="${build.target === x.id}">
-            <span class="choice-art">${planetSvg(x, 72)}</span>
+          <div class="choice-wrap"><button type="button" class="choice big" data-id="${esc(x.id)}" aria-pressed="${build.target === x.id}">
+            <span class="choice-art">${app.data.photos?.[x.id]?.file ? thumbHtml('target', x, app.data) : planetSvg(x, 72)}</span>
             <span class="choice-name">${t(x.name)}</span>
             <span class="choice-desc">${t(x.summary)}</span>
             <span class="choice-stats">
               <span>Політ у вікно: ${fmt(x.flight_days)} діб</span>
               <span class="stat-power">Сонце: ${Math.round(sunShare(x) * 100)}% земного</span>
             </span>
-          </button>`).join('')}
+          </button>${zoomButton('target', x)}</div>`).join('')}
       </div>
     </fieldset>
 
@@ -64,7 +65,7 @@ export function render(root, app) {
 
   root.querySelectorAll('[data-field] .choice').forEach((btn) => {
     btn.addEventListener('click', () => {
-      const field = btn.parentElement.dataset.field;
+      const field = btn.closest('[data-field]').dataset.field;
       const changedTarget = field === 'target' && build.target !== btn.dataset.id;
       build[field] = btn.dataset.id;
       if (changedTarget) {
@@ -83,6 +84,7 @@ export function render(root, app) {
     const y = window.scrollY; app.render(); window.scrollTo(0, y);
   }));
   root.querySelector('#to-builder').addEventListener('click', () => app.go('builder'));
+  bindZoom(root, app);
 }
 
 const monthName = (ym, opts = { month: 'long', year: 'numeric' }) => new Date(`${ym}-15T00:00:00Z`).toLocaleDateString('uk-UA', { ...opts, timeZone: 'UTC' });

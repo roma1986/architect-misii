@@ -68,6 +68,8 @@ async function start() {
     about.showModal();
   });
   about.addEventListener('click', (e) => { if (e.target === about || e.target.closest('[data-close]')) about.close(); });
+  const viewer = document.getElementById('viewer');
+  viewer.addEventListener('click', (e) => { if (e.target === viewer || e.target.closest('[data-close]')) viewer.close(); });
 
   // Демо для презентації: #demo1 — «жадібна» місія, яка провалиться; #demo2 — виправлена.
   const DEMOS = {

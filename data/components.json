@@ -19,7 +19,17 @@
       "ops_musd_per_step": 8,
       "reliability": 0.97,
       "source": "https://science.nasa.gov/mission/mars-reconnaissance-orbiter/",
-      "simplified": "маса — суха платформа без приладів, округлено"
+      "simplified": "маса — суха платформа без приладів, округлено",
+      "prototype_facts": "MRO: суха маса 1031 кг, на старті 2180 кг",
+      "verified": {
+        "fields": [
+          "prototype_facts"
+        ],
+        "note": "перевірено 2026-11-09: MRO: суха маса 1031 кг, на старті 2180 кг (Wikipedia)",
+        "urls": [
+          "https://en.wikipedia.org/wiki/Mars_Reconnaissance_Orbiter"
+        ]
+      }
     },
     {
       "id": "lander",
@@ -40,7 +50,17 @@
       "ops_musd_per_step": 5,
       "reliability": 0.97,
       "source": "https://science.nasa.gov/mission/insight/",
-      "simplified": "маса — без приладів і системи посадки"
+      "simplified": "маса — без приладів і системи посадки",
+      "prototype_facts": "InSight: на старті 694 кг, панелі 600 Вт",
+      "verified": {
+        "fields": [
+          "prototype_facts"
+        ],
+        "note": "перевірено 2026-11-09: InSight: на старті 694 кг, панелі 600 Вт (Wikipedia)",
+        "urls": [
+          "https://en.wikipedia.org/wiki/InSight"
+        ]
+      }
     },
     {
       "id": "rover_small",
@@ -61,7 +81,17 @@
       "ops_musd_per_step": 8,
       "reliability": 0.95,
       "source": "https://science.nasa.gov/mission/mer-opportunity/",
-      "simplified": "маса — без приладів"
+      "simplified": "маса — без приладів",
+      "prototype_facts": "Opportunity: 185 кг, панелі 140 Вт",
+      "verified": {
+        "fields": [
+          "prototype_facts"
+        ],
+        "note": "перевірено 2026-11-09: Opportunity: 185 кг, панелі 140 Вт (Wikipedia)",
+        "urls": [
+          "https://en.wikipedia.org/wiki/Opportunity_(rover)"
+        ]
+      }
     },
     {
       "id": "rover_large",
@@ -82,7 +112,17 @@
       "ops_musd_per_step": 15,
       "reliability": 0.97,
       "source": "https://science.nasa.gov/mission/mars-2020-perseverance/",
-      "simplified": "маса — без приладів (повна маса Perseverance ~1025 кг)"
+      "simplified": "маса — без приладів (повна маса Perseverance ~1025 кг)",
+      "prototype_facts": "Perseverance: 1025 кг, MMRTG 110 Вт",
+      "verified": {
+        "fields": [
+          "prototype_facts"
+        ],
+        "note": "перевірено 2026-11-09: Perseverance: 1025 кг, MMRTG 110 Вт (Wikipedia)",
+        "urls": [
+          "https://en.wikipedia.org/wiki/Perseverance_(rover)"
+        ]
+      }
     },
     {
       "id": "sampler",
@@ -107,7 +147,17 @@
       "ops_musd_per_step": 8,
       "reliability": 0.96,
       "source": "https://science.nasa.gov/mission/osiris-rex/",
-      "simplified": "капсула повернення включена в масу платформи"
+      "simplified": "капсула повернення включена в масу платформи",
+      "prototype_facts": "OSIRIS-REx: суха маса 880 кг, на старті 2110 кг",
+      "verified": {
+        "fields": [
+          "prototype_facts"
+        ],
+        "note": "перевірено 2026-11-09: OSIRIS-REx: суха маса 880 кг, на старті 2110 кг (Wikipedia)",
+        "urls": [
+          "https://en.wikipedia.org/wiki/OSIRIS-REx"
+        ]
+      }
     }
   ],
   "instruments": [
@@ -124,7 +174,7 @@
       "mass_kg": 65,
       "power_w": 60,
       "duty": 0.5,
-      "cost_musd": 45,
+      "cost_musd": 40,
       "data_mbit_per_day": 18000,
       "science_base": 4,
       "reliability": 0.97,
@@ -137,7 +187,17 @@
       },
       "source": "https://www.uahirise.org/",
       "simplified": "маса і потужність округлені",
-      "optical": true
+      "optical": true,
+      "verified": {
+        "fields": [
+          "cost_musd",
+          "mass_kg"
+        ],
+        "note": "перевірено 2026-11-09: маса 65 кг, вартість ~40 млн $ (Wikipedia: HiRISE)",
+        "urls": [
+          "https://en.wikipedia.org/wiki/HiRISE"
+        ]
+      }
     },
     {
       "id": "ir_spectrometer",
@@ -289,8 +349,8 @@
         "lander",
         "rover"
       ],
-      "mass_kg": 4,
-      "power_w": 15,
+      "mass_kg": 2.8,
+      "power_w": 24,
       "duty": 0.3,
       "cost_musd": 15,
       "data_mbit_per_day": 400,
@@ -305,7 +365,17 @@
       },
       "source": "https://science.nasa.gov/mission/mars-2020-perseverance/",
       "simplified": "ігрові значення",
-      "optical": true
+      "optical": true,
+      "verified": {
+        "fields": [
+          "mass_kg",
+          "power_w"
+        ],
+        "note": "перевірено 2026-11-09: Mastcam-Z: 1,38 кг і 11,8 Вт на кожну з двох камер (Wikipedia)",
+        "urls": [
+          "https://en.wikipedia.org/wiki/Mastcam-Z"
+        ]
+      }
     },
     {
       "id": "laser_spectrometer",
@@ -317,8 +387,8 @@
       "platforms": [
         "rover"
       ],
-      "mass_kg": 10,
-      "power_w": 20,
+      "mass_kg": 10.4,
+      "power_w": 17.9,
       "duty": 0.3,
       "cost_musd": 40,
       "data_mbit_per_day": 80,
@@ -332,7 +402,17 @@
         "life": 2.5
       },
       "source": "https://science.nasa.gov/mission/mars-2020-perseverance/",
-      "simplified": "ігрові значення"
+      "simplified": "ігрові значення",
+      "verified": {
+        "fields": [
+          "mass_kg",
+          "power_w"
+        ],
+        "note": "перевірено 2026-11-09: SuperCam: 10,4 кг, 17,9 Вт (Wikipedia)",
+        "urls": [
+          "https://en.wikipedia.org/wiki/SuperCam"
+        ]
+      }
     },
     {
       "id": "gpr",
@@ -371,8 +451,8 @@
       "platforms": [
         "lander"
       ],
-      "mass_kg": 30,
-      "power_w": 10,
+      "mass_kg": 29.5,
+      "power_w": 8.5,
       "duty": 1,
       "cost_musd": 40,
       "data_mbit_per_day": 40,
@@ -386,7 +466,17 @@
         "life": 0
       },
       "source": "https://science.nasa.gov/mission/insight/",
-      "simplified": "маса з кабелем і захисним куполом, округлено"
+      "simplified": "маса з кабелем і захисним куполом, округлено",
+      "verified": {
+        "fields": [
+          "mass_kg",
+          "power_w"
+        ],
+        "note": "перевірено 2026-11-09: 29,5 кг, 8,5 Вт (Wikipedia: SEIS)",
+        "urls": [
+          "https://en.wikipedia.org/wiki/Seismic_Experiment_for_Interior_Structure"
+        ]
+      }
     },
     {
       "id": "weather",
@@ -458,7 +548,7 @@
       "only_targets": [
         "mars"
       ],
-      "mass_kg": 17,
+      "mass_kg": 15,
       "power_w": 300,
       "duty": 0.05,
       "cost_musd": 30,
@@ -473,7 +563,17 @@
         "life": 0.5
       },
       "source": "https://science.nasa.gov/mission/mars-2020-perseverance/",
-      "simplified": "мало науки, але це технологія для майбутніх баз"
+      "simplified": "мало науки, але це технологія для майбутніх баз",
+      "verified": {
+        "fields": [
+          "mass_kg",
+          "power_w"
+        ],
+        "note": "перевірено 2026-11-09: 15 кг, 300 Вт (Wikipedia: MOXIE)",
+        "urls": [
+          "https://en.wikipedia.org/wiki/Mars_Oxygen_ISRU_Experiment"
+        ]
+      }
     },
     {
       "id": "lidar",
@@ -612,16 +712,26 @@
       "id": "solar_xl",
       "type": "solar",
       "name": {
-        "uk": "Сонячні панелі, 90 м²",
-        "en": "Solar arrays, 90 m²"
+        "uk": "Сонячні панелі, ~100 м²",
+        "en": "Solar arrays, ~100 m²"
       },
-      "prototype": "Europa Clipper (розмах ~30 м)",
+      "prototype": "Europa Clipper: два крила по 14,2 × 4,1 м",
       "mass_kg": 400,
       "cost_musd": 150,
-      "p1au_w": 20000,
+      "p1au_w": 17100,
       "reliability": 0.97,
       "source": "https://science.nasa.gov/mission/europa-clipper/",
-      "simplified": "біля Юпітера дає ~700 Вт; маса — ігрова оцінка"
+      "simplified": "біля Юпітера дає ~600 Вт, як Europa Clipper; маса — ігрова оцінка",
+      "verified": {
+        "fields": [
+          "p1au_w",
+          "prototype"
+        ],
+        "note": "перевірено 2026-11-09: кожне крило ~14,2 × 4,1 м (опис фото PIA26067, NASA); Europa Clipper: ~600 Вт біля Юпітера (Wikipedia)",
+        "urls": [
+          "https://en.wikipedia.org/wiki/Europa_Clipper"
+        ]
+      }
     },
     {
       "id": "rtg_1",
@@ -636,7 +746,17 @@
       "p0_w": 110,
       "reliability": 0.995,
       "source": "https://science.nasa.gov/planetary-science/programs/radioisotope-power-systems/",
-      "simplified": "втрачає ~4% потужності на рік; ціна — ігрова оцінка"
+      "simplified": "втрачає ~4% потужності на рік; ціна — ігрова оцінка",
+      "verified": {
+        "fields": [
+          "mass_kg",
+          "p0_w"
+        ],
+        "note": "перевірено 2026-11-09: ~110 Вт на старті (опис фото PIA23306, NASA); 45 кг; ~110 Вт на старті за NASA, 125 Вт за проєктом, ~100 Вт через 14 років (Wikipedia)",
+        "urls": [
+          "https://en.wikipedia.org/wiki/Multi-mission_radioisotope_thermoelectric_generator"
+        ]
+      }
     },
     {
       "id": "rtg_2",
@@ -710,7 +830,16 @@
       "contact_h": 4,
       "reliability": 0.98,
       "source": "https://science.nasa.gov/mission/mars-reconnaissance-orbiter/",
-      "simplified": "MRO: до ~6 Мбіт/с, коли Марс близько"
+      "simplified": "MRO: до ~6 Мбіт/с, коли Марс близько",
+      "verified": {
+        "fields": [
+          "rate_1au_mbps"
+        ],
+        "note": "перевірено 2026-11-09: MRO передає до 6 Мбіт/с, у середньому 0,5–4 Мбіт/с (Wikipedia)",
+        "urls": [
+          "https://en.wikipedia.org/wiki/Mars_Reconnaissance_Orbiter"
+        ]
+      }
     },
     {
       "id": "relay_uhf",
@@ -729,7 +858,16 @@
       "relay_mbit_per_day": 400,
       "reliability": 0.98,
       "source": "https://science.nasa.gov/mission/mars-reconnaissance-orbiter/",
-      "simplified": "кілька сеансів на добу; не залежить від відстані до Землі"
+      "simplified": "кілька сеансів на добу; не залежить від відстані до Землі",
+      "verified": {
+        "fields": [
+          "relay_mbit_per_day"
+        ],
+        "note": "перевірено 2026-11-09: радіо Electra на MRO: зв'язок з апаратами на поверхні 1 кбіт/с – 2 Мбіт/с (Wikipedia)",
+        "urls": [
+          "https://en.wikipedia.org/wiki/Mars_Reconnaissance_Orbiter"
+        ]
+      }
     }
   ],
   "extras": [

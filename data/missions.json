@@ -8,10 +8,22 @@
     "rocket": "Atlas V 541",
     "launch_mass_kg": 4040,
     "craft_mass_kg": 1025,
-    "cost_musd": 2700,
+    "cost_musd": 2800,
     "instruments": 7,
     "power": "MMRTG",
-    "source": "https://science.nasa.gov/mission/mars-2020-perseverance/"
+    "source": "https://science.nasa.gov/mission/mars-2020-perseverance/",
+    "verified": {
+      "fields": [
+        "cost_musd",
+        "craft_mass_kg",
+        "launch_mass_kg"
+      ],
+      "note": "перевірено 2026-11-09: маси збігаються з Wikipedia; NASA планує ~2,8 млрд $ на Mars 2020 за 10 років (Wikipedia)",
+      "urls": [
+        "https://en.wikipedia.org/wiki/Perseverance_(rover)",
+        "https://en.wikipedia.org/wiki/Mars_2020"
+      ]
+    }
   },
   {
     "id": "curiosity",
@@ -25,7 +37,17 @@
     "cost_musd": 2500,
     "instruments": 10,
     "power": "MMRTG",
-    "source": "https://science.nasa.gov/mission/msl-curiosity/"
+    "source": "https://science.nasa.gov/mission/msl-curiosity/",
+    "verified": {
+      "fields": [
+        "craft_mass_kg",
+        "launch_mass_kg"
+      ],
+      "note": "перевірено 2026-11-09: маси збігаються з Wikipedia",
+      "urls": [
+        "https://en.wikipedia.org/wiki/Curiosity_(rover)"
+      ]
+    }
   },
   {
     "id": "opportunity",
@@ -39,7 +61,17 @@
     "cost_musd": 500,
     "instruments": 5,
     "power": "сонячні панелі",
-    "source": "https://science.nasa.gov/mission/mer-opportunity/"
+    "source": "https://science.nasa.gov/mission/mer-opportunity/",
+    "verified": {
+      "fields": [
+        "craft_mass_kg",
+        "launch_mass_kg"
+      ],
+      "note": "перевірено 2026-11-09: маси збігаються з Wikipedia",
+      "urls": [
+        "https://en.wikipedia.org/wiki/Opportunity_(rover)"
+      ]
+    }
   },
   {
     "id": "insight",
@@ -53,7 +85,17 @@
     "cost_musd": 830,
     "instruments": 3,
     "power": "сонячні панелі",
-    "source": "https://science.nasa.gov/mission/insight/"
+    "source": "https://science.nasa.gov/mission/insight/",
+    "verified": {
+      "fields": [
+        "craft_mass_kg",
+        "launch_mass_kg"
+      ],
+      "note": "перевірено 2026-11-09: маси збігаються з Wikipedia",
+      "urls": [
+        "https://en.wikipedia.org/wiki/InSight"
+      ]
+    }
   },
   {
     "id": "mro",
@@ -67,7 +109,17 @@
     "cost_musd": 720,
     "instruments": 6,
     "power": "сонячні панелі",
-    "source": "https://science.nasa.gov/mission/mars-reconnaissance-orbiter/"
+    "source": "https://science.nasa.gov/mission/mars-reconnaissance-orbiter/",
+    "verified": {
+      "fields": [
+        "craft_mass_kg",
+        "launch_mass_kg"
+      ],
+      "note": "перевірено 2026-11-09: маси збігаються з Wikipedia",
+      "urls": [
+        "https://en.wikipedia.org/wiki/Mars_Reconnaissance_Orbiter"
+      ]
+    }
   },
   {
     "id": "lro",
@@ -81,7 +133,17 @@
     "cost_musd": 500,
     "instruments": 7,
     "power": "сонячні панелі",
-    "source": "https://science.nasa.gov/mission/lro/"
+    "source": "https://science.nasa.gov/mission/lro/",
+    "verified": {
+      "fields": [
+        "craft_mass_kg",
+        "launch_mass_kg"
+      ],
+      "note": "перевірено 2026-11-09: маси збігаються з Wikipedia",
+      "urls": [
+        "https://en.wikipedia.org/wiki/Lunar_Reconnaissance_Orbiter"
+      ]
+    }
   },
   {
     "id": "change4",
@@ -123,7 +185,17 @@
     "cost_musd": 1000,
     "instruments": 5,
     "power": "сонячні панелі",
-    "source": "https://science.nasa.gov/mission/osiris-rex/"
+    "source": "https://science.nasa.gov/mission/osiris-rex/",
+    "verified": {
+      "fields": [
+        "craft_mass_kg",
+        "launch_mass_kg"
+      ],
+      "note": "перевірено 2026-11-09: маси збігаються з Wikipedia",
+      "urls": [
+        "https://en.wikipedia.org/wiki/OSIRIS-REx"
+      ]
+    }
   },
   {
     "id": "magellan",
@@ -137,7 +209,17 @@
     "cost_musd": null,
     "instruments": 1,
     "power": "сонячні панелі",
-    "source": "https://science.nasa.gov/mission/magellan/"
+    "source": "https://science.nasa.gov/mission/magellan/",
+    "verified": {
+      "fields": [
+        "craft_mass_kg",
+        "launch_mass_kg"
+      ],
+      "note": "перевірено 2026-11-09: маси збігаються з Wikipedia",
+      "urls": [
+        "https://en.wikipedia.org/wiki/Magellan_(spacecraft)"
+      ]
+    }
   },
   {
     "id": "venera13",
@@ -165,6 +247,16 @@
     "cost_musd": 5000,
     "instruments": 9,
     "power": "сонячні панелі ~90 м²",
-    "source": "https://science.nasa.gov/mission/europa-clipper/"
+    "source": "https://science.nasa.gov/mission/europa-clipper/",
+    "verified": {
+      "fields": [
+        "craft_mass_kg",
+        "launch_mass_kg"
+      ],
+      "note": "перевірено 2026-11-09: маси збігаються з Wikipedia",
+      "urls": [
+        "https://en.wikipedia.org/wiki/Europa_Clipper"
+      ]
+    }
   }
 ]

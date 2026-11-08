@@ -4,6 +4,7 @@ import { Mission } from '../sim.js';
 import { logText, decisionText, optionInfo, eventFact, factSource } from '../explain.js';
 import { busPower, instrumentPower, opsSteps } from '../calc.js';
 import { orbitSvg, countdown } from './visuals.js';
+import { rocketSvg } from './stack.js';
 import { sfx } from './sound.js';
 
 export function render(root, app) {
@@ -30,7 +31,7 @@ export function render(root, app) {
     </div>`;
 
   root.querySelector('[data-act="step"]')?.addEventListener('click', (e) => {
-    if (!started) { e.currentTarget.disabled = true; countdown(() => { m.advance(); after(m, app); }, sfx); return; }
+    if (!started) { e.currentTarget.disabled = true; countdown(() => { m.advance(); after(m, app); }, sfx, rocketSvg(m.r.rocket, { flame: true, className: 'rocket' })); return; }
     m.advance(); after(m, app);
   });
   root.querySelector('[data-act="run"]')?.addEventListener('click', () => {

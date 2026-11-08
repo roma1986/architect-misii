@@ -6,6 +6,8 @@ import {
   downlinkPerDay, earthDistanceAu, sunShare, solarFactor, isSurface, DESIGN_MARGIN, platformFits, bestLaunch, launchYear,
 } from '../calc.js';
 import { patchSvg, craftSvg } from './visuals.js';
+import { rocketSvg, fairingSvg } from './stack.js';
+import { thumbHtml, zoomButton, bindZoom } from './gallery.js';
 
 const GAUGES = [
   { key: 'budget', name: 'Бюджет', color: 'var(--budget)' },
@@ -54,17 +56,20 @@ export function render(root, app) {
   const C = data.components;
   const dist0 = earthDistanceAu(r.target, 0);
 
+  const KIND = { rocket: 'rocket', platform: 'platform', instruments: 'instrument', power: 'power', antenna: 'antenna', extras: 'extra' };
   const card = (field, item, { multi = false, disabled = false, why = '', stats = '', desc = '' } = {}) => {
     const selected = multi ? build[field].includes(item.id) : build[field] === item.id;
-    return `
-      <button type="button" class="choice" data-field="${field}" data-id="${esc(item.id)}" data-multi="${multi}"
+    const kind = KIND[field];
+    return `<div class="choice-wrap">
+      <button type="button" class="choice has-thumb" data-field="${field}" data-id="${esc(item.id)}" data-multi="${multi}"
         aria-pressed="${selected}" ${disabled && !selected ? 'disabled' : ''}>
+        ${thumbHtml(kind, item, data)}
         <span class="choice-name">${t(item.name)}</span>
         ${item.prototype ? `<span class="choice-proto">Прототип: ${esc(item.prototype)}</span>` : ''}
         ${desc ? `<span class="choice-desc">${desc}</span>` : ''}
         <span class="choice-stats">${stats}</span>
         ${why ? `<span class="choice-why">${why}</span>` : ''}
-      </button>`;
+      </button>${zoomButton(kind, item)}</div>`;
   };
   const baseStats = (x) => `
     ${x.mass_kg !== undefined ? `<span class="stat-mass">${fmt(x.mass_kg)} кг</span>` : ''}
@@ -145,7 +150,11 @@ export function render(root, app) {
           ${patchSvg({ ...r, seed: app.seed, year: launchYear(r) }, 104)}
           <div><h2>Готовність місії</h2><p class="small muted">Емблема змінюється разом з апаратом: зірки — це прилади.</p></div>
         </div>
-        <figure class="craft-wrap">${craftSvg(r, r.platform ? `Суха маса ${fmt(c.mass.dry)} кг · на старті ${fmt(c.mass.launch)} кг` : '')}</figure>
+        <figure class="stack-wrap">
+          <div class="stack-rocket">${rocketSvg(r.rocket)}<figcaption>${r.rocket ? `${t(r.rocket.name)}<br>${fmt(r.rocket.visual?.height_m)} м` : 'Оберіть ракету'}</figcaption></div>
+          <div class="stack-fairing">${fairingSvg(r, c)}</div>
+        </figure>
+        <figure class="craft-wrap"><figcaption class="craft-cap">У польоті</figcaption>${craftSvg(r, r.platform ? `Суха маса ${fmt(c.mass.dry)} кг · на старті ${fmt(c.mass.launch)} кг` : '')}</figure>
         ${GAUGES.map((g) => gauge(g, c.bars[g.key], r, c)).join('')}
         ${massBar(c)}
         <ul class="issues">
@@ -165,6 +174,7 @@ export function render(root, app) {
     </div>`;
 
   root.querySelector('#back').addEventListener('click', () => app.go('briefing'));
+  bindZoom(root, app);
   root.querySelectorAll('.choice').forEach((btn) => btn.addEventListener('click', () => select(app, r, btn)));
   const launch = () => { app.mission = null; app.go('flight'); };
   root.querySelector('#launch').addEventListener('click', launch);

@@ -13,11 +13,13 @@ const rows = [];
 const name = (x) => (typeof x === 'object' && x ? x.uk || Object.values(x)[0] : x) || '';
 const add = (file, obj, field, value, unit, priority = '') => {
   if (value === undefined || value === null) return;
-  rows.push([file, obj.id, name(obj.name), field, value, unit, obj.prototype || '', obj.source || '', priority, '', '', obj.simplified || '']);
+  const ok = obj.verified && obj.verified.fields && obj.verified.fields.some((f) => field.startsWith(f));
+  rows.push([file, obj.id, name(obj.name), field, value, unit, obj.prototype || '', obj.source || '', priority, ok ? 'так' : '', ok ? `${obj.verified.note} ${(obj.verified.urls || []).join(' ')}` : '', obj.simplified || '']);
 };
 
 for (const t of d.targets) {
   add('targets.json', t, 'sun_au', t.sun_au, 'а.о.');
+  add('targets.json', t, 'period_days', t.period_days, 'діб');
   add('targets.json', t, 'flight_days', t.flight_days, 'діб', 'важливо');
   add('targets.json', t, 'k_capacity', t.k_capacity, 'частка від НОО', 'важливо');
   add('targets.json', t, 'dv_capture_kms', t.dv_capture_kms, 'км/с');
@@ -57,9 +59,9 @@ for (const m of d.missions) {
   add('missions.json', o, 'instruments', m.instruments, 'шт.');
 }
 const col = d.colony;
-add('colony.json', { id: 'moxie', name: 'MOXIE', source: col.moxie.source }, 'o2_g_per_h / power_w / mass_kg', `${col.moxie.o2_g_per_h} / ${col.moxie.power_w} / ${col.moxie.mass_kg}`, 'г/год, Вт, кг', 'важливо');
+add('colony.json', { id: 'moxie', name: 'MOXIE', source: col.moxie.source, verified: col.moxie.verified ? { fields: ['o2'], note: col.moxie.verified } : null }, 'o2_g_per_h / power_w / mass_kg', `${col.moxie.o2_g_per_h} / ${col.moxie.power_w} / ${col.moxie.mass_kg}`, 'г/год, Вт, кг', 'важливо');
 add('colony.json', { id: 'needs', name: 'Потреби експедиції', source: col.needs.source }, 'ascent_o2_t / crew_o2_t_per_year', `${col.needs.ascent_o2_t} / ${col.needs.crew_o2_t_per_year}`, 'т', 'важливо');
-add('colony.json', { id: 'kilopower', name: 'Kilopower', source: col.power.reactor_source }, 'reactor_w / reactor_kg', `${col.power.reactor_w} / ${col.power.reactor_kg}`, 'Вт, кг', 'важливо');
+add('colony.json', { id: 'kilopower', name: 'Kilopower', source: col.power.reactor_source, verified: col.power.verified ? { fields: ['reactor'], note: col.power.verified, urls: [col.power.verified_url] } : null }, 'reactor_w / reactor_kg', `${col.power.reactor_w} / ${col.power.reactor_kg}`, 'Вт, кг', 'важливо');
 
 const head = ['Файл', 'id', 'Назва', 'Поле', 'Значення в грі', 'Одиниці', 'Прототип', 'Джерело', 'Пріоритет', 'Перевірено (так/ні)', 'Правильне значення', 'Спрощення в грі'];
 const csv = (v) => `"${String(v).replace(/"/g, '""')}"`;

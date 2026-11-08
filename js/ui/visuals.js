@@ -136,7 +136,7 @@ export function orbitSvg(target, dayFromArrival = 0) {
 }
 
 /** Зворотний відлік і старт ракети. Без анімації, якщо в системі вимкнено рух. */
-export function countdown(done, sfx = null) {
+export function countdown(done, sfx = null, rocketHtml = '') {
   if (window.matchMedia('(prefers-reduced-motion: reduce)').matches) { done(); return; }
   const el = document.createElement('div');
   el.className = 'countdown';
@@ -153,16 +153,7 @@ export function countdown(done, sfx = null) {
       return;
     }
     sfx?.liftoff();
-    el.innerHTML = `<div class="liftoff">
-      <svg class="rocket" viewBox="0 0 60 200" aria-hidden="true">
-        <path d="M30 4 C40 18 44 40 44 64 L44 150 L16 150 L16 64 C16 40 20 18 30 4 Z" fill="#f3efe4"/>
-        <path d="M30 4 C36 12 40 24 42 36 L18 36 C20 24 24 12 30 4 Z" fill="#c8352b"/>
-        <rect x="16" y="96" width="28" height="6" fill="#25386b"/>
-        <path d="M16 120 L4 156 L16 150 Z M44 120 L56 156 L44 150 Z" fill="#c8352b"/>
-        <path class="flame" d="M18 150 Q30 205 42 150 Z" fill="#ffb347"/>
-        <path class="flame" d="M23 150 Q30 185 37 150 Z" fill="#fff3c4"/>
-      </svg>
-      <span class="cd-go">Старт</span></div>`;
+    el.innerHTML = `<div class="liftoff">${rocketHtml || ''}<span class="cd-go">Старт</span></div>`;
     setTimeout(() => { el.remove(); done(); }, 1500);
   };
   tick();
@@ -181,7 +172,7 @@ let lastParts = new Set();
  * Схема апарата, що «росте» з кожним вибором: корпус за типом платформи,
  * панелі за площею, РІТЕГ, антена за розміром, прилади, резервування.
  */
-export function craftSvg(r, massText = '') {
+export function craftSvg(r, massText = '', { track = true } = {}) {
   const parts = [];
   const add = (key, svg, title = '') => parts.push({ key, svg: title ? `<g><title>${esc(title)}</title>${svg}</g>` : svg });
   const p = r.platform;
@@ -279,8 +270,8 @@ export function craftSvg(r, massText = '') {
   });
 
   const keys = new Set(parts.map((x) => x.key));
-  const out = parts.map((x) => `<g class="part${lastParts.size && !lastParts.has(x.key) ? ' is-new' : ''}">${x.svg}</g>`).join('');
-  lastParts = keys;
+  const out = parts.map((x) => `<g class="part${track && lastParts.size && !lastParts.has(x.key) ? ' is-new' : ''}">${x.svg}</g>`).join('');
+  if (track) lastParts = keys;
   return `<svg class="craft" viewBox="0 0 ${W} ${H}" role="img" aria-label="Схема апарата: ${esc(tr(p.name))}, приладів ${r.instruments.length}">
     ${surface ? `<path d="M0 ${groundY + 2} H${W}" stroke="var(--line)" stroke-width="2"/>` : ''}
     ${out}
