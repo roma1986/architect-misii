@@ -1,0 +1,58 @@
+{
+  "random": [
+    {
+      "id": "antenna_stuck", "phase": "cruise", "prob": 0.06, "effect": "antenna_fail",
+      "when": { "antenna": ["hga_small", "hga_large"] },
+      "title": { "uk": "Антена не розкрилася", "en": "Antenna failed to deploy" },
+      "fact": { "uk": "У 1991 році головна антена зонда Galileo розкрилася лише частково. Місію врятували через малу антену, але даних стало в тисячі разів менше.", "en": "In 1991 Galileo's high-gain antenna only partly opened." },
+      "source": "https://science.nasa.gov/mission/galileo/"
+    },
+    {
+      "id": "panel_deploy_fail", "phase": "arrival", "prob": 0.04, "effect": "power_mult", "value": 0.4,
+      "when": { "power_type": ["solar"], "surface": true },
+      "title": { "uk": "Панелі розкрилися не повністю", "en": "Solar panels did not fully deploy" },
+      "fact": { "uk": "Британський Beagle 2 сів на Марс у 2003 році, але не всі панелі розкрилися, і він не вийшов на зв'язок. Його знайшли на знімках HiRISE у 2015 році.", "en": "Beagle 2 landed in 2003 but its panels did not fully open." },
+      "source": "https://www.esa.int/Science_Exploration/Space_Science/Mars_Express/Beagle_2"
+    },
+    {
+      "id": "dust_devil", "phase": "ops", "prob": 0.1, "effect": "dust_clean",
+      "when": { "target": ["mars"], "power_type": ["solar"], "surface": true },
+      "title": { "uk": "Пиловий вихор очистив панелі", "en": "A dust devil cleaned the panels" },
+      "fact": { "uk": "Вихори не раз очищали панелі Spirit і Opportunity, тому марсоходи пропрацювали в десятки разів довше, ніж планувалося.", "en": "Dust devils repeatedly cleaned Spirit and Opportunity's panels." },
+      "source": "https://science.nasa.gov/mission/mer-spirit/"
+    },
+    {
+      "id": "wheel_stuck", "phase": "ops", "prob": 0.04, "effect": "mobility", "value": 0.7, "once": true,
+      "when": { "platform_type": ["rover"] },
+      "title": { "uk": "Заклинило колесо", "en": "A wheel jammed" },
+      "fact": { "uk": "З 2006 року Spirit їздив задом наперед, тягнучи зламане колесо. У 2009 році він застряг у піску і став нерухомою станцією.", "en": "Spirit drove backwards from 2006, dragging a broken wheel." },
+      "source": "https://science.nasa.gov/mission/mer-spirit/"
+    },
+    {
+      "id": "computer_reset", "phase": "ops", "prob": 0.03, "effect": "lose_step",
+      "when": {},
+      "title": { "uk": "Перезавантаження комп'ютера", "en": "Computer reset" },
+      "fact": { "uk": "Через кілька тижнів після посадки у 2004 році Spirit почав безкінечно перезавантажуватися через переповнену флеш-пам'ять. Інженери лагодили його з Землі майже два тижні.", "en": "Spirit's flash memory filled up in 2004, causing endless reboots." },
+      "source": "https://science.nasa.gov/mission/mer-spirit/"
+    },
+    {
+      "id": "discovery", "phase": "ops", "prob": 0.04, "effect": "science_bonus", "value": 0.5,
+      "when": {},
+      "title": { "uk": "Несподівана знахідка", "en": "Unexpected discovery" },
+      "fact": { "uk": "Curiosity знайшов органічні молекули у 3-мільярдолітніх породах кратера Ґейл (2018). Найцікавіші відкриття часто не плануються.", "en": "Curiosity found organic molecules in 3-billion-year-old rocks." },
+      "source": "https://science.nasa.gov/mission/msl-curiosity/"
+    }
+  ],
+  "facts": {
+    "launch_fail": { "uk": "Навіть надійні ракети іноді падають. У 2011 році «Фобос-Ґрунт» вийшов на орбіту Землі, але так і не полетів до Марса.", "source": "https://nssdc.gsfc.nasa.gov/" },
+    "capture_fail": { "uk": "Mars Climate Orbiter у 1999 році зійшов з курсу і згорів в атмосфері Марса: одна команда рахувала в фунт-секундах, інша — в ньютон-секундах.", "source": "https://science.nasa.gov/mission/mars-climate-orbiter/" },
+    "landing_fail": { "uk": "Schiaparelli (2016) і японський Hakuto-R на Місяці (2023) розбилися, бо програма неправильно визначила висоту над поверхнею.", "source": "https://www.esa.int/Science_Exploration/Human_and_Robotic_Exploration/Exploration/ExoMars/Schiaparelli" },
+    "dust_storm": { "uk": "У 2018 році глобальна пилова буря закрила Сонце над Opportunity. Марсохід замовк і більше не прокинувся, пропрацювавши майже 15 років замість 90 діб.", "source": "https://science.nasa.gov/mission/mer-opportunity/" },
+    "conjunction": { "uk": "Раз на ~26 місяців Сонце на кілька тижнів стає між Землею і Марсом. NASA заздалегідь завантажує апаратам прості плани й не надсилає нових команд.", "source": "https://science.nasa.gov/mars/" },
+    "lunar_night": { "uk": "Місячна ніч триває ~14 земних діб, і температура падає нижче −170 °C. Японський SLIM кілька разів пережив ніч, а американський Odysseus (2024) — ні.", "source": "https://science.nasa.gov/moon/" },
+    "instrument_fail": { "uk": "Тепловий зонд HP3 («кріт») InSight так і не зміг заглибитися в марсіанський ґрунт: ґрунт виявився не таким, як очікували.", "source": "https://science.nasa.gov/mission/insight/" },
+    "platform_fail": { "uk": "Mars Observer (1993) замовк за три дні до виходу на орбіту Марса — імовірно, через витік у паливній системі.", "source": "https://nssdc.gsfc.nasa.gov/" },
+    "extended": { "uk": "Opportunity планували на 90 діб, а він пропрацював майже 15 років. Успішні місії NASA часто продовжує.", "source": "https://science.nasa.gov/mission/mer-opportunity/" },
+    "comms_lost": { "uk": "Без зв'язку апарат може працювати, але ми ніколи не дізнаємося, що він побачив.", "source": "https://www.nasa.gov/communicating-with-missions/dsn/" }
+  }
+}

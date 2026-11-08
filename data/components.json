@@ -1,0 +1,616 @@
+{
+  "platforms": [
+    {
+      "id": "orbiter",
+      "type": "orbiter",
+      "name": {
+        "uk": "Орбітер",
+        "en": "Orbiter"
+      },
+      "prototype": "Mars Reconnaissance Orbiter, LRO",
+      "summary": {
+        "uk": "Бачить усю планету, але здалеку. Не потребує посадки.",
+        "en": "Sees the whole planet from afar. No landing."
+      },
+      "mass_kg": 800,
+      "cost_musd": 300,
+      "bus_power_w": 250,
+      "slots": 5,
+      "ops_musd_per_step": 8,
+      "reliability": 0.97,
+      "source": "https://science.nasa.gov/mission/mars-reconnaissance-orbiter/",
+      "simplified": "маса — суха платформа без приладів, округлено"
+    },
+    {
+      "id": "lander",
+      "type": "lander",
+      "name": {
+        "uk": "Посадкова станція",
+        "en": "Lander"
+      },
+      "prototype": "InSight, Phoenix",
+      "summary": {
+        "uk": "Стоїть на місці і вивчає надра й погоду в одній точці.",
+        "en": "Stays in one place: interior and weather."
+      },
+      "mass_kg": 280,
+      "cost_musd": 300,
+      "bus_power_w": 40,
+      "slots": 4,
+      "ops_musd_per_step": 5,
+      "reliability": 0.97,
+      "source": "https://science.nasa.gov/mission/insight/",
+      "simplified": "маса — без приладів і системи посадки"
+    },
+    {
+      "id": "rover_small",
+      "type": "rover",
+      "name": {
+        "uk": "Малий ровер",
+        "en": "Small rover"
+      },
+      "prototype": "Spirit, Opportunity",
+      "summary": {
+        "uk": "Пересувається, але бере мало приладів.",
+        "en": "Mobile, few instruments."
+      },
+      "mass_kg": 160,
+      "cost_musd": 450,
+      "bus_power_w": 30,
+      "slots": 3,
+      "ops_musd_per_step": 8,
+      "reliability": 0.95,
+      "source": "https://science.nasa.gov/mission/mer-opportunity/",
+      "simplified": "маса — без приладів"
+    },
+    {
+      "id": "rover_large",
+      "type": "rover",
+      "name": {
+        "uk": "Великий ровер",
+        "en": "Large rover"
+      },
+      "prototype": "Curiosity, Perseverance",
+      "summary": {
+        "uk": "Лабораторія на колесах. Дорогий і важкий.",
+        "en": "A lab on wheels. Expensive and heavy."
+      },
+      "mass_kg": 720,
+      "cost_musd": 1200,
+      "bus_power_w": 50,
+      "slots": 6,
+      "ops_musd_per_step": 15,
+      "reliability": 0.97,
+      "source": "https://science.nasa.gov/mission/mars-2020-perseverance/",
+      "simplified": "маса — без приладів (повна маса Perseverance ~1025 кг)"
+    }
+  ],
+  "instruments": [
+    {
+      "id": "cam_hires",
+      "name": {
+        "uk": "Камера високої роздільності",
+        "en": "High-resolution camera"
+      },
+      "prototype": "HiRISE (MRO)",
+      "platforms": [
+        "orbiter"
+      ],
+      "mass_kg": 65,
+      "power_w": 60,
+      "duty": 0.5,
+      "cost_musd": 45,
+      "data_mbit_per_day": 18000,
+      "science_base": 4,
+      "reliability": 0.97,
+      "weights": {
+        "water": 1,
+        "map": 3,
+        "interior": 0.5,
+        "atmosphere": 0.5,
+        "life": 1
+      },
+      "source": "https://www.uahirise.org/",
+      "simplified": "маса і потужність округлені",
+      "optical": true
+    },
+    {
+      "id": "ir_spectrometer",
+      "name": {
+        "uk": "Інфрачервоний спектрометр",
+        "en": "Infrared spectrometer"
+      },
+      "prototype": "CRISM (MRO)",
+      "platforms": [
+        "orbiter"
+      ],
+      "mass_kg": 30,
+      "power_w": 45,
+      "duty": 0.5,
+      "cost_musd": 40,
+      "data_mbit_per_day": 6000,
+      "science_base": 4,
+      "reliability": 0.96,
+      "weights": {
+        "water": 3,
+        "map": 1.5,
+        "interior": 0.5,
+        "atmosphere": 1,
+        "life": 2
+      },
+      "source": "https://science.nasa.gov/mission/mars-reconnaissance-orbiter/",
+      "simplified": "ігрові значення",
+      "optical": true
+    },
+    {
+      "id": "orbital_radar",
+      "name": {
+        "uk": "Орбітальний радар",
+        "en": "Orbital radar"
+      },
+      "prototype": "SHARAD (MRO)",
+      "platforms": [
+        "orbiter"
+      ],
+      "mass_kg": 20,
+      "power_w": 35,
+      "duty": 0.4,
+      "cost_musd": 35,
+      "data_mbit_per_day": 3000,
+      "science_base": 3,
+      "reliability": 0.97,
+      "weights": {
+        "water": 3,
+        "map": 1,
+        "interior": 2,
+        "atmosphere": 0,
+        "life": 1
+      },
+      "source": "https://science.nasa.gov/mission/mars-reconnaissance-orbiter/",
+      "simplified": "ігрові значення"
+    },
+    {
+      "id": "neutron",
+      "name": {
+        "uk": "Нейтронний детектор",
+        "en": "Neutron detector"
+      },
+      "prototype": "DAN (Curiosity), LEND (LRO)",
+      "platforms": [
+        "orbiter",
+        "lander",
+        "rover"
+      ],
+      "mass_kg": 5,
+      "power_w": 10,
+      "duty": 1,
+      "cost_musd": 12,
+      "data_mbit_per_day": 5,
+      "science_base": 2,
+      "reliability": 0.98,
+      "weights": {
+        "water": 3,
+        "map": 0.5,
+        "interior": 1,
+        "atmosphere": 0,
+        "life": 1
+      },
+      "source": "https://science.nasa.gov/mission/msl-curiosity/",
+      "simplified": "ігрові значення"
+    },
+    {
+      "id": "magnetometer",
+      "name": {
+        "uk": "Магнітометр",
+        "en": "Magnetometer"
+      },
+      "prototype": "MAVEN, InSight",
+      "platforms": [
+        "orbiter",
+        "lander"
+      ],
+      "mass_kg": 3,
+      "power_w": 5,
+      "duty": 1,
+      "cost_musd": 6,
+      "data_mbit_per_day": 5,
+      "science_base": 1.5,
+      "reliability": 0.99,
+      "weights": {
+        "water": 0.5,
+        "map": 0.5,
+        "interior": 2,
+        "atmosphere": 1,
+        "life": 0
+      },
+      "source": "https://science.nasa.gov/mission/maven/",
+      "simplified": "ігрові значення"
+    },
+    {
+      "id": "panorama_cam",
+      "name": {
+        "uk": "Панорамна камера",
+        "en": "Panoramic camera"
+      },
+      "prototype": "Mastcam-Z (Perseverance)",
+      "platforms": [
+        "lander",
+        "rover"
+      ],
+      "mass_kg": 4,
+      "power_w": 15,
+      "duty": 0.3,
+      "cost_musd": 15,
+      "data_mbit_per_day": 400,
+      "science_base": 3,
+      "reliability": 0.98,
+      "weights": {
+        "water": 1,
+        "map": 2,
+        "interior": 0.5,
+        "atmosphere": 0.5,
+        "life": 1
+      },
+      "source": "https://science.nasa.gov/mission/mars-2020-perseverance/",
+      "simplified": "ігрові значення",
+      "optical": true
+    },
+    {
+      "id": "laser_spectrometer",
+      "name": {
+        "uk": "Лазерний спектрометр",
+        "en": "Laser spectrometer"
+      },
+      "prototype": "SuperCam (Perseverance), ChemCam",
+      "platforms": [
+        "rover"
+      ],
+      "mass_kg": 10,
+      "power_w": 20,
+      "duty": 0.3,
+      "cost_musd": 40,
+      "data_mbit_per_day": 80,
+      "science_base": 4,
+      "reliability": 0.96,
+      "weights": {
+        "water": 1.5,
+        "map": 0.5,
+        "interior": 1,
+        "atmosphere": 0,
+        "life": 2.5
+      },
+      "source": "https://science.nasa.gov/mission/mars-2020-perseverance/",
+      "simplified": "ігрові значення"
+    },
+    {
+      "id": "gpr",
+      "name": {
+        "uk": "Георадар",
+        "en": "Ground-penetrating radar"
+      },
+      "prototype": "RIMFAX (Perseverance)",
+      "platforms": [
+        "rover"
+      ],
+      "mass_kg": 3,
+      "power_w": 10,
+      "duty": 0.3,
+      "cost_musd": 15,
+      "data_mbit_per_day": 50,
+      "science_base": 3,
+      "reliability": 0.97,
+      "weights": {
+        "water": 3,
+        "map": 1,
+        "interior": 2,
+        "atmosphere": 0,
+        "life": 1
+      },
+      "source": "https://science.nasa.gov/mission/mars-2020-perseverance/",
+      "simplified": "ігрові значення"
+    },
+    {
+      "id": "seismometer",
+      "name": {
+        "uk": "Сейсмометр",
+        "en": "Seismometer"
+      },
+      "prototype": "SEIS (InSight)",
+      "platforms": [
+        "lander"
+      ],
+      "mass_kg": 30,
+      "power_w": 10,
+      "duty": 1,
+      "cost_musd": 40,
+      "data_mbit_per_day": 40,
+      "science_base": 4,
+      "reliability": 0.95,
+      "weights": {
+        "water": 0.5,
+        "map": 0,
+        "interior": 3,
+        "atmosphere": 0,
+        "life": 0
+      },
+      "source": "https://science.nasa.gov/mission/insight/",
+      "simplified": "маса з кабелем і захисним куполом, округлено"
+    },
+    {
+      "id": "weather",
+      "name": {
+        "uk": "Метеостанція",
+        "en": "Weather station"
+      },
+      "prototype": "MEDA (Perseverance), REMS",
+      "platforms": [
+        "lander",
+        "rover"
+      ],
+      "mass_kg": 5,
+      "power_w": 15,
+      "duty": 0.5,
+      "cost_musd": 10,
+      "data_mbit_per_day": 10,
+      "science_base": 2,
+      "reliability": 0.98,
+      "weights": {
+        "water": 1,
+        "map": 0,
+        "interior": 0,
+        "atmosphere": 3,
+        "life": 0.5
+      },
+      "source": "https://science.nasa.gov/mission/mars-2020-perseverance/",
+      "simplified": "ігрові значення"
+    },
+    {
+      "id": "drill",
+      "name": {
+        "uk": "Бур і контейнери для зразків",
+        "en": "Drill and sample tubes"
+      },
+      "prototype": "система зразків Perseverance",
+      "platforms": [
+        "lander",
+        "rover"
+      ],
+      "mass_kg": 40,
+      "power_w": 50,
+      "duty": 0.15,
+      "cost_musd": 80,
+      "data_mbit_per_day": 5,
+      "science_base": 5,
+      "reliability": 0.93,
+      "weights": {
+        "water": 2,
+        "map": 0,
+        "interior": 1,
+        "atmosphere": 0,
+        "life": 3
+      },
+      "source": "https://science.nasa.gov/mission/mars-2020-perseverance/",
+      "simplified": "ігрові значення"
+    },
+    {
+      "id": "moxie",
+      "name": {
+        "uk": "Генератор кисню",
+        "en": "Oxygen generator"
+      },
+      "prototype": "MOXIE (Perseverance)",
+      "platforms": [
+        "lander",
+        "rover"
+      ],
+      "only_targets": [
+        "mars"
+      ],
+      "mass_kg": 17,
+      "power_w": 300,
+      "duty": 0.05,
+      "cost_musd": 30,
+      "data_mbit_per_day": 1,
+      "science_base": 1,
+      "reliability": 0.97,
+      "weights": {
+        "water": 0.5,
+        "map": 0,
+        "interior": 0,
+        "atmosphere": 1,
+        "life": 0.5
+      },
+      "source": "https://science.nasa.gov/mission/mars-2020-perseverance/",
+      "simplified": "мало науки, але це технологія для майбутніх баз"
+    }
+  ],
+  "power": [
+    {
+      "id": "solar_s",
+      "type": "solar",
+      "name": {
+        "uk": "Сонячні панелі, 2 м²",
+        "en": "Solar arrays, 2 m²"
+      },
+      "prototype": "малі апарати",
+      "mass_kg": 15,
+      "cost_musd": 10,
+      "p1au_w": 760,
+      "reliability": 0.98,
+      "source": "https://science.nasa.gov/learn/basics-of-space-flight/chapter11-3/",
+      "simplified": "ККД ~28%, 1361 Вт/м² біля Землі"
+    },
+    {
+      "id": "solar_m",
+      "type": "solar",
+      "name": {
+        "uk": "Сонячні панелі, 7 м²",
+        "en": "Solar arrays, 7 m²"
+      },
+      "prototype": "InSight",
+      "mass_kg": 45,
+      "cost_musd": 25,
+      "p1au_w": 2670,
+      "reliability": 0.98,
+      "source": "https://science.nasa.gov/mission/insight/",
+      "simplified": "ККД ~28%"
+    },
+    {
+      "id": "solar_l",
+      "type": "solar",
+      "name": {
+        "uk": "Сонячні панелі, 20 м²",
+        "en": "Solar arrays, 20 m²"
+      },
+      "prototype": "великі орбітери",
+      "mass_kg": 120,
+      "cost_musd": 60,
+      "p1au_w": 7600,
+      "reliability": 0.98,
+      "source": "https://science.nasa.gov/mission/juno/",
+      "simplified": "ККД ~28%"
+    },
+    {
+      "id": "rtg_1",
+      "type": "rtg",
+      "name": {
+        "uk": "РІТЕГ (MMRTG)",
+        "en": "RTG (MMRTG)"
+      },
+      "prototype": "Curiosity, Perseverance",
+      "mass_kg": 45,
+      "cost_musd": 110,
+      "p0_w": 110,
+      "reliability": 0.995,
+      "source": "https://science.nasa.gov/planetary-science/programs/radioisotope-power-systems/",
+      "simplified": "втрачає ~4% потужності на рік; ціна — ігрова оцінка"
+    },
+    {
+      "id": "rtg_2",
+      "type": "rtg",
+      "name": {
+        "uk": "Два РІТЕГи",
+        "en": "Two RTGs"
+      },
+      "prototype": "Cassini мав три",
+      "mass_kg": 90,
+      "cost_musd": 220,
+      "p0_w": 220,
+      "reliability": 0.995,
+      "source": "https://science.nasa.gov/planetary-science/programs/radioisotope-power-systems/",
+      "simplified": "плутонію-238 мало, тому дорого"
+    }
+  ],
+  "antennas": [
+    {
+      "id": "lga",
+      "name": {
+        "uk": "Мала всенаправлена антена",
+        "en": "Low-gain antenna"
+      },
+      "prototype": "аварійні антени всіх апаратів",
+      "platforms": [
+        "orbiter",
+        "lander",
+        "rover"
+      ],
+      "mass_kg": 2,
+      "cost_musd": 5,
+      "rate_1au_mbps": 0.003,
+      "contact_h": 4,
+      "reliability": 0.99,
+      "source": "https://science.nasa.gov/learn/basics-of-space-flight/chapter10-1/",
+      "simplified": "ігрова швидкість"
+    },
+    {
+      "id": "hga_small",
+      "name": {
+        "uk": "Остронаправлена антена 0,3 м",
+        "en": "High-gain antenna 0.3 m"
+      },
+      "prototype": "антени марсоходів",
+      "platforms": [
+        "lander",
+        "rover"
+      ],
+      "mass_kg": 8,
+      "cost_musd": 15,
+      "rate_1au_mbps": 0.05,
+      "contact_h": 4,
+      "reliability": 0.98,
+      "source": "https://science.nasa.gov/mission/mars-2020-perseverance/",
+      "simplified": "ігрова швидкість"
+    },
+    {
+      "id": "hga_large",
+      "name": {
+        "uk": "Остронаправлена антена 3 м",
+        "en": "High-gain antenna 3 m"
+      },
+      "prototype": "MRO",
+      "platforms": [
+        "orbiter"
+      ],
+      "mass_kg": 50,
+      "cost_musd": 40,
+      "rate_1au_mbps": 4,
+      "contact_h": 4,
+      "reliability": 0.98,
+      "source": "https://science.nasa.gov/mission/mars-reconnaissance-orbiter/",
+      "simplified": "MRO: до ~6 Мбіт/с, коли Марс близько"
+    },
+    {
+      "id": "relay_uhf",
+      "relay": true,
+      "name": {
+        "uk": "Ретрансляція через орбітер (UHF)",
+        "en": "UHF relay via orbiter"
+      },
+      "prototype": "марсоходи через MRO і Mars Odyssey",
+      "platforms": [
+        "lander",
+        "rover"
+      ],
+      "mass_kg": 6,
+      "cost_musd": 10,
+      "relay_mbit_per_day": 400,
+      "reliability": 0.98,
+      "source": "https://science.nasa.gov/mission/mars-reconnaissance-orbiter/",
+      "simplified": "кілька сеансів на добу; не залежить від відстані до Землі"
+    }
+  ],
+  "extras": [
+    {
+      "id": "backup_antenna",
+      "effect": "backup_antenna",
+      "name": {
+        "uk": "Резервна антена",
+        "en": "Backup antenna"
+      },
+      "summary": {
+        "uk": "Якщо головна антена відмовить, зв'язок не зникне.",
+        "en": "Keeps the link if the main antenna fails."
+      },
+      "mass_kg": 10,
+      "cost_musd": 15,
+      "source": "https://science.nasa.gov/mission/galileo/",
+      "simplified": "ігрова механіка"
+    },
+    {
+      "id": "big_battery",
+      "effect": "big_battery",
+      "name": {
+        "uk": "Великий акумулятор",
+        "en": "Large battery"
+      },
+      "summary": {
+        "uk": "Допомагає пережити бурю або ніч.",
+        "en": "Helps survive storms and nights."
+      },
+      "mass_kg": 40,
+      "cost_musd": 10,
+      "source": "https://science.nasa.gov/mission/insight/",
+      "simplified": "ігрова механіка; Li-ion ~120 Вт·год/кг"
+    }
+  ]
+}

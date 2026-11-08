@@ -1,0 +1,48 @@
+<!doctype html>
+<html lang="uk">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+  <title>Архітектор місії</title>
+  <meta name="description" content="Гра про компроміси в дизайні космічних місій. NASA Space Apps 2026.">
+  <link rel="icon" href="data:image/svg+xml,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 100 100'><text y='.9em' font-size='90'>🛰️</text></svg>">
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=IBM+Plex+Sans:wght@400;500;600&family=Unbounded:wght@500;700&display=swap" rel="stylesheet">
+  <link rel="stylesheet" href="style.css">
+</head>
+<body class="mode-cadet">
+  <header class="topbar">
+    <div class="brand">
+      <span class="brand-mark" aria-hidden="true"></span>
+      <span class="brand-name">Архітектор місії</span>
+    </div>
+    <ol class="stages" aria-label="Етапи місії">
+      <li data-stage="briefing">Брифінг</li>
+      <li data-stage="builder">Конструктор</li>
+      <li data-stage="flight">Політ</li>
+      <li data-stage="summary">Підсумок</li>
+    </ol>
+    <div class="top-actions">
+      <label class="mode-switch" title="Інженер бачить усі числа й формули">
+        <input type="checkbox" id="mode-toggle">
+        <span>Режим інженера</span>
+      </label>
+      <button class="link-btn" id="about-btn" type="button">Про дані</button>
+    </div>
+  </header>
+
+  <main id="screen" tabindex="-1"></main>
+
+  <dialog id="about" aria-labelledby="about-title">
+    <div class="dialog-head">
+      <h2 id="about-title">Про дані</h2>
+      <button class="icon-btn" type="button" data-close aria-label="Закрити">×</button>
+    </div>
+    <div id="about-body"></div>
+  </dialog>
+
+  <noscript><p class="noscript">Для гри потрібен JavaScript.</p></noscript>
+  <script type="module" src="js/app.js"></script>
+</body>
+</html>

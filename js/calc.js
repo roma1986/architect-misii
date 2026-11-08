@@ -1,0 +1,228 @@
+// Формули гри (розділ 5 документа). Без DOM, тому працює і в браузері, і в Node.js.
+
+export const G0 = 9.81;              // м/с²
+export const ISP_S = 320;            // питомий імпульс двигунів апарата, с
+export const DESIGN_MARGIN = 0.2;    // інженерний запас маси 20%
+export const WARN_MARGIN = 0.15;     // запас менше 15% — жовта зона
+export const RTG_DECAY = 0.96;       // РІТЕГ втрачає ~4% на рік
+export const RATE_CAP_MBPS = 100;    // стеля швидкості зв'язку (близькі цілі)
+export const MARGIN_PENALTY = 1.5;   // жовта зона збільшує шанс збою
+
+export const byId = (list, id) => (list || []).find((x) => x.id === id) || null;
+export const clamp = (x, a, b) => Math.max(a, Math.min(b, x));
+
+/** Перетворює вибір гравця (id) на повні об'єкти з даних. */
+export function resolveBuild(data, build) {
+  const c = data.components;
+  return {
+    target: byId(data.targets, build.target),
+    cls: byId(data.mission.classes, build.cls),
+    goal: byId(data.mission.goals, build.goal),
+    rocket: byId(data.rockets, build.rocket),
+    platform: byId(c.platforms, build.platform),
+    instruments: (build.instruments || []).map((id) => byId(c.instruments, id)).filter(Boolean),
+    power: byId(c.power, build.power),
+    antenna: byId(c.antennas, build.antenna),
+    extras: (build.extras || []).map((id) => byId(c.extras, id)).filter(Boolean),
+  };
+}
+
+export const isSurface = (r) => !!r.platform && r.platform.type !== 'orbiter';
+export const hasExtra = (r, effect) => r.extras.some((e) => e.effect === effect);
+
+/** Рівняння Ціолковського: яку частку від сухої маси становить паливо для Δv (км/с). */
+export function fuelFraction(dvKms) {
+  return Math.exp((dvKms * 1000) / (ISP_S * G0)) - 1;
+}
+
+/** Маса: сума компонентів → суха маса з запасом → паливо / система посадки → маса на старті. */
+export function massBreakdown(r) {
+  const parts = [r.platform, ...r.instruments, r.power, r.antenna, ...r.extras].filter(Boolean);
+  const sum = parts.reduce((s, p) => s + (p.mass_kg || 0), 0);
+  const margin = sum * DESIGN_MARGIN;
+  const dry = sum + margin;
+  let fuel = 0;
+  let edl = 0;
+  const t = r.target;
+  if (t && r.platform) {
+    if (!isSurface(r)) {
+      fuel = dry * fuelFraction(t.dv_capture_kms);
+    } else if (t.landing.type === 'aeroshell') {
+      edl = dry * t.landing.edl_factor; // теплозахист, парашут, гальмівна ступінь, перелітний модуль
+    } else {
+      fuel = dry * fuelFraction(t.dv_capture_kms + t.landing.dv_kms); // посадка на двигунах
+    }
+  }
+  return { sum, margin, dry, fuel, edl, launch: dry + fuel + edl };
+}
+
+/** Скільки ракета доставить до цілі. Якщо є точне число виробника — беремо його, інакше НОО × k цілі. */
+export function capacityTo(rocket, target) {
+  if (!rocket || !target) return 0;
+  if (rocket.max_target && !rocket.max_target.includes(target.id)) return 0;
+  if (rocket.to_kg && rocket.to_kg[target.id]) return rocket.to_kg[target.id];
+  return Math.round(rocket.leo_kg * target.k_capacity);
+}
+
+export function costBreakdown(r) {
+  const items = [];
+  const add = (label, cost) => { if (cost) items.push({ label, cost }); };
+  add('rocket', r.rocket?.cost_musd);
+  add('platform', r.platform?.cost_musd);
+  add('instruments', r.instruments.reduce((s, i) => s + i.cost_musd, 0));
+  add('power', r.power?.cost_musd);
+  add('antenna', r.antenna?.cost_musd);
+  add('extras', r.extras.reduce((s, e) => s + e.cost_musd, 0));
+  if (r.target && isSurface(r)) add('landing', r.target.landing.cost_musd);
+  if (r.target && r.platform) add('operations', r.platform.ops_musd_per_step * r.target.ops_steps);
+  return { items, total: items.reduce((s, i) => s + i.cost, 0) };
+}
+
+export function solarFactor(r) {
+  return isSurface(r) ? r.target.surface_solar_factor : r.target.orbit_solar_factor;
+}
+
+/** Середня потужність біля цілі, Вт. Сонце слабшає як 1/r², РІТЕГ — на 4% на рік. */
+export function powerProduced(r, { years = 0, dust = 1, solarMult = 1 } = {}) {
+  if (!r.power || !r.target) return 0;
+  if (r.power.type === 'solar') {
+    return (r.power.p1au_w / (r.target.sun_au ** 2)) * solarFactor(r) * dust * solarMult;
+  }
+  return r.power.p0_w * RTG_DECAY ** years;
+}
+
+/** Частка земного сонячного світла біля цілі (для пояснень). */
+export const sunShare = (target) => 1 / (target.sun_au ** 2);
+
+export function busPower(r) { return r.platform ? r.platform.bus_power_w : 0; }
+export function instrumentPower(instruments) {
+  return instruments.reduce((s, i) => s + i.power_w * i.duty, 0);
+}
+export function powerDemand(r) { return busPower(r) + instrumentPower(r.instruments); }
+
+/** Відстань Земля–ціль, а.о., через dayFromArrival діб після прибуття. Колові орбіти. */
+export function earthDistanceAu(target, dayFromArrival = 0) {
+  if (!target.orbit_au) return target.earth_dist_au;
+  const theta = phaseDeg(target, dayFromArrival) * Math.PI / 180;
+  const a = target.orbit_au;
+  return Math.sqrt(1 + a * a - 2 * a * Math.cos(theta));
+}
+
+/** Кут між Землею і ціллю, якщо дивитися від Сонця. 180° — сонячне з'єднання. */
+export function phaseDeg(target, dayFromArrival) {
+  const rel = 360 / 365.25 - 360 / target.period_days;
+  return target.theta0_deg + rel * dayFromArrival;
+}
+
+/** Чи проходить ціль за Сонцем у проміжку днів [d0, d1). */
+export function conjunctionBetween(target, d0, d1) {
+  if (!target.orbit_au) return false;
+  const a = Math.floor((phaseDeg(target, d0) - 180) / 360);
+  const b = Math.floor((phaseDeg(target, d1) - 180) / 360);
+  return a !== b;
+}
+
+/** Скільки Мбіт на добу можна передати на Землю. */
+export function downlinkPerDay(antenna, target, distAu) {
+  if (!antenna || !target) return 0;
+  if (antenna.relay) return target.has_relay ? antenna.relay_mbit_per_day : 0;
+  const rate = Math.min(antenna.rate_1au_mbps / (distAu ** 2), RATE_CAP_MBPS);
+  return rate * antenna.contact_h * 3600;
+}
+
+export function dataPerDay(instruments) {
+  return instruments.reduce((s, i) => s + i.data_mbit_per_day, 0);
+}
+
+/** Надійність ракети за правилом Лапласа: (успіхи + 1) / (польоти + 2). */
+export function rocketReliability(rocket) {
+  return (rocket.successes + 1) / (rocket.flights + 2);
+}
+
+/** Шанс відмови за один крок, якщо надійність задано на всю місію. */
+export function stepFailProb(reliability, steps, penalty = 1) {
+  return clamp((1 - reliability ** (1 / steps)) * penalty, 0, 1);
+}
+
+export function weight(instr, goal) {
+  if (!goal) return 1;
+  const w = instr.weights?.[goal.id];
+  return w === undefined ? 1 : w;
+}
+
+export function idealSciencePerStep(instruments, goal, siteMult = 1) {
+  return instruments.reduce((s, i) => s + i.science_base * weight(i, goal), 0) * siteMult;
+}
+
+/** Чи можна поставити компонент на цю платформу і для цієї цілі. */
+export function fits(item, r) {
+  if (item.platforms && r.platform && !item.platforms.includes(r.platform.type)) return false;
+  if (item.only_targets && r.target && !item.only_targets.includes(r.target.id)) return false;
+  return true;
+}
+
+function barStatus(used, limit, warnOnly = false) {
+  if (limit <= 0) return used > 0 ? (warnOnly ? 'warn' : 'fail') : 'ok';
+  const ratio = used / limit;
+  if (ratio > 1) return warnOnly ? 'warn' : 'fail';
+  if (ratio > 1 - WARN_MARGIN) return 'warn';
+  return 'ok';
+}
+
+/**
+ * Перевірка конструкції: чотири шкали + список проблем.
+ * Кожна проблема має code, щоб інтерфейс показав зрозумілу підказку.
+ */
+export function checkBuild(r) {
+  const issues = [];
+  const need = (cond, code, params = {}) => { if (!cond) issues.push({ code, ...params }); };
+
+  need(r.target, 'no_target');
+  need(r.cls, 'no_class');
+  need(r.goal, 'no_goal');
+  need(r.rocket, 'no_rocket');
+  need(r.platform, 'no_platform');
+  need(r.power, 'no_power');
+  need(r.antenna, 'no_antenna');
+  need(r.instruments.length > 0, 'no_instruments');
+
+  if (r.platform) {
+    need(r.instruments.length <= r.platform.slots, 'too_many_instruments', { slots: r.platform.slots });
+    r.instruments.filter((i) => !fits(i, r)).forEach((i) => issues.push({ code: 'instrument_misfit', item: i }));
+    if (r.antenna) need(fits(r.antenna, r), 'antenna_misfit', { item: r.antenna });
+  }
+  if (r.antenna?.relay && r.target) need(r.target.has_relay, 'no_relay');
+  if (r.rocket && r.target && r.rocket.max_target) need(r.rocket.max_target.includes(r.target.id), 'rocket_target');
+
+  const mass = massBreakdown(r);
+  const capacity = capacityTo(r.rocket, r.target);
+  const cost = costBreakdown(r);
+  const budget = r.cls ? r.cls.budget_musd : 0;
+  const produced = powerProduced(r);
+  const demand = powerDemand(r);
+  const dist = r.target ? earthDistanceAu(r.target, 0) : 1;
+  const downlink = downlinkPerDay(r.antenna, r.target, dist);
+  const collected = dataPerDay(r.instruments);
+
+  const bars = {
+    budget: { used: cost.total, limit: budget, unit: 'млн $', status: barStatus(cost.total, budget) },
+    mass: { used: mass.launch, limit: capacity, unit: 'кг', status: barStatus(mass.launch, capacity) },
+    power: { used: demand, limit: produced, unit: 'Вт', status: barStatus(demand, produced) },
+    data: { used: collected, limit: downlink, unit: 'Мбіт/добу', status: barStatus(collected, downlink, true) },
+  };
+
+  // Нижче — помилки, через які запуск неможливий. Шкала «дані» лише попереджає.
+  if (r.cls && cost.total > budget) issues.push({ code: 'over_budget' });
+  if (r.rocket && r.target && r.platform && mass.launch > capacity) issues.push({ code: 'over_mass' });
+  if (r.power && r.platform && demand > produced) issues.push({ code: 'over_power' });
+
+  const warnings = [];
+  if (r.target?.surface_night_kills_solar && isSurface(r) && r.power?.type === 'solar') warnings.push({ code: 'lunar_night' });
+  if (r.antenna && r.instruments.length && collected > downlink) warnings.push({ code: 'data_bottleneck' });
+  if (bars.mass.status === 'warn' || bars.power.status === 'warn') warnings.push({ code: 'thin_margin' });
+
+  return {
+    ok: issues.length === 0,
+    issues, warnings, bars, mass, capacity, cost, produced, demand, downlink, collected, dist,
+  };
+}

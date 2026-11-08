@@ -1,0 +1,100 @@
+{
+  "classes": [
+    {
+      "id": "discovery",
+      "name": {
+        "uk": "Discovery",
+        "en": "Discovery"
+      },
+      "budget_musd": 900,
+      "science_target": 90,
+      "summary": {
+        "uk": "Невелика сфокусована місія. Приклад: InSight.",
+        "en": "Small focused mission, e.g. InSight."
+      }
+    },
+    {
+      "id": "new_frontiers",
+      "name": {
+        "uk": "New Frontiers",
+        "en": "New Frontiers"
+      },
+      "budget_musd": 1500,
+      "science_target": 160,
+      "summary": {
+        "uk": "Середня місія. Приклад: OSIRIS-REx.",
+        "en": "Medium mission, e.g. OSIRIS-REx."
+      }
+    },
+    {
+      "id": "flagship",
+      "name": {
+        "uk": "Flagship",
+        "en": "Flagship"
+      },
+      "budget_musd": 3000,
+      "science_target": 260,
+      "summary": {
+        "uk": "Велика місія з найвищими очікуваннями. Приклад: Perseverance.",
+        "en": "Large mission with the highest expectations, e.g. Perseverance."
+      }
+    }
+  ],
+  "goals": [
+    {
+      "id": "water",
+      "name": {
+        "uk": "Пошук води",
+        "en": "Find water"
+      },
+      "summary": {
+        "uk": "Де є лід або гідратовані мінерали.",
+        "en": "Where is ice or hydrated minerals."
+      }
+    },
+    {
+      "id": "map",
+      "name": {
+        "uk": "Карта поверхні",
+        "en": "Map the surface"
+      },
+      "summary": {
+        "uk": "Детальні знімки і рельєф.",
+        "en": "Detailed imagery and topography."
+      }
+    },
+    {
+      "id": "interior",
+      "name": {
+        "uk": "Будова надр",
+        "en": "Interior structure"
+      },
+      "summary": {
+        "uk": "Що всередині: кора, мантія, ядро.",
+        "en": "Crust, mantle, core."
+      }
+    },
+    {
+      "id": "atmosphere",
+      "name": {
+        "uk": "Атмосфера і клімат",
+        "en": "Atmosphere and climate"
+      },
+      "summary": {
+        "uk": "Погода, пил, сезони.",
+        "en": "Weather, dust, seasons."
+      }
+    },
+    {
+      "id": "life",
+      "name": {
+        "uk": "Сліди життя",
+        "en": "Signs of life"
+      },
+      "summary": {
+        "uk": "Органіка і давні середовища, придатні для життя.",
+        "en": "Organics and ancient habitable environments."
+      }
+    }
+  ]
+}

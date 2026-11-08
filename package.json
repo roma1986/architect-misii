@@ -1,0 +1,16 @@
+{
+  "name": "architect-misii",
+  "version": "0.1.0",
+  "private": true,
+  "type": "module",
+  "description": "Гра про дизайн космічних місій. NASA Space Apps 2026.",
+  "scripts": {
+    "start": "python3 -m http.server 8000",
+    "check": "node tools/check-data.js",
+    "balance": "node tools/montecarlo.js 10000",
+    "build:single": "node tools/build-single.mjs"
+  },
+  "devDependencies": {
+    "esbuild": "0.24.2"
+  }
+}

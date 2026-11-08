@@ -1,0 +1,42 @@
+// «Про дані»: кожен компонент, його прототип, спрощення і джерело.
+import { t, esc, fmt } from './dom.js';
+import { rocketReliability } from '../calc.js';
+
+const link = (url) => (url ? `<a href="${esc(url)}" target="_blank" rel="noopener">джерело</a>` : '');
+
+export function renderAbout(root, app) {
+  const d = app.data;
+  const C = d.components;
+  const table = (head, rows) => `<div class="table-wrap"><table><thead><tr>${head.map((h) => `<th>${h}</th>`).join('')}</tr></thead><tbody>${rows.join('')}</tbody></table></div>`;
+
+  root.innerHTML = `
+    <p>Кожне число в грі має реальний прототип. Ми округлюємо числа, але зберігаємо співвідношення:
+    скільки маси ракета везе до цілі, як слабшає Сонце з відстанню, як падає швидкість зв'язку.
+    Значення приладів — ігрові, близькі до порядку величини прототипів.</p>
+
+    <h3>Головні спрощення</h3>
+    <ul>
+      <li>Орбіти планет вважаємо коловими; відстань до Землі і сонячне з'єднання рахуються з реальних періодів обертання.</li>
+      <li>Паливо — за рівнянням Ціолковського з питомим імпульсом 320 с. Система посадки на Марс важить у 2,3 раза більше за апарат (як у Perseverance).</li>
+      <li>Сонячна енергія: 1361 Вт/м² біля Землі × 1/r² × множник умов (ніч, кут, атмосфера).</li>
+      <li>Надійність ракети — правило Лапласа: (успіхи + 1) / (польоти + 2).</li>
+      <li>Наука — умовні бали, що залежать від приладу, завдання, майданчика, енергії і переданих даних.</li>
+    </ul>
+
+    <h3>Ракети</h3>
+    ${table(['Ракета', 'На низьку орбіту', 'Ціна', 'Польоти', 'Надійність', 'Спрощення', ''], d.rockets.map((x) => `<tr><td>${t(x.name)}</td><td>${fmt(x.leo_kg)} кг</td><td>${fmt(x.cost_musd)} млн $</td><td>${x.successes}/${x.flights}</td><td>${Math.round(rocketReliability(x) * 1000) / 10}%</td><td>${esc(x.simplified)}</td><td>${link(x.source)}</td></tr>`))}
+
+    <h3>Платформи</h3>
+    ${table(['Платформа', 'Прототип', 'Маса', 'Ціна', 'Спрощення', ''], C.platforms.map((x) => `<tr><td>${t(x.name)}</td><td>${esc(x.prototype)}</td><td>${fmt(x.mass_kg)} кг</td><td>${fmt(x.cost_musd)} млн $</td><td>${esc(x.simplified)}</td><td>${link(x.source)}</td></tr>`))}
+
+    <h3>Прилади</h3>
+    ${table(['Прилад', 'Прототип', 'Маса', 'Потужність', 'Дані/добу', 'Спрощення', ''], C.instruments.map((x) => `<tr><td>${t(x.name)}</td><td>${esc(x.prototype)}</td><td>${fmt(x.mass_kg)} кг</td><td>${fmt(x.power_w)} Вт</td><td>${fmt(x.data_mbit_per_day)} Мбіт</td><td>${esc(x.simplified)}</td><td>${link(x.source)}</td></tr>`))}
+
+    <h3>Енергія і зв'язок</h3>
+    ${table(['Компонент', 'Прототип', 'Маса', 'Спрощення', ''], [...C.power, ...C.antennas].map((x) => `<tr><td>${t(x.name)}</td><td>${esc(x.prototype)}</td><td>${fmt(x.mass_kg)} кг</td><td>${esc(x.simplified)}</td><td>${link(x.source)}</td></tr>`))}
+
+    <h3>Цілі</h3>
+    ${table(['Ціль', 'Відстань від Сонця', 'k маси', 'Політ', ''], d.targets.map((x) => `<tr><td>${t(x.name)}</td><td>${x.sun_au} а.о.</td><td>${x.k_capacity}</td><td>${fmt(x.flight_days)} діб</td><td>${link(x.source)}</td></tr>`))}
+
+    <p class="small muted">Зображення: NASA. Гра створена для NASA Space Apps Challenge 2026.</p>`;
+}

@@ -1,0 +1,145 @@
+[
+  {
+    "id": "mars",
+    "name": {
+      "uk": "Марс",
+      "en": "Mars"
+    },
+    "summary": {
+      "uk": "Червона планета з тонкою атмосферою і пиловими бурями. Політ ~7 місяців, сигнал іде 3–22 хв.",
+      "en": "Thin atmosphere, dust storms. ~7 month cruise, 3–22 min signal delay."
+    },
+    "sun_au": 1.52,
+    "orbit_au": 1.52,
+    "period_days": 687,
+    "theta0_deg": 75,
+    "k_capacity": 0.18,
+    "dv_capture_kms": 1.0,
+    "landing": {
+      "type": "aeroshell",
+      "edl_factor": 2.3,
+      "cost_musd": 350
+    },
+    "orbit_solar_factor": 0.6,
+    "surface_solar_factor": 0.15,
+    "dust_per_step": 0.06,
+    "dust_storm_prob": 0.12,
+    "surface_night_kills_solar": false,
+    "flight_days": 210,
+    "step_days": 30,
+    "ops_steps": 10,
+    "has_relay": true,
+    "orbit_capture_risk": 0.03,
+    "sites": [
+      {
+        "id": "utopia",
+        "name": {
+          "uk": "Рівнина Утопія",
+          "en": "Utopia Planitia"
+        },
+        "risk": 0.05,
+        "science_mult": 1.0,
+        "note": {
+          "uk": "Рівна і безпечна. Тут сіли Viking 2 і китайський Zhurong.",
+          "en": "Flat and safe. Viking 2 and Zhurong landed here."
+        },
+        "lat": 48.0,
+        "lon": 134.0
+      },
+      {
+        "id": "gale",
+        "name": {
+          "uk": "Кратер Ґейл",
+          "en": "Gale Crater"
+        },
+        "risk": 0.1,
+        "science_mult": 1.3,
+        "note": {
+          "uk": "Шари осадових порід і гора Шарпа. Тут працює Curiosity.",
+          "en": "Layered sediments, Mount Sharp. Curiosity works here."
+        },
+        "lat": -5.4,
+        "lon": 137.8
+      },
+      {
+        "id": "jezero",
+        "name": {
+          "uk": "Кратер Єзеро",
+          "en": "Jezero Crater"
+        },
+        "risk": 0.18,
+        "science_mult": 1.7,
+        "note": {
+          "uk": "Дельта давньої річки, найкраще місце для пошуку слідів життя. Тут працює Perseverance. Багато каміння.",
+          "en": "Ancient river delta, best place to search for life. Perseverance works here. Rocky."
+        },
+        "lat": 18.4,
+        "lon": 77.5
+      }
+    ],
+    "source": "https://science.nasa.gov/mars/facts/"
+  },
+  {
+    "id": "moon",
+    "name": {
+      "uk": "Місяць",
+      "en": "Moon"
+    },
+    "summary": {
+      "uk": "Найближча ціль: політ кілька діб, сигнал 1,3 с. Атмосфери немає, тож сідати доводиться на двигунах. Ніч триває 14 діб.",
+      "en": "Closest target: days of cruise, 1.3 s delay. No air, powered landing. 14-day night."
+    },
+    "sun_au": 1.0,
+    "earth_dist_au": 0.00257,
+    "k_capacity": 0.35,
+    "dv_capture_kms": 0.9,
+    "landing": {
+      "type": "propulsive",
+      "dv_kms": 1.9,
+      "cost_musd": 120
+    },
+    "orbit_solar_factor": 0.65,
+    "surface_solar_factor": 0.5,
+    "dust_per_step": 0,
+    "dust_storm_prob": 0,
+    "surface_night_kills_solar": true,
+    "flight_days": 5,
+    "step_days": 14,
+    "ops_steps": 10,
+    "has_relay": false,
+    "orbit_capture_risk": 0.02,
+    "sites": [
+      {
+        "id": "tranquility",
+        "name": {
+          "uk": "Море Спокою",
+          "en": "Sea of Tranquility"
+        },
+        "risk": 0.12,
+        "science_mult": 1.0,
+        "note": {
+          "uk": "Рівна лавова рівнина, місце посадки Apollo 11.",
+          "en": "Flat lava plain, Apollo 11 site."
+        },
+        "lat": 0.7,
+        "lon": 23.5
+      },
+      {
+        "id": "south_pole",
+        "name": {
+          "uk": "Південний полюс",
+          "en": "South Pole"
+        },
+        "risk": 0.3,
+        "science_mult": 1.8,
+        "note": {
+          "uk": "У вічно затінених кратерах є водяний лід. Рельєф складний, світло низьке.",
+          "en": "Water ice in permanently shadowed craters. Rough terrain, low sun."
+        },
+        "lat": -85,
+        "lon": 0
+      }
+    ],
+    "source": "https://science.nasa.gov/moon/facts/"
+  }
+]
