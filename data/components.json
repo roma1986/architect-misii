@@ -83,6 +83,31 @@
       "reliability": 0.97,
       "source": "https://science.nasa.gov/mission/mars-2020-perseverance/",
       "simplified": "маса — без приладів (повна маса Perseverance ~1025 кг)"
+    },
+    {
+      "id": "sampler",
+      "type": "orbiter",
+      "sample_return": true,
+      "name": {
+        "uk": "Зонд-пробовідбірник",
+        "en": "Sample-return probe"
+      },
+      "prototype": "OSIRIS-REx, Хаябуса-2",
+      "summary": {
+        "uk": "Літає біля астероїда, торкається поверхні і везе зразок на Землю.",
+        "en": "Touches the asteroid and brings a sample home."
+      },
+      "only_targets": [
+        "asteroid"
+      ],
+      "mass_kg": 700,
+      "cost_musd": 450,
+      "bus_power_w": 250,
+      "slots": 4,
+      "ops_musd_per_step": 8,
+      "reliability": 0.96,
+      "source": "https://science.nasa.gov/mission/osiris-rex/",
+      "simplified": "капсула повернення включена в масу платформи"
     }
   ],
   "instruments": [
@@ -168,6 +193,33 @@
       },
       "source": "https://science.nasa.gov/mission/mars-reconnaissance-orbiter/",
       "simplified": "ігрові значення"
+    },
+    {
+      "id": "sar",
+      "name": {
+        "uk": "Радар із синтезованою апертурою",
+        "en": "Synthetic aperture radar"
+      },
+      "prototype": "Magellan, VERITAS, Mini-RF (LRO)",
+      "platforms": [
+        "orbiter"
+      ],
+      "mass_kg": 130,
+      "power_w": 300,
+      "duty": 0.4,
+      "cost_musd": 70,
+      "data_mbit_per_day": 8000,
+      "science_base": 5,
+      "reliability": 0.96,
+      "weights": {
+        "water": 1,
+        "map": 3,
+        "interior": 1.5,
+        "atmosphere": 0,
+        "life": 0.5
+      },
+      "source": "https://science.nasa.gov/mission/magellan/",
+      "simplified": "бачить крізь хмари і в темряві; маса й потужність — ігрові оцінки"
     },
     {
       "id": "neutron",
@@ -422,6 +474,92 @@
       },
       "source": "https://science.nasa.gov/mission/mars-2020-perseverance/",
       "simplified": "мало науки, але це технологія для майбутніх баз"
+    },
+    {
+      "id": "lidar",
+      "name": {
+        "uk": "Лазерний висотомір",
+        "en": "Laser altimeter"
+      },
+      "prototype": "OLA (OSIRIS-REx), LOLA (LRO)",
+      "platforms": [
+        "orbiter"
+      ],
+      "mass_kg": 20,
+      "power_w": 60,
+      "duty": 0.3,
+      "cost_musd": 25,
+      "data_mbit_per_day": 500,
+      "science_base": 3,
+      "reliability": 0.97,
+      "weights": {
+        "water": 0.5,
+        "map": 3,
+        "interior": 1.5,
+        "atmosphere": 0,
+        "life": 0.5
+      },
+      "source": "https://science.nasa.gov/mission/osiris-rex/",
+      "simplified": "ігрові значення"
+    },
+    {
+      "id": "sample_arm",
+      "name": {
+        "uk": "Маніпулятор для відбору зразка",
+        "en": "Sampling arm"
+      },
+      "prototype": "TAGSAM (OSIRIS-REx)",
+      "platforms": [
+        "orbiter"
+      ],
+      "only_platforms": [
+        "sampler"
+      ],
+      "mass_kg": 40,
+      "power_w": 30,
+      "duty": 0.05,
+      "cost_musd": 60,
+      "data_mbit_per_day": 5,
+      "science_base": 1,
+      "reliability": 0.97,
+      "weights": {
+        "water": 2,
+        "map": 0.5,
+        "interior": 1.5,
+        "atmosphere": 0,
+        "life": 3
+      },
+      "source": "https://science.nasa.gov/mission/osiris-rex/",
+      "simplified": "головна наука — зразок, який досліджують на Землі"
+    },
+    {
+      "id": "mass_spectrometer",
+      "name": {
+        "uk": "Мас-спектрометр",
+        "en": "Mass spectrometer"
+      },
+      "prototype": "MASPEX (Europa Clipper), SAM (Curiosity)",
+      "platforms": [
+        "orbiter",
+        "lander",
+        "rover"
+      ],
+      "mass_kg": 25,
+      "power_w": 60,
+      "duty": 0.2,
+      "cost_musd": 50,
+      "data_mbit_per_day": 40,
+      "science_base": 4,
+      "reliability": 0.95,
+      "weights": {
+        "water": 1.5,
+        "map": 0,
+        "interior": 0.5,
+        "atmosphere": 2.5,
+        "life": 3
+      },
+      "source": "https://science.nasa.gov/mission/europa-clipper/",
+      "simplified": "ігрові значення"
     }
   ],
   "power": [
@@ -469,6 +607,21 @@
       "reliability": 0.98,
       "source": "https://science.nasa.gov/mission/juno/",
       "simplified": "ККД ~28%"
+    },
+    {
+      "id": "solar_xl",
+      "type": "solar",
+      "name": {
+        "uk": "Сонячні панелі, 90 м²",
+        "en": "Solar arrays, 90 m²"
+      },
+      "prototype": "Europa Clipper (розмах ~30 м)",
+      "mass_kg": 400,
+      "cost_musd": 150,
+      "p1au_w": 20000,
+      "reliability": 0.97,
+      "source": "https://science.nasa.gov/mission/europa-clipper/",
+      "simplified": "біля Юпітера дає ~700 Вт; маса — ігрова оцінка"
     },
     {
       "id": "rtg_1",
@@ -611,6 +764,22 @@
       "cost_musd": 10,
       "source": "https://science.nasa.gov/mission/insight/",
       "simplified": "ігрова механіка; Li-ion ~120 Вт·год/кг"
+    },
+    {
+      "id": "radiation_vault",
+      "effect": "radiation_vault",
+      "name": {
+        "uk": "Радіаційний сейф",
+        "en": "Radiation vault"
+      },
+      "summary": {
+        "uk": "Титанова камера для електроніки. Майже обов'язкова біля Юпітера.",
+        "en": "Titanium box for electronics."
+      },
+      "mass_kg": 150,
+      "cost_musd": 40,
+      "source": "https://science.nasa.gov/mission/juno/",
+      "simplified": "у Juno сейф важить ~200 кг; ігрова механіка"
     }
   ]
 }

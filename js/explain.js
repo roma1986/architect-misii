@@ -1,7 +1,7 @@
 // Пояснення результату: оцінка, причини людською мовою, тексти журналу і рішень.
 // Тексти зараз українською; для англійської версії додайте переклади в цьому файлі.
 
-import { clamp, sunShare, isSurface, instrumentPower, busPower } from './calc.js';
+import { clamp, sunShare, isSurface, instrumentPower, busPower, opsSteps } from './calc.js';
 import { tr } from './i18n.js';
 
 const pct = (x) => Math.round(x * 100);
@@ -15,7 +15,7 @@ export function score(m) {
   const cost = m.check.cost.total;
   const science = clamp((s.science / target) * 100, 0, 150);
   const efficiency = clamp(((s.science / cost) / (target / r.cls.budget_musd)) * 100, 0, 150);
-  const done = m.timeline.length / r.target.ops_steps;
+  const done = m.timeline.length / opsSteps(r);
   const alive = s.instruments.filter((i) => i.alive).length / Math.max(1, s.instruments.length);
   const reliability = clamp((s.alive ? alive : 0) * 50 + Math.min(1, done) * 50, 0, 100);
   const total = Math.round(0.6 * science / 1.5 + 0.2 * efficiency / 1.5 + 0.2 * reliability);
@@ -65,13 +65,16 @@ function stats(m) {
 
 const LOST_TEXT = {
   launch: (m) => `Ракета ${tr(m.r.rocket.name)} зазнала аварії на старті. Її надійність за історією польотів — ${pct((m.r.rocket.successes + 1) / (m.r.rocket.flights + 2))}%: навіть такий шанс іноді не спрацьовує.`,
-  capture: () => 'Апарат не вийшов на орбіту цілі. Гальмування біля планети — один із найризикованіших моментів місії.',
+  capture: (m) => (m.s.navError
+    ? 'Помилка в одиницях під час поправки курсу: апарат підійшов до цілі не тим курсом і не вийшов на орбіту. Саме так у 1999 році загинув Mars Climate Orbiter.'
+    : 'Апарат не вийшов на орбіту цілі. Гальмування біля планети — один із найризикованіших моментів місії.'),
   landing: (m) => `Посадка в районі «${tr(m.s.site.name)}» закінчилася аварією. Ризик цього майданчика — ${pct(m.s.site.risk * m.penalty)}%.`,
   storm: () => 'Під час пилової бурі апарат працював далі, акумулятор розрядився, і апарат замерз.',
   night: () => 'Апарат не пережив місячну ніч: сонячні панелі 14 діб не дають енергії, а температура падає нижче −170 °C.',
   power: () => 'Енергії не вистачало навіть на обігрів і комп\'ютер, і апарат вимкнувся назавжди.',
   platform: () => 'Відмовила сама платформа апарата (комп\'ютер, двигун або паливна система).',
   comms: () => 'Зв\'язок втрачено остаточно: резервної антени не було.',
+  touch: () => 'Під час торкання астероїда зонд зачепив брилу і пошкодився. Біля тіла з майже нульовою гравітацією кожен дотик — ризик.',
 };
 
 export function reasons(m) {
@@ -105,8 +108,10 @@ export function reasons(m) {
     conjunction: () => s.conjunctionPlan === 'idle'
       ? 'Під час сонячного з\'єднання апарат простоював без команд.'
       : 'Сонячне з\'єднання на ~2 тижні перервало зв\'язок. План, завантажений заздалегідь, зменшив втрати.',
+    clouds: () => 'Хмари Венери непрозорі для світла: оптичні прилади бачили лише верхівки хмар. Радар бачить крізь хмари, тому Magellan склав карту саме ним.',
     mobility: () => 'Заклинило колесо: ровер їздив повільніше і досліджував менше місць.',
     night: () => 'Місячні ночі: половину часу сонячні панелі не працювали. РІТЕГ або ізотопні обігрівачі розв\'язують цю проблему.',
+    skipped: () => 'Прилад тимчасово не дав науки: пробірка виявилася порожньою, і спробу довелося повторювати.',
     reset: () => 'Збій комп\'ютера забрав цілий крок роботи.',
   };
 
@@ -121,6 +126,11 @@ export function reasons(m) {
   const extra = [];
   if (m.penalty > 1) extra.push({ key: 'margin', text: 'Запас маси або енергії був менший за 15%, тому збої траплялися в 1,5 раза частіше. Реальні інженери закладають 15–30% запасу.', tone: 'bad' });
   if (s.bonusScience > 0) extra.push({ key: 'bonus', text: `Несподівана знахідка додала ${fmt(s.bonusScience)} балів науки.`, tone: 'good' });
+  if (s.sampleScience) extra.push({ key: 'sample', text: `Зразок з району «${tr(s.sampleSite.name)}» дав ${fmt(s.sampleScience)} балів науки: лабораторії на Землі точніші за будь-який прилад у космосі.`, tone: 'good' });
+  if (r.target.radiation_mult) extra.push(m.radPenalty > 1.5
+    ? { key: 'rad', text: `Без радіаційного сейфа електроніка біля Юпітера ламалася в ${fmt(r.target.radiation_mult)} рази частіше.`, tone: 'bad' }
+    : { key: 'rad', text: 'Радіаційний сейф захистив електроніку від радіації Юпітера.', tone: 'good' });
+  if (r.target.surface_ops_steps && isSurface(r) && s.alive) extra.push({ key: 'heat', text: 'Посадковий апарат пропрацював ~2 години: довше на поверхні Венери не вижив жоден апарат.', tone: 'good' });
   if (s.backupUsed) extra.push({ key: 'backup', text: 'Резервна антена врятувала зв\'язок.', tone: 'good' });
   if (s.extended) extra.push({ key: 'extended', text: 'Місію продовжили, бо апарат був у доброму стані.', tone: 'good' });
   if (r.power.type === 'rtg' && isSurface(r) && s.stormsSeen > 0) extra.push({ key: 'rtg', text: 'РІТЕГ не залежить від Сонця і пилу, тому буря не зупинила роботу.', tone: 'good' });
@@ -139,7 +149,7 @@ export function mediaFor(m) {
 }
 
 // ---------- журнал ----------
-const CAUSE_SHORT = { launch: 'аварія ракети', capture: 'не вдалося вийти на орбіту', landing: 'аварійна посадка', storm: 'буря розрядила акумулятор', night: 'апарат замерз уночі', power: 'забракло енергії', platform: 'відмова платформи', comms: 'зв\'язок втрачено' };
+const CAUSE_SHORT = { touch: 'зонд пошкоджено під час торкання', launch: 'аварія ракети', capture: 'не вдалося вийти на орбіту', landing: 'аварійна посадка', storm: 'буря розрядила акумулятор', night: 'апарат замерз уночі', power: 'забракло енергії', platform: 'відмова платформи', comms: 'зв\'язок втрачено' };
 
 export function logText(e, m) {
   const p = e.params;
@@ -165,6 +175,17 @@ export function logText(e, m) {
     case 'reset': return 'Комп\'ютер перезавантажувався весь крок.';
     case 'extended': return `NASA продовжило місію ще на ${p.steps} кроки!`;
     case 'complete': return 'Основну програму місії завершено.';
+    case 'units_ok': return 'Одиниці перевірено й перераховано. Курс точний.';
+    case 'units_bad': return 'Поправку застосовано з помилкою в одиницях. Апарат іде не тим курсом!';
+    case 'tipped': return `Недоступні прилади: ${p.names.map((x) => tr(x.name)).join(', ')}.`;
+    case 'wheel_backwards': return 'Ровер їздить задом наперед: повільніше, зате безпечно.';
+    case 'wheel_lucky': return 'Пощастило: новий маршрут виявився безпечним.';
+    case 'wheel_stuck': return 'Ровер застряг на складному маршруті і майже не рухається.';
+    case 'heat_end': return 'Спека і тиск перемогли: апарат замовк. Але всі дані вже на Землі.';
+    case 'touch': return `Зонд торкається поверхні в районі «${tr(p.site.name)}». Ризик: ${pct(p.p)}%.`;
+    case 'touch_ok': return `Зразок узято! Капсула з ним полетить на Землю (+${fmt(p.bonus)} науки).`;
+    case 'touch_fail': return 'Невдале торкання: маніпулятор пошкоджено, зразка немає.';
+    case 'sample_skip': return 'Вирішили не ризикувати і не брати зразок.';
     case 'step': return `Науки +${fmt(p.sci, 1)}. Прилади працювали ${pct(p.u)}% часу, передано ${pct(Math.min(1, p.sent))}% даних.`;
     case 'fact': {
       const f = m.data.events.facts[p.id];
@@ -203,6 +224,18 @@ export function decisionText(d, m) {
       title: 'Канал зв\'язку перевантажений',
       text: `Антена встигає передати лише ~${pct(d.params.share)}% даних, які збирають прилади. Решта перезапишеться в пам'яті. Що передавати першим?`,
     };
+    case 'units': return {
+      title: 'Перевірте поправку курсу',
+      text: 'Програма виробника видала імпульс двигунів: 1 фунт-сила-секунда. Навігація апарата приймає лише ньютон-секунди. Скільки ньютон-секунд вводимо?',
+    };
+    case 'wheel': return {
+      title: 'Заклинило колесо',
+      text: 'Одне з шести коліс більше не обертається. Попереду цікаві породи, але шлях кам\'янистий.',
+    };
+    case 'sample': return {
+      title: 'Час брати зразок',
+      text: 'Зонд торкнеться поверхні на кілька секунд і вдихне пил струменем азоту. Цікавіші місця ризикованіші: навколо брили розміром з будинок.',
+    };
     default: return { title: d.id, text: '' };
   }
 }
@@ -221,6 +254,19 @@ export function optionInfo(decisionId, option, m) {
     case 'conjunction': return id === 'upload'
       ? { label: 'Завантажити план заздалегідь', hint: 'Апарат працює сам; втрачається лише половина передачі даних.' }
       : { label: 'Чекати', hint: 'Простіше, але апарат простоює половину кроку.' };
+    case 'units': return {
+      '4.45': { label: '4,45 Н·с', hint: '1 фунт-сила ≈ 4,45 ньютона.' },
+      '0.45': { label: '0,45 Н·с', hint: 'Фунт маси ≈ 0,45 кілограма.' },
+      1: { label: '1 Н·с', hint: 'Залишити число як є.' },
+    }[id];
+    case 'wheel': return id === 'backwards'
+      ? { label: 'Їхати задом наперед', hint: 'Як Spirit: повільніше, але безпечно. Рухливість −30%.' }
+      : { label: 'Ризикнути маршрутом', hint: '50 на 50: або майже без втрат, або ровер застрягне.' };
+    case 'sample': {
+      if (id === 'skip') return { label: 'Не брати зразок', hint: 'Безпечно, але головна наука місії залишиться на астероїді.' };
+      const site = m.r.target.sites.find((x) => x.id === id);
+      return { label: tr(site.name), hint: `Ризик ${pct(site.risk * m.penalty)}%, цінність зразка ×${fmt(site.science_mult, 1)}. ${tr(site.note)}` };
+    }
     case 'priority': return id === 'science'
       ? { label: 'Спершу найцінніше', hint: 'Дані з найбільшою наукою на мегабіт ідуть першими. Великі знімки можуть не потрапити на Землю.' }
       : { label: 'Порівну', hint: 'Кожен прилад передає однакову частку своїх даних.' };

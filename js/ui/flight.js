@@ -2,7 +2,9 @@
 import { t, esc, fmt, pct } from './dom.js';
 import { Mission } from '../sim.js';
 import { logText, decisionText, optionInfo, eventFact, factSource } from '../explain.js';
-import { busPower, instrumentPower } from '../calc.js';
+import { busPower, instrumentPower, opsSteps } from '../calc.js';
+import { orbitSvg, countdown } from './visuals.js';
+import { sfx } from './sound.js';
 
 export function render(root, app) {
   if (!app.mission) app.mission = new Mission(app.data, app.build, app.seed);
@@ -27,19 +29,29 @@ export function render(root, app) {
       </div>
     </div>`;
 
-  root.querySelector('[data-act="step"]')?.addEventListener('click', () => { m.advance(); app.render(); });
+  root.querySelector('[data-act="step"]')?.addEventListener('click', (e) => {
+    if (!started) { e.currentTarget.disabled = true; countdown(() => { m.advance(); after(m, app); }, sfx); return; }
+    m.advance(); after(m, app);
+  });
   root.querySelector('[data-act="run"]')?.addEventListener('click', () => {
     let guard = 0;
     while (!m.done && !m.pending && guard++ < 200) m.advance();
-    app.render();
+    after(m, app);
   });
   root.querySelector('[data-act="summary"]')?.addEventListener('click', () => app.go('summary'));
   root.querySelector('[data-act="rebuild"]')?.addEventListener('click', () => { app.mission = null; app.go('builder'); });
   root.querySelectorAll('[data-option]').forEach((b) => b.addEventListener('click', () => {
     m.choose(b.dataset.option);
     m.advance();
-    app.render();
+    after(m, app);
   }));
+}
+
+/** Після кожної дії: звук за подією і перемальовування. */
+function after(m, app) {
+  if (m.pending) sfx.decision();
+  else if (m.done) (m.s.lost ? sfx.bad : sfx.good)();
+  app.render();
 }
 
 function controls(m, started) {
@@ -117,12 +129,13 @@ function telemetry(m, last) {
   const done = m.timeline.length;
   const cells = Array.from({ length: total }, (_, i) => {
     const cls = i < done ? 'done' : (s.lost && i === done ? 'lost' : '');
-    return `<span class="${cls} ${i >= m.r.target.ops_steps ? 'ext' : ''}" title="Крок ${i + 1}"></span>`;
+    return `<span class="${cls} ${i >= opsSteps(m.r) ? 'ext' : ''}" title="Крок ${i + 1}"></span>`;
   }).join('');
   const need = busPower(m.r) + instrumentPower(m.aliveInstruments);
   const target = m.r.cls.science_target;
   return `<section class="panel">
     <h2>Телеметрія</h2>
+    <figure class="orbit-wrap">${orbitSvg(m.r.target, s.phase === 'launch' || s.phase === 'cruise' ? 0 : done * m.r.target.step_days)}</figure>
     <div class="track" aria-label="Кроки наукової програми: ${done} з ${total}">${cells}</div>
     <dl class="tele">
       <div><dt>Наука</dt><dd><span class="science-big num">${fmt(s.science)}</span> <span class="muted small">з ${fmt(target)}</span></dd></div>

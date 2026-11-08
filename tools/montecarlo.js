@@ -5,10 +5,11 @@ import { fileURLToPath } from 'node:url';
 import path from 'node:path';
 import fs from 'node:fs/promises';
 import { loadDataNode } from './node-data.js';
-import { resolveBuild, checkBuild, fits } from '../js/calc.js';
+import { resolveBuild, checkBuild, fits, platformFits, launchMonths, bestLaunch } from '../js/calc.js';
 import { Mission, defaultPolicy, randomPolicy } from '../js/sim.js';
 import { makeRng } from '../js/rng.js';
 import { score } from '../js/explain.js';
+import { balanceSvg } from '../js/ui/balance.js';
 
 const here = path.dirname(fileURLToPath(import.meta.url));
 const N = Number(process.argv[2] || 10000);
@@ -18,7 +19,7 @@ const C = data.components;
 
 function randomBuild() {
   const target = rng.pick(data.targets);
-  const platform = rng.pick(C.platforms);
+  const platform = rng.pick(C.platforms.filter((p) => platformFits(p, target)));
   const r0 = { platform, target };
   const pool = C.instruments.filter((i) => fits(i, r0));
   const n = 1 + Math.floor(rng() * platform.slots);
@@ -29,6 +30,7 @@ function randomBuild() {
     target: target.id, cls: rng.pick(data.mission.classes).id, goal: rng.pick(data.mission.goals).id,
     rocket: rng.pick(data.rockets).id, platform: platform.id, instruments,
     power: rng.pick(C.power).id, antenna: rng.pick(antennas).id, extras,
+    launch: rng() < 0.7 ? bestLaunch(target) : rng.pick(launchMonths()),
   };
 }
 
@@ -74,9 +76,23 @@ const best = [...rows].sort((a, b) => b.sc.total - a.sc.total).slice(0, 5);
 console.log('\nНайкращі 5 (різні — отже, ідеальної збірки немає):');
 best.forEach((r) => console.log(`  ${r.sc.total} | ${r.build.target} ${r.build.cls} ${r.build.goal} | ${r.build.platform} ${r.build.power} ${r.build.antenna} | ${r.build.instruments.join(',')}`));
 
-// Гістограма підсумкової оцінки для слайда
+// Гістограма оцінок для слайда і для екрана «Про дані»
 const bins = Array(10).fill(0);
 rows.forEach((r) => bins[Math.min(9, Math.floor(r.sc.total / 10))]++);
+const balance = {
+  date: new Date().toISOString().slice(0, 10),
+  n: rows.length,
+  valid_share: rows.length / tried,
+  bins,
+  classes: data.mission.classes.map((cls) => {
+    const xs = rows.filter((r) => r.build.cls === cls.id);
+    return { id: cls.id, n: xs.length, success: xs.filter((r) => r.sc.outcome === 'success').length / Math.max(1, xs.length) };
+  }),
+  causes: Object.entries(count('topLoss')).map(([key, v]) => ({ key, share: v / rows.length })).sort((a, b) => b.share - a.share),
+  best: best.map((r) => ({ total: r.sc.total, ...r.build })),
+};
 await fs.mkdir(path.join(here, 'out'), { recursive: true });
+await fs.writeFile(path.join(here, '..', 'data', 'balance.json'), JSON.stringify(balance, null, 2));
 await fs.writeFile(path.join(here, 'out', 'histogram.csv'), 'оцінка,кількість\n' + bins.map((b, i) => `${i * 10}-${i * 10 + 9},${b}`).join('\n'));
-console.log('\nГістограму збережено в tools/out/histogram.csv');
+await fs.writeFile(path.join(here, 'out', 'balance.svg'), balanceSvg(balance, { ink: '#172238' }));
+console.log('\nЗбережено: data/balance.json (графік у грі), tools/out/balance.svg (для слайда), tools/out/histogram.csv');

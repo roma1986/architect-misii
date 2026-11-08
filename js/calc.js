@@ -24,10 +24,56 @@ export function resolveBuild(data, build) {
     power: byId(c.power, build.power),
     antenna: byId(c.antennas, build.antenna),
     extras: (build.extras || []).map((id) => byId(c.extras, id)).filter(Boolean),
+    launch: build.launch || null,
   };
 }
 
+// ---------- вікна запуску ----------
+export const GAME_START = '2026-11';   // перший місяць, який можна обрати
+export const LAUNCH_MONTHS = 48;       // скільки місяців уперед показуємо
+
+const DAY = 86400000;
+const monthDate = (ym) => new Date(`${ym}-15T00:00:00Z`);
+export function addMonths(ym, n) {
+  const [y, m] = ym.split('-').map(Number);
+  const d = new Date(Date.UTC(y, m - 1 + n, 15));
+  return `${d.getUTCFullYear()}-${String(d.getUTCMonth() + 1).padStart(2, '0')}`;
+}
+export const launchMonths = () => Array.from({ length: LAUNCH_MONTHS }, (_, i) => addMonths(GAME_START, i));
+
+/**
+ * Наскільки вдалий місяць запуску. Біля оптимальної дати ракета везе всю масу,
+ * далі від неї — потрібна більша швидкість, тож корисна маса падає, а політ довшає.
+ */
+export function windowInfo(target, ym) {
+  if (!target?.window || !ym) return { factor: 1, offDays: 0, always: !target?.window };
+  const w = target.window;
+  const t = monthDate(ym).getTime();
+  const ref = new Date(`${w.ref}T00:00:00Z`).getTime();
+  const k = Math.round((t - ref) / DAY / w.synodic_days);
+  const best = new Date(ref + k * w.synodic_days * DAY);
+  const offDays = (t - best.getTime()) / DAY;
+  const factor = 0.3 + 0.7 * Math.exp(-((offDays / w.sigma_days) ** 2));
+  return { factor, offDays, best: best.toISOString().slice(0, 7) };
+}
+
+/** Найближчий до початку гри місяць з найкращим вікном. */
+export function bestLaunch(target) {
+  if (!target?.window) return GAME_START;
+  const months = launchMonths();
+  return months.find((m) => windowInfo(target, m).factor >= 0.9)
+    || months.reduce((a, b) => (windowInfo(target, b).factor > windowInfo(target, a).factor ? b : a));
+}
+
+export function flightDays(r) {
+  const f = windowInfo(r.target, r.launch).factor;
+  return Math.round(r.target.flight_days * (1 + 0.4 * (1 - f)));
+}
+export const launchYear = (r) => (r.launch ? Number(r.launch.slice(0, 4)) : 2026);
+
 export const isSurface = (r) => !!r.platform && r.platform.type !== 'orbiter';
+/** Скільки кроків триває наукова програма (на Венері посадковий апарат живе лише ~2 години). */
+export const opsSteps = (r) => (isSurface(r) && r.target.surface_ops_steps ? r.target.surface_ops_steps : r.target.ops_steps);
 export const hasExtra = (r, effect) => r.extras.some((e) => e.effect === effect);
 
 /** Рівняння Ціолковського: яку частку від сухої маси становить паливо для Δv (км/с). */
@@ -56,12 +102,15 @@ export function massBreakdown(r) {
   return { sum, margin, dry, fuel, edl, launch: dry + fuel + edl };
 }
 
-/** Скільки ракета доставить до цілі. Якщо є точне число виробника — беремо його, інакше НОО × k цілі. */
-export function capacityTo(rocket, target) {
+/**
+ * Скільки ракета доставить до цілі у найкраще вікно. Якщо є точне число виробника — беремо його,
+ * інакше НОО × k цілі. Поза вікном — менше (множник windowInfo).
+ */
+export function capacityTo(rocket, target, launch = null) {
   if (!rocket || !target) return 0;
   if (rocket.max_target && !rocket.max_target.includes(target.id)) return 0;
-  if (rocket.to_kg && rocket.to_kg[target.id]) return rocket.to_kg[target.id];
-  return Math.round(rocket.leo_kg * target.k_capacity);
+  const base = rocket.to_kg && rocket.to_kg[target.id] ? rocket.to_kg[target.id] : rocket.leo_kg * target.k_capacity;
+  return Math.round(base * windowInfo(target, launch).factor);
 }
 
 export function costBreakdown(r) {
@@ -74,7 +123,8 @@ export function costBreakdown(r) {
   add('antenna', r.antenna?.cost_musd);
   add('extras', r.extras.reduce((s, e) => s + e.cost_musd, 0));
   if (r.target && isSurface(r)) add('landing', r.target.landing.cost_musd);
-  if (r.target && r.platform) add('operations', r.platform.ops_musd_per_step * r.target.ops_steps);
+  if (r.target && r.platform) add('operations', r.platform.ops_musd_per_step * opsSteps(r));
+  if (r.target) add('cruise', r.target.cruise_ops_musd || 0);
   return { items, total: items.reduce((s, i) => s + i.cost, 0) };
 }
 
@@ -157,7 +207,16 @@ export function idealSciencePerStep(instruments, goal, siteMult = 1) {
 /** Чи можна поставити компонент на цю платформу і для цієї цілі. */
 export function fits(item, r) {
   if (item.platforms && r.platform && !item.platforms.includes(r.platform.type)) return false;
+  if (item.only_platforms && r.platform && !item.only_platforms.includes(r.platform.id)) return false;
   if (item.only_targets && r.target && !item.only_targets.includes(r.target.id)) return false;
+  return true;
+}
+
+/** Чи підходить платформа для цілі (на астероїд не сядеш, пробовідбірник — лише для астероїда). */
+export function platformFits(platform, target) {
+  if (!platform || !target) return true;
+  if (platform.only_targets && !platform.only_targets.includes(target.id)) return false;
+  if (target.allowed_platform_types && !target.allowed_platform_types.includes(platform.type)) return false;
   return true;
 }
 
@@ -186,6 +245,7 @@ export function checkBuild(r) {
   need(r.antenna, 'no_antenna');
   need(r.instruments.length > 0, 'no_instruments');
 
+  if (r.platform && r.target) need(platformFits(r.platform, r.target), 'platform_target');
   if (r.platform) {
     need(r.instruments.length <= r.platform.slots, 'too_many_instruments', { slots: r.platform.slots });
     r.instruments.filter((i) => !fits(i, r)).forEach((i) => issues.push({ code: 'instrument_misfit', item: i }));
@@ -195,7 +255,8 @@ export function checkBuild(r) {
   if (r.rocket && r.target && r.rocket.max_target) need(r.rocket.max_target.includes(r.target.id), 'rocket_target');
 
   const mass = massBreakdown(r);
-  const capacity = capacityTo(r.rocket, r.target);
+  const capacity = capacityTo(r.rocket, r.target, r.launch);
+  const win = windowInfo(r.target, r.launch);
   const cost = costBreakdown(r);
   const budget = r.cls ? r.cls.budget_musd : 0;
   const produced = powerProduced(r);
@@ -217,12 +278,16 @@ export function checkBuild(r) {
   if (r.power && r.platform && demand > produced) issues.push({ code: 'over_power' });
 
   const warnings = [];
+  if (win.factor < 0.9) warnings.push({ code: 'off_window', factor: win.factor, best: win.best });
   if (r.target?.surface_night_kills_solar && isSurface(r) && r.power?.type === 'solar') warnings.push({ code: 'lunar_night' });
   if (r.antenna && r.instruments.length && collected > downlink) warnings.push({ code: 'data_bottleneck' });
   if (bars.mass.status === 'warn' || bars.power.status === 'warn') warnings.push({ code: 'thin_margin' });
+  if (r.target?.radiation_mult && !hasExtra(r, 'radiation_vault')) warnings.push({ code: 'radiation' });
+  if (r.target?.optical_mult && r.instruments.some((i) => i.optical)) warnings.push({ code: 'clouds' });
+  if (r.target?.surface_ops_steps && isSurface(r)) warnings.push({ code: 'short_life' });
 
   return {
     ok: issues.length === 0,
-    issues, warnings, bars, mass, capacity, cost, produced, demand, downlink, collected, dist,
+    issues, warnings, bars, mass, capacity, cost, produced, demand, downlink, collected, dist, win,
   };
 }

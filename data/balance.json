@@ -1,0 +1,221 @@
+{
+  "date": "2026-11-08",
+  "n": 10000,
+  "valid_share": 0.3959925553399596,
+  "bins": [
+    2602,
+    508,
+    2656,
+    986,
+    768,
+    615,
+    490,
+    363,
+    267,
+    745
+  ],
+  "classes": [
+    {
+      "id": "discovery",
+      "n": 2113,
+      "success": 0.23663038334122102
+    },
+    {
+      "id": "new_frontiers",
+      "n": 3697,
+      "success": 0.11008926156342981
+    },
+    {
+      "id": "flagship",
+      "n": 4190,
+      "success": 0.03556085918854415
+    }
+  ],
+  "causes": [
+    {
+      "key": "none",
+      "share": 0.2765
+    },
+    {
+      "key": "downlink",
+      "share": 0.1923
+    },
+    {
+      "key": "lost_night",
+      "share": 0.1013
+    },
+    {
+      "key": "clouds",
+      "share": 0.0847
+    },
+    {
+      "key": "reset",
+      "share": 0.0708
+    },
+    {
+      "key": "lost_landing",
+      "share": 0.0621
+    },
+    {
+      "key": "lost_launch",
+      "share": 0.0583
+    },
+    {
+      "key": "failure",
+      "share": 0.0328
+    },
+    {
+      "key": "mobility",
+      "share": 0.0239
+    },
+    {
+      "key": "sleep",
+      "share": 0.0208
+    },
+    {
+      "key": "lost_capture",
+      "share": 0.0197
+    },
+    {
+      "key": "lost_platform",
+      "share": 0.0177
+    },
+    {
+      "key": "night",
+      "share": 0.0159
+    },
+    {
+      "key": "conjunction",
+      "share": 0.0076
+    },
+    {
+      "key": "skipped",
+      "share": 0.0054
+    },
+    {
+      "key": "power",
+      "share": 0.0032
+    },
+    {
+      "key": "lost_storm",
+      "share": 0.0029
+    },
+    {
+      "key": "lost_comms",
+      "share": 0.0019
+    },
+    {
+      "key": "storm",
+      "share": 0.0015
+    },
+    {
+      "key": "lost_power",
+      "share": 0.0004
+    },
+    {
+      "key": "lost_touch",
+      "share": 0.0003
+    }
+  ],
+  "best": [
+    {
+      "total": 100,
+      "target": "moon",
+      "cls": "discovery",
+      "goal": "map",
+      "rocket": "falcon9",
+      "platform": "orbiter",
+      "instruments": [
+        "cam_hires",
+        "ir_spectrometer"
+      ],
+      "power": "solar_s",
+      "antenna": "hga_large",
+      "extras": [
+        "radiation_vault"
+      ],
+      "launch": "2026-11"
+    },
+    {
+      "total": 100,
+      "target": "moon",
+      "cls": "discovery",
+      "goal": "water",
+      "rocket": "atlas_v_541",
+      "platform": "orbiter",
+      "instruments": [
+        "sar",
+        "magnetometer",
+        "cam_hires",
+        "orbital_radar"
+      ],
+      "power": "solar_l",
+      "antenna": "lga",
+      "extras": [
+        "radiation_vault"
+      ],
+      "launch": "2026-11"
+    },
+    {
+      "total": 100,
+      "target": "venus",
+      "cls": "discovery",
+      "goal": "map",
+      "rocket": "falcon_heavy",
+      "platform": "orbiter",
+      "instruments": [
+        "sar",
+        "magnetometer"
+      ],
+      "power": "solar_xl",
+      "antenna": "hga_large",
+      "extras": [
+        "big_battery"
+      ],
+      "launch": "2028-01"
+    },
+    {
+      "total": 100,
+      "target": "moon",
+      "cls": "new_frontiers",
+      "goal": "map",
+      "rocket": "falcon_heavy",
+      "platform": "orbiter",
+      "instruments": [
+        "cam_hires",
+        "lidar",
+        "magnetometer",
+        "neutron",
+        "mass_spectrometer"
+      ],
+      "power": "solar_l",
+      "antenna": "hga_large",
+      "extras": [
+        "backup_antenna",
+        "big_battery"
+      ],
+      "launch": "2026-11"
+    },
+    {
+      "total": 100,
+      "target": "moon",
+      "cls": "new_frontiers",
+      "goal": "water",
+      "rocket": "falcon_heavy",
+      "platform": "orbiter",
+      "instruments": [
+        "sar",
+        "magnetometer",
+        "orbital_radar",
+        "ir_spectrometer",
+        "neutron"
+      ],
+      "power": "solar_l",
+      "antenna": "lga",
+      "extras": [
+        "backup_antenna"
+      ],
+      "launch": "2027-12"
+    }
+  ]
+}

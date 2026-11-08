@@ -11,7 +11,8 @@
       "summary": {
         "uk": "Невелика сфокусована місія. Приклад: InSight.",
         "en": "Small focused mission, e.g. InSight."
-      }
+      },
+      "color": "#2e7d5b"
     },
     {
       "id": "new_frontiers",
@@ -24,7 +25,8 @@
       "summary": {
         "uk": "Середня місія. Приклад: OSIRIS-REx.",
         "en": "Medium mission, e.g. OSIRIS-REx."
-      }
+      },
+      "color": "#3556a8"
     },
     {
       "id": "flagship",
@@ -37,7 +39,8 @@
       "summary": {
         "uk": "Велика місія з найвищими очікуваннями. Приклад: Perseverance.",
         "en": "Large mission with the highest expectations, e.g. Perseverance."
-      }
+      },
+      "color": "#b8790c"
     }
   ],
   "goals": [

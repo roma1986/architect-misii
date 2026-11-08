@@ -6,9 +6,11 @@ import * as briefing from './ui/briefing.js';
 import * as builder from './ui/builder.js';
 import * as flight from './ui/flight.js';
 import * as summary from './ui/summary.js';
+import * as colony from './ui/colony.js';
 import { renderAbout } from './ui/about.js';
+import { setSound } from './ui/sound.js';
 
-const SCREENS = { briefing, builder, flight, summary };
+const SCREENS = { briefing, builder, flight, summary, colony };
 const ORDER = ['briefing', 'builder', 'flight', 'summary'];
 
 export const app = {
@@ -26,7 +28,7 @@ export const app = {
   },
   render() {
     SCREENS[this.screen].render(this.root, this);
-    const idx = ORDER.indexOf(this.screen);
+    const idx = ORDER.indexOf(this.screen === 'colony' ? 'summary' : this.screen);
     document.querySelectorAll('.stages li').forEach((li) => {
       const i = ORDER.indexOf(li.dataset.stage);
       li.classList.toggle('is-current', i === idx);
@@ -57,12 +59,29 @@ async function start() {
     document.body.classList.toggle('mode-cadet', !modeToggle.checked);
   });
 
+  const soundToggle = document.getElementById('sound-toggle');
+  soundToggle.addEventListener('change', () => setSound(soundToggle.checked));
+
   const about = document.getElementById('about');
   document.getElementById('about-btn').addEventListener('click', () => {
     renderAbout(document.getElementById('about-body'), app);
     about.showModal();
   });
   about.addEventListener('click', (e) => { if (e.target === about || e.target.closest('[data-close]')) about.close(); });
+
+  // Демо для презентації: #demo1 — «жадібна» місія, яка провалиться; #demo2 — виправлена.
+  const DEMOS = {
+    demo1: { target: 'mars', cls: 'flagship', goal: 'life', launch: '2026-11', rocket: 'atlas_v_541', platform: 'rover_large', instruments: ['panorama_cam', 'laser_spectrometer', 'drill', 'gpr', 'weather', 'mass_spectrometer'], power: 'solar_l', antenna: 'hga_small', extras: [] },
+    demo2: { target: 'mars', cls: 'flagship', goal: 'life', launch: '2026-11', rocket: 'atlas_v_541', platform: 'rover_large', instruments: ['panorama_cam', 'laser_spectrometer', 'drill', 'gpr', 'mass_spectrometer'], power: 'rtg_2', antenna: 'relay_uhf', extras: ['big_battery'] },
+  };
+  const demo = DEMOS[location.hash.slice(1)];
+  if (demo) {
+    app.build = { ...emptyBuild(), ...demo };
+    app.seed = 'DBCA';
+    app.go('builder', { focus: false });
+    toast(`Демо-місія ${app.seed}`);
+    return;
+  }
 
   const m = location.hash.match(/^#m=(.+)$/);
   if (m) {

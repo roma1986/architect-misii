@@ -4,7 +4,7 @@
 import {
   resolveBuild, checkBuild, isSurface, hasExtra, powerProduced, busPower, instrumentPower,
   earthDistanceAu, conjunctionBetween, downlinkPerDay, rocketReliability, stepFailProb,
-  weight, idealSciencePerStep, clamp, byId, MARGIN_PENALTY,
+  weight, idealSciencePerStep, clamp, byId, MARGIN_PENALTY, opsSteps, flightDays,
 } from './calc.js';
 import { makeRng } from './rng.js';
 import { rollEvents } from './events.js';
@@ -20,15 +20,17 @@ export class Mission {
     const thin = this.check.bars.mass.status === 'warn' || this.check.bars.power.status === 'warn';
     this.penalty = thin ? MARGIN_PENALTY : 1;
     const t = this.r.target;
+    // Радіація (Юпітер): прилади й платформа ламаються частіше, сейф зменшує ефект
+    this.radPenalty = t.radiation_mult ? (hasExtra(this.r, 'radiation_vault') ? 1.2 : t.radiation_mult) : 1;
 
     this.s = {
       phase: 'launch',
       step: 0,
-      steps: t.ops_steps,
+      steps: opsSteps(this.r),
       alive: true,
       lost: null,             // причина втрати місії
       site: null,
-      siteMult: 1,
+      siteMult: t.science_value || 1,   // цінність цілі (Європа — океанічний світ)
       dust: 1,
       powerMult: 1,
       mobility: 1,
@@ -111,7 +113,7 @@ export class Mission {
     this.loss(`lost_${cause}`, this.idealPerStep(true) * remaining, remaining);
     s.ideal += this.idealPerStep(true) * remaining;
     this.log('lost', { cause }, 'bad');
-    const factId = { launch: 'launch_fail', capture: 'capture_fail', landing: 'landing_fail', storm: 'dust_storm', night: 'lunar_night', platform: 'platform_fail', comms: 'comms_lost', power: 'dust_storm' }[cause];
+    const factId = { launch: 'launch_fail', capture: 'capture_fail', landing: 'landing_fail', storm: 'dust_storm', night: 'lunar_night', platform: 'platform_fail', comms: 'comms_lost', power: 'dust_storm', touch: 'touch_fail' }[cause];
     if (factId) this.fact(factId);
     s.phase = 'done';
     return { kind: 'lost', cause };
@@ -129,10 +131,11 @@ export class Mission {
 
   doCruise() {
     const t = this.r.target;
-    this.log('cruise', { days: t.flight_days }, 'info');
+    this.log('cruise', { days: flightDays(this.r) }, 'info');
     rollEvents(this, 'cruise');
     if (!this.s.alive) return { kind: 'lost', cause: this.s.lost };
     this.s.phase = 'arrival';
+    if (this.pending) return { kind: 'decision', decision: this.pending };
     return { kind: 'phase', phase: 'cruise' };
   }
 
@@ -140,7 +143,7 @@ export class Mission {
     const r = this.r;
     const t = r.target;
     if (!isSurface(r)) {
-      const p = t.orbit_capture_risk * this.penalty;
+      const p = t.orbit_capture_risk * this.penalty + (this.s.navError ? 0.4 : 0);
       if (this.rng() < p) return this.lose('capture');
       this.log('orbit_ok', {}, 'good');
     } else {
@@ -151,15 +154,17 @@ export class Mission {
           apply: (id) => {
             const site = byId(t.sites, id);
             this.s.site = site;
-            this.s.siteMult = site.science_mult;
+            this.s.siteMult = (t.science_value || 1) * site.science_mult * (t.surface_science_mult || 1);
           },
         });
       }
-      const p = clamp(this.s.site.risk * this.penalty, 0, 0.95);
+      const p = clamp(this.s.site.risk * this.penalty + (this.s.navError ? 0.4 : 0), 0, 0.95);
       this.log('landing', { site: this.s.site, p }, 'info');
       if (this.rng() < p) return this.lose('landing');
       this.log('landing_ok', { site: this.s.site }, 'good');
     }
+    if (t.optical_mult && r.instruments.some((i) => i.optical)) this.fact('venus_clouds');
+    if (t.radiation_mult) this.fact('radiation');
     rollEvents(this, 'arrival');
     if (!this.s.alive) return { kind: 'lost', cause: this.s.lost };
     this.s.phase = 'ops';
@@ -197,6 +202,20 @@ export class Mission {
       }
     }
 
+    // Відбір зразка (зонд-пробовідбірник): у середині наукової програми
+    if (!done.sample) {
+      done.sample = true;
+      const arm = s.instruments.find((i) => i.def.id === 'sample_arm' && i.alive);
+      if (r.platform.sample_return && arm && !s.sampled && s.step >= Math.floor(t.ops_steps / 2)) {
+        s.sampled = true;
+        return this.ask({
+          id: 'sample',
+          options: [...t.sites.map((site) => ({ id: site.id, site })), { id: 'skip' }],
+          apply: (id) => this.takeSample(id),
+        });
+      }
+    }
+
     // Вузьке місце зв'язку: питаємо один раз за місію
     if (!done.prio) {
       done.prio = true;
@@ -230,7 +249,7 @@ export class Mission {
     const t = r.target;
     const stepDays = t.step_days;
     const d0 = s.step * stepDays;
-    const years = (t.flight_days + d0) / 365.25;
+    const years = (flightDays(r) + d0) / 365.25;
     const dist = earthDistanceAu(t, d0 + stepDays / 2);
     const solar = r.power.type === 'solar';
     const surface = isSurface(r);
@@ -242,9 +261,12 @@ export class Mission {
     const tele = { step: s.step, day: d0, dist, storm: s.storm > 0, conjunction: !!s.conjunctionNow };
 
     // Відмови приладів (до роботи на цьому кроці не впливають — впливають далі)
-    const aliveBefore = this.aliveInstruments;
+    const aliveBefore = this.aliveInstruments.filter((i) => i.id !== s.skipNext);
+    s.skipNext = null;
     const idealAlive = idealSciencePerStep(aliveBefore, r.goal, s.siteMult);
-    this.loss('failure', idealAll - idealAlive);
+    const idealNotDead = idealSciencePerStep(this.aliveInstruments, r.goal, s.siteMult);
+    this.loss('failure', idealAll - idealNotDead);
+    this.loss('skipped', idealNotDead - idealAlive);
 
     // Кроки, на яких наука неможлива
     const night = t.surface_night_kills_solar && surface && solar && s.step % 2 === 0;
@@ -282,18 +304,26 @@ export class Mission {
       if (this.rng() < pDie) { this.endStorm(); this.lose('storm'); return tele; }
     }
 
-    // Наука до урахування зв'язку
-    const opticalMult = s.storm > 0 ? 0.6 : 1;
+    // Наука до урахування зв'язку: хмари (Венера), буря (Марс), рухливість ровера
+    const cloudF = t.optical_mult ?? 1;
+    const stormF = s.storm > 0 ? 0.6 : 1;
+    const mob = r.platform.type === 'rover' ? s.mobility : 1;
+    let cloudLoss = 0; let stormLoss = 0; let mobLoss = 0;
     const base = aliveBefore.map((i) => {
       const w = weight(i, r.goal) * i.science_base * s.siteMult;
-      const env = (i.optical ? opticalMult : 1) * (r.platform.type === 'rover' ? s.mobility : 1);
-      return { i, ideal: w, env: w * env, worked: w * env * u, data: i.data_mbit_per_day * stepDays * u };
+      const c = i.optical ? cloudF : 1;
+      const st = i.optical ? stormF : 1;
+      cloudLoss += w * (1 - c);
+      stormLoss += w * c * (1 - st);
+      mobLoss += w * c * st * (1 - mob);
+      const env = w * c * st * mob;
+      return { i, ideal: w, env, worked: env * u, data: i.data_mbit_per_day * stepDays * u };
     });
     const envSum = base.reduce((a, b) => a + b.env, 0);
     const workedSum = base.reduce((a, b) => a + b.worked, 0);
-    const stormLoss = base.reduce((a, b) => a + b.ideal * ((b.i.optical ? 1 - opticalMult : 0)), 0);
-    this.loss('storm', s.storm > 0 ? stormLoss : 0);
-    this.loss('mobility', idealAlive - envSum - (s.storm > 0 ? stormLoss : 0));
+    this.loss('clouds', cloudLoss);
+    this.loss('storm', stormLoss);
+    this.loss('mobility', mobLoss);
     this.loss(s.storm > 0 && solar && surface ? 'storm' : 'power', envSum - workedSum);
 
     // Зв'язок: скільки даних встигнемо передати
@@ -323,19 +353,42 @@ export class Mission {
     // Відмови після кроку
     const steps = s.steps;
     s.instruments.forEach((x) => {
-      if (x.alive && this.rng() < stepFailProb(x.def.reliability, steps, this.penalty)) {
+      if (x.alive && this.rng() < stepFailProb(x.def.reliability, steps, this.penalty * this.radPenalty)) {
         x.alive = false;
         this.log('instrument_fail', { instr: x.def }, 'bad');
         if (!s.happened.has('fact_instr')) { s.happened.add('fact_instr'); this.fact('instrument_fail'); }
       }
     });
-    if (this.rng() < stepFailProb(s.antenna.reliability, steps, this.penalty)) this.failAntenna('wear');
-    if (s.alive && this.rng() < stepFailProb(r.platform.reliability, steps, this.penalty)) { this.lose('platform'); return tele; }
+    if (this.rng() < stepFailProb(s.antenna.reliability, steps, this.penalty * this.radPenalty)) this.failAntenna('wear');
+    if (s.alive && this.rng() < stepFailProb(r.platform.reliability, steps, this.penalty * this.radPenalty)) { this.lose('platform'); return tele; }
 
     if (s.alive) rollEvents(this, 'ops');
     if (s.alive && surface && solar) s.dust = Math.max(0.2, s.dust * (1 - t.dust_per_step));
     this.endStorm();
     return tele;
+  }
+
+  /** Торкнутися астероїда і взяти зразок. Зразок досліджують на Землі — це найцінніша наука. */
+  takeSample(id) {
+    const s = this.s;
+    if (id === 'skip') { this.log('sample_skip', {}, 'info'); return; }
+    const site = byId(this.r.target.sites, id);
+    const arm = s.instruments.find((i) => i.def.id === 'sample_arm');
+    const p = clamp(site.risk * this.penalty, 0, 0.9);
+    this.log('touch', { site, p }, 'info');
+    if (this.rng() < p) {
+      arm.alive = false;
+      this.log('touch_fail', { site }, 'bad');
+      this.fact('touch_fail');
+      if (this.rng() < 0.25) this.lose('touch');
+      return;
+    }
+    const bonus = 12 * weight(arm.def, this.r.goal) * site.science_mult;
+    s.science += bonus;
+    s.sampleScience = bonus;
+    s.sampleSite = site;
+    this.log('touch_ok', { site, bonus }, 'good');
+    this.fact('sample');
   }
 
   endStorm() {
@@ -378,6 +431,12 @@ export class Mission {
 
   doEnd() {
     const s = this.s;
+    if (s.alive && isSurface(this.r) && this.r.target.surface_ops_steps) {
+      s.phase = 'done';
+      this.log('heat_end', {}, 'info');
+      this.fact('venus_heat');
+      return { kind: 'done' };
+    }
     if (!s.extended && s.alive) {
       s.extended = true;
       const p = 0.4 + (this.r.power.type === 'rtg' ? 0.2 : 0) + (s.instruments.every((i) => i.alive) ? 0.1 : 0);
@@ -433,6 +492,9 @@ export function defaultPolicy(decision, m) {
     case 'storm': return 'sleep';
     case 'conjunction': return 'upload';
     case 'priority': return 'science';
+    case 'units': return '4.45';
+    case 'wheel': return 'backwards';
+    case 'sample': return [...decision.options].filter((o) => o.site).sort((a, b) => a.site.risk - b.site.risk)[0].id;
     default: return decision.options[0].id;
   }
 }

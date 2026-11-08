@@ -77,7 +77,19 @@
         "lon": 77.5
       }
     ],
-    "source": "https://science.nasa.gov/mars/facts/"
+    "source": "https://science.nasa.gov/mars/facts/",
+    "visual": {
+      "light": "#e08a5c",
+      "base": "#c1572e",
+      "dark": "#5e2111",
+      "features": "mars"
+    },
+    "window": {
+      "ref": "2026-11-15",
+      "synodic_days": 780,
+      "sigma_days": 45,
+      "note": "Наступні вікна до Марса: кінець 2026 і кінець 2028 – початок 2029 року."
+    }
   },
   {
     "id": "moon",
@@ -140,6 +152,223 @@
         "lon": 0
       }
     ],
-    "source": "https://science.nasa.gov/moon/facts/"
+    "source": "https://science.nasa.gov/moon/facts/",
+    "visual": {
+      "light": "#e4e4e2",
+      "base": "#a7a8aa",
+      "dark": "#4f5257",
+      "features": "craters"
+    }
+  },
+  {
+    "id": "asteroid",
+    "name": {
+      "uk": "Астероїд Бенну",
+      "en": "Asteroid Bennu"
+    },
+    "summary": {
+      "uk": "Купа уламків завширшки ~500 м. Гравітація майже нульова, тому сісти не можна, лише торкнутися й узяти зразок. Політ ~2 роки.",
+      "en": "A ~500 m rubble pile. Near-zero gravity: touch-and-go sampling only. ~2 year cruise."
+    },
+    "sun_au": 1.13,
+    "orbit_au": 1.126,
+    "period_days": 437,
+    "theta0_deg": 40,
+    "k_capacity": 0.2,
+    "dv_capture_kms": 0.6,
+    "landing": {
+      "type": "none",
+      "cost_musd": 0
+    },
+    "allowed_platform_types": [
+      "orbiter"
+    ],
+    "orbit_solar_factor": 0.95,
+    "surface_solar_factor": 0,
+    "dust_per_step": 0,
+    "dust_storm_prob": 0,
+    "surface_night_kills_solar": false,
+    "flight_days": 800,
+    "step_days": 30,
+    "ops_steps": 10,
+    "has_relay": false,
+    "orbit_capture_risk": 0.05,
+    "sites": [
+      {
+        "id": "osprey",
+        "name": {
+          "uk": "Кратер Оспрі",
+          "en": "Osprey"
+        },
+        "risk": 0.08,
+        "science_mult": 1.2,
+        "note": {
+          "uk": "Запасний майданчик OSIRIS-REx. Менше великих каменів.",
+          "en": "OSIRIS-REx backup site."
+        }
+      },
+      {
+        "id": "nightingale",
+        "name": {
+          "uk": "Кратер Найтінгейл",
+          "en": "Nightingale"
+        },
+        "risk": 0.15,
+        "science_mult": 1.6,
+        "note": {
+          "uk": "Тут OSIRIS-REx узяв зразок у 2020 році. Найсвіжіший ґрунт, але навколо брили розміром з будинок.",
+          "en": "OSIRIS-REx sampled here in 2020."
+        }
+      }
+    ],
+    "visual": {
+      "light": "#9c958c",
+      "base": "#5f5a54",
+      "dark": "#262422",
+      "features": "rubble"
+    },
+    "source": "https://science.nasa.gov/solar-system/asteroids/101955-bennu/",
+    "window": {
+      "ref": "2016-09-08",
+      "synodic_days": 2226,
+      "sigma_days": 90,
+      "note": "OSIRIS-REx стартував у вересні 2016 року. Вікна до Бенну рідкісні: раз на ~6 років."
+    }
+  },
+  {
+    "id": "venus",
+    "name": {
+      "uk": "Венера",
+      "en": "Venus"
+    },
+    "summary": {
+      "uk": "Найближча планета, вкрита хмарами сірчаної кислоти. На поверхні 465 °C і тиск як на глибині 900 м в океані. Камери з орбіти бачать лише хмари.",
+      "en": "Cloud-covered, 465 °C surface. Orbital cameras see only clouds."
+    },
+    "sun_au": 0.72,
+    "orbit_au": 0.723,
+    "period_days": 225,
+    "theta0_deg": 40,
+    "k_capacity": 0.24,
+    "dv_capture_kms": 1.0,
+    "landing": {
+      "type": "aeroshell",
+      "edl_factor": 1.3,
+      "cost_musd": 250
+    },
+    "allowed_platform_types": [
+      "orbiter",
+      "lander"
+    ],
+    "optical_mult": 0.2,
+    "surface_ops_steps": 1,
+    "surface_science_mult": 4,
+    "orbit_solar_factor": 0.6,
+    "surface_solar_factor": 0.05,
+    "dust_per_step": 0,
+    "dust_storm_prob": 0,
+    "surface_night_kills_solar": false,
+    "flight_days": 150,
+    "step_days": 30,
+    "ops_steps": 10,
+    "has_relay": false,
+    "cruise_ops_musd": 10,
+    "orbit_capture_risk": 0.03,
+    "sites": [
+      {
+        "id": "phoebe",
+        "name": {
+          "uk": "Область Феби",
+          "en": "Phoebe Regio"
+        },
+        "risk": 0.08,
+        "science_mult": 1.2,
+        "lat": -7.5,
+        "lon": -57,
+        "note": {
+          "uk": "Тут у 1982 році сіла «Венера-13» і працювала 127 хвилин.",
+          "en": "Venera 13 landed here in 1982."
+        }
+      },
+      {
+        "id": "alpha",
+        "name": {
+          "uk": "Область Альфа",
+          "en": "Alpha Regio"
+        },
+        "risk": 0.2,
+        "science_mult": 1.8,
+        "lat": -25,
+        "lon": 5,
+        "note": {
+          "uk": "Тесери — найдавніші породи Венери. Сюди планують відправити зонд DAVINCI. Рельєф складний.",
+          "en": "Ancient tesserae, DAVINCI target."
+        }
+      }
+    ],
+    "visual": {
+      "light": "#f7e3b0",
+      "base": "#d9b56a",
+      "dark": "#7a5a24",
+      "features": "clouds"
+    },
+    "source": "https://science.nasa.gov/venus/facts/",
+    "window": {
+      "ref": "2026-06-01",
+      "synodic_days": 584,
+      "sigma_days": 35,
+      "note": "Вікна до Венери відкриваються раз на ~19 місяців."
+    }
+  },
+  {
+    "id": "europa",
+    "name": {
+      "uk": "Європа",
+      "en": "Europa"
+    },
+    "summary": {
+      "uk": "Супутник Юпітера з океаном під кригою — одне з найімовірніших місць для життя. Політ ~5,5 року, сигнал іде до 53 хв, Сонце дає 4% земного світла, а радіація Юпітера руйнує електроніку.",
+      "en": "Jupiter's moon with an ocean under the ice. 5.5-year cruise, harsh radiation."
+    },
+    "sun_au": 5.2,
+    "orbit_au": 5.2,
+    "period_days": 4333,
+    "theta0_deg": 60,
+    "k_capacity": 0.07,
+    "dv_capture_kms": 0.9,
+    "landing": {
+      "type": "none",
+      "cost_musd": 0
+    },
+    "allowed_platform_types": [
+      "orbiter"
+    ],
+    "radiation_mult": 3,
+    "orbit_solar_factor": 0.95,
+    "surface_solar_factor": 0,
+    "dust_per_step": 0,
+    "dust_storm_prob": 0,
+    "surface_night_kills_solar": false,
+    "flight_days": 2000,
+    "step_days": 60,
+    "ops_steps": 10,
+    "has_relay": false,
+    "cruise_ops_musd": 200,
+    "orbit_capture_risk": 0.05,
+    "sites": [],
+    "visual": {
+      "light": "#f4efe6",
+      "base": "#d6c9b4",
+      "dark": "#8a5a3c",
+      "features": "ice"
+    },
+    "source": "https://science.nasa.gov/jupiter/moons/europa/",
+    "science_value": 2.2,
+    "window": {
+      "ref": "2026-12-01",
+      "synodic_days": 399,
+      "sigma_days": 30,
+      "note": "До Юпітера вікна щороку, але з гравітаційними маневрами біля Землі й Марса."
+    }
   }
 ]

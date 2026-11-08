@@ -1,11 +1,85 @@
 {
   "_note": "Покладіть файли в папку img/ і заповніть credit та url з images.nasa.gov або photojournal.jpl.nasa.gov. Якщо файлу немає, гра покаже посилання на пошук.",
   "items": [
-    { "target": "mars", "platform_type": "orbiter", "file": "img/mars_orbit.jpg", "caption": "Знімок поверхні Марса з орбіти", "credit": "NASA/JPL-Caltech/University of Arizona", "search": "https://images.nasa.gov/search?q=HiRISE" },
-    { "target": "mars", "platform_type": "lander", "file": "img/mars_lander.jpg", "caption": "Поверхня Марса біля посадкової станції", "credit": "NASA/JPL-Caltech", "search": "https://images.nasa.gov/search?q=InSight%20lander" },
-    { "target": "mars", "platform_type": "rover", "file": "img/mars_rover.jpg", "caption": "Панорама марсохода", "credit": "NASA/JPL-Caltech/ASU/MSSS", "search": "https://images.nasa.gov/search?q=Perseverance%20panorama" },
-    { "target": "moon", "platform_type": "orbiter", "file": "img/moon_orbit.jpg", "caption": "Місяць з орбіти LRO", "credit": "NASA/GSFC/Arizona State University", "search": "https://images.nasa.gov/search?q=LRO" },
-    { "target": "moon", "platform_type": "lander", "file": "img/moon_surface.jpg", "caption": "Поверхня Місяця", "credit": "NASA", "search": "https://images.nasa.gov/search?q=lunar%20surface" },
-    { "target": "moon", "platform_type": "rover", "file": "img/moon_surface.jpg", "caption": "Поверхня Місяця", "credit": "NASA", "search": "https://images.nasa.gov/search?q=lunar%20rover" }
+    {
+      "target": "mars",
+      "platform_type": "orbiter",
+      "file": "img/mars_orbit.jpg",
+      "caption": "Знімок поверхні Марса з орбіти",
+      "credit": "NASA/JPL-Caltech/University of Arizona",
+      "search": "https://images.nasa.gov/search?q=HiRISE"
+    },
+    {
+      "target": "mars",
+      "platform_type": "lander",
+      "file": "img/mars_lander.jpg",
+      "caption": "Поверхня Марса біля посадкової станції",
+      "credit": "NASA/JPL-Caltech",
+      "search": "https://images.nasa.gov/search?q=InSight%20lander"
+    },
+    {
+      "target": "mars",
+      "platform_type": "rover",
+      "file": "img/mars_rover.jpg",
+      "caption": "Панорама марсохода",
+      "credit": "NASA/JPL-Caltech/ASU/MSSS",
+      "search": "https://images.nasa.gov/search?q=Perseverance%20panorama"
+    },
+    {
+      "target": "moon",
+      "platform_type": "orbiter",
+      "file": "img/moon_orbit.jpg",
+      "caption": "Місяць з орбіти LRO",
+      "credit": "NASA/GSFC/Arizona State University",
+      "search": "https://images.nasa.gov/search?q=LRO"
+    },
+    {
+      "target": "moon",
+      "platform_type": "lander",
+      "file": "img/moon_surface.jpg",
+      "caption": "Поверхня Місяця",
+      "credit": "NASA",
+      "search": "https://images.nasa.gov/search?q=lunar%20surface"
+    },
+    {
+      "target": "moon",
+      "platform_type": "rover",
+      "file": "img/moon_surface.jpg",
+      "caption": "Поверхня Місяця",
+      "credit": "NASA",
+      "search": "https://images.nasa.gov/search?q=lunar%20rover"
+    },
+    {
+      "target": "asteroid",
+      "platform_type": "orbiter",
+      "file": "img/bennu.jpg",
+      "caption": "Астероїд Бенну",
+      "credit": "NASA/Goddard/University of Arizona",
+      "search": "https://images.nasa.gov/search?q=Bennu"
+    },
+    {
+      "target": "venus",
+      "platform_type": "orbiter",
+      "file": "img/venus_radar.jpg",
+      "caption": "Радарна карта Венери",
+      "credit": "NASA/JPL",
+      "search": "https://images.nasa.gov/search?q=Magellan%20Venus"
+    },
+    {
+      "target": "venus",
+      "platform_type": "lander",
+      "file": "img/venus_surface.jpg",
+      "caption": "Поверхня Венери",
+      "credit": "NASA",
+      "search": "https://images.nasa.gov/search?q=Venus%20surface"
+    },
+    {
+      "target": "europa",
+      "platform_type": "orbiter",
+      "file": "img/europa.jpg",
+      "caption": "Крижана поверхня Європи",
+      "credit": "NASA/JPL-Caltech/SETI Institute",
+      "search": "https://images.nasa.gov/search?q=Europa"
+    }
   ]
 }

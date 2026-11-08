@@ -1,65 +1,104 @@
 [
   {
     "id": "falcon9",
-    "name": { "uk": "Falcon 9", "en": "Falcon 9" },
+    "name": {
+      "uk": "Falcon 9",
+      "en": "Falcon 9"
+    },
     "maker": "SpaceX",
     "leo_kg": 22800,
-    "to_kg": { "mars": 4020 },
+    "to_kg": {
+      "mars": 4020
+    },
     "cost_musd": 90,
     "flights": 550,
     "successes": 548,
-    "note": { "uk": "Найдешевша на кілограм. Числа для варіанту без повернення першого ступеня.", "en": "Cheapest per kg. Expendable figures." },
+    "note": {
+      "uk": "Найдешевша на кілограм. Числа для варіанту без повернення першого ступеня.",
+      "en": "Cheapest per kg. Expendable figures."
+    },
     "source": "https://www.spacex.com/vehicles/falcon-9/",
     "simplified": "кількість польотів орієнтовна на 2026 рік; ціна для NASA вища за прайс"
   },
   {
     "id": "falcon_heavy",
-    "name": { "uk": "Falcon Heavy", "en": "Falcon Heavy" },
+    "name": {
+      "uk": "Falcon Heavy",
+      "en": "Falcon Heavy"
+    },
     "maker": "SpaceX",
     "leo_kg": 63800,
-    "to_kg": { "mars": 16800 },
+    "to_kg": {
+      "mars": 16800,
+      "europa": 6100
+    },
     "cost_musd": 150,
     "flights": 11,
     "successes": 11,
-    "note": { "uk": "Запускала Psyche і Europa Clipper. Польотів поки мало.", "en": "Launched Psyche and Europa Clipper. Few flights so far." },
+    "note": {
+      "uk": "Запускала Psyche і Europa Clipper (~6 т до Юпітера з гравітаційними маневрами). Польотів поки мало.",
+      "en": "Launched Psyche and Europa Clipper. Few flights so far."
+    },
     "source": "https://www.spacex.com/vehicles/falcon-heavy/",
     "simplified": "ціна — середнє з контрактів NASA"
   },
   {
     "id": "atlas_v_541",
-    "name": { "uk": "Atlas V 541", "en": "Atlas V 541" },
+    "name": {
+      "uk": "Atlas V 541",
+      "en": "Atlas V 541"
+    },
     "maker": "United Launch Alliance",
     "leo_kg": 17500,
-    "to_kg": { "mars": 4050 },
+    "to_kg": {
+      "mars": 4050
+    },
     "cost_musd": 200,
     "flights": 100,
     "successes": 99,
-    "note": { "uk": "Запускала Curiosity і Perseverance. Дуже надійна, але дорога і знімається з експлуатації.", "en": "Launched Curiosity and Perseverance. Very reliable, expensive, being retired." },
+    "note": {
+      "uk": "Запускала Curiosity і Perseverance. Дуже надійна, але дорога і знімається з експлуатації.",
+      "en": "Launched Curiosity and Perseverance. Very reliable, expensive, being retired."
+    },
     "source": "https://www.ulalaunch.com/rockets/atlas-v",
     "simplified": "один частковий збій (2007) зараховано як невдачу"
   },
   {
     "id": "vulcan",
-    "name": { "uk": "Vulcan Centaur", "en": "Vulcan Centaur" },
+    "name": {
+      "uk": "Vulcan Centaur",
+      "en": "Vulcan Centaur"
+    },
     "maker": "United Launch Alliance",
     "leo_kg": 27200,
     "cost_musd": 150,
     "flights": 5,
     "successes": 5,
-    "note": { "uk": "Нова ракета. Усі польоти вдалі, але їх мало, тому довіра нижча.", "en": "New rocket: all flights succeeded, but few of them." },
+    "note": {
+      "uk": "Нова ракета. Усі польоти вдалі, але їх мало, тому довіра нижча.",
+      "en": "New rocket: all flights succeeded, but few of them."
+    },
     "source": "https://www.ulalaunch.com/rockets/vulcan-centaur",
     "simplified": "до Марса — оцінка через k цілі"
   },
   {
     "id": "antares",
-    "name": { "uk": "Antares (історична)", "en": "Antares (historic)" },
+    "name": {
+      "uk": "Antares (історична)",
+      "en": "Antares (historic)"
+    },
     "maker": "Northrop Grumman / Південне",
     "leo_kg": 8000,
     "cost_musd": 85,
     "flights": 18,
     "successes": 17,
-    "max_target": ["moon"],
-    "note": { "uk": "Перший ступінь розробили й виготовили в Україні (КБ «Південне», «Південмаш»). У грі — лише для Місяця.", "en": "First stage built in Ukraine (Pivdenne/Pivdenmash). Moon only in this game." },
+    "max_target": [
+      "moon"
+    ],
+    "note": {
+      "uk": "Перший ступінь розробили й виготовили в Україні (КБ «Південне», «Південмаш»). У грі — лише для Місяця.",
+      "en": "First stage built in Ukraine (Pivdenne/Pivdenmash). Moon only in this game."
+    },
     "source": "https://www.northropgrumman.com/space/antares-rocket",
     "simplified": "версія 230 знята з експлуатації у 2023; політ до Місяця — ігрове припущення"
   }

@@ -1,6 +1,7 @@
 // «Про дані»: кожен компонент, його прототип, спрощення і джерело.
 import { t, esc, fmt } from './dom.js';
 import { rocketReliability } from '../calc.js';
+import { balanceSvg } from './balance.js';
 
 const link = (url) => (url ? `<a href="${esc(url)}" target="_blank" rel="noopener">джерело</a>` : '');
 
@@ -13,6 +14,12 @@ export function renderAbout(root, app) {
     <p>Кожне число в грі має реальний прототип. Ми округлюємо числа, але зберігаємо співвідношення:
     скільки маси ракета везе до цілі, як слабшає Сонце з відстанню, як падає швидкість зв'язку.
     Значення приладів — ігрові, близькі до порядку величини прототипів.</p>
+
+    ${d.balance?.n ? `<h3>Перевірка балансу</h3>
+    <p>Ми згенерували ${fmt(d.balance.n)} випадкових конструкцій, які проходять усі ліміти, і зіграли їх тією самою симуляцією, що й у грі.
+    Частка успіху: ${d.balance.classes.map((c) => `${t(d.mission.classes.find((x) => x.id === c.id)?.name || c.id)} — ${Math.round(c.success * 100)}%`).join(', ')}.
+    Найкращі збірки летять до різних цілей і з різними приладами: ідеальної конструкції немає.</p>
+    <div class="balance-chart">${balanceSvg(d.balance, { ink: 'var(--ink)', muted: 'var(--muted)', bar: 'var(--mass)', bad: 'var(--bad)' })}</div>` : ''}
 
     <h3>Головні спрощення</h3>
     <ul>
