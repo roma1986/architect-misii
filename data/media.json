@@ -6,45 +6,60 @@
       "platform_type": "orbiter",
       "file": "img/mars_orbit.jpg",
       "caption": "Знімок поверхні Марса з орбіти",
-      "credit": "NASA/JPL-Caltech/University of Arizona",
+      "credit": "NASA/JPL/University of Arizona",
       "search": "https://images.nasa.gov/search?q=HiRISE",
-      "query": "HiRISE"
+      "query": "HiRISE",
+      "nasa_id": "PIA08060",
+      "title": "First HiRISE Image of Mars",
+      "url": "https://images.nasa.gov/details/PIA08060"
     },
     {
       "target": "mars",
       "platform_type": "lander",
       "file": "img/mars_lander.jpg",
       "caption": "Поверхня Марса біля посадкової станції",
-      "credit": "NASA/JPL-Caltech",
+      "credit": "NASA/JPL-Caltech/Lockheed Martin",
       "search": "https://images.nasa.gov/search?q=InSight%20lander",
-      "query": "InSight lander"
+      "query": "InSight lander",
+      "nasa_id": "PIA22205",
+      "title": "InSight Lander Solar Array Test",
+      "url": "https://images.nasa.gov/details/PIA22205"
     },
     {
       "target": "mars",
       "platform_type": "rover",
       "file": "img/mars_rover.jpg",
       "caption": "Панорама марсохода",
-      "credit": "NASA/JPL-Caltech/ASU/MSSS",
+      "credit": "NASA/JPL-Caltech",
       "search": "https://images.nasa.gov/search?q=Perseverance%20panorama",
-      "query": "Perseverance panorama"
+      "query": "Perseverance panorama",
+      "nasa_id": "PIA24422",
+      "title": "Perseverance Navcams 360-Degree Panorama",
+      "url": "https://images.nasa.gov/details/PIA24422"
     },
     {
       "target": "moon",
       "platform_type": "orbiter",
       "file": "img/moon_orbit.jpg",
       "caption": "Місяць з орбіти LRO",
-      "credit": "NASA/GSFC/Arizona State University",
+      "credit": "NASA/JPL",
       "search": "https://images.nasa.gov/search?q=LRO",
-      "query": "LRO"
+      "query": "LRO",
+      "nasa_id": "PIA12086",
+      "title": "Loading Lunar Reconnaissance Orbiter LRO in the Thermal Vacuum Chamber",
+      "url": "https://images.nasa.gov/details/PIA12086"
     },
     {
       "target": "moon",
       "platform_type": "lander",
       "file": "img/moon_surface.jpg",
       "caption": "Поверхня Місяця",
-      "credit": "NASA",
+      "credit": "NASA/JSC",
       "search": "https://images.nasa.gov/search?q=lunar%20surface",
-      "query": "lunar surface"
+      "query": "lunar surface",
+      "nasa_id": "as12-46-6813",
+      "title": "Astronaut Alan Bean deploys Lunar Surface Magnetometer on lunar surface",
+      "url": "https://images.nasa.gov/details/as12-46-6813"
     },
     {
       "target": "moon",
@@ -60,9 +75,12 @@
       "platform_type": "orbiter",
       "file": "img/bennu.jpg",
       "caption": "Астероїд Бенну",
-      "credit": "NASA/Goddard/University of Arizona",
+      "credit": "NASA/GSFC",
       "search": "https://images.nasa.gov/search?q=Bennu",
-      "query": "Bennu"
+      "query": "Bennu",
+      "nasa_id": "GSFC_20171208_Archive_e000894",
+      "title": "BENNU’S JOURNEY",
+      "url": "https://images.nasa.gov/details/GSFC_20171208_Archive_e000894"
     },
     {
       "target": "venus",
@@ -71,25 +89,34 @@
       "caption": "Радарна карта Венери",
       "credit": "NASA/JPL",
       "search": "https://images.nasa.gov/search?q=Magellan%20Venus",
-      "query": "Magellan Venus"
+      "query": "Magellan Venus",
+      "nasa_id": "PIA00207",
+      "title": "Venus - Magellan and Arecibo Comparison",
+      "url": "https://images.nasa.gov/details/PIA00207"
     },
     {
       "target": "venus",
       "platform_type": "lander",
       "file": "img/venus_surface.jpg",
       "caption": "Поверхня Венери",
-      "credit": "NASA",
+      "credit": "NASA/JPL",
       "search": "https://images.nasa.gov/search?q=Venus%20surface",
-      "query": "Venus surface"
+      "query": "Venus surface",
+      "nasa_id": "PIA00256",
+      "title": "Venus - Simple Cylindrical Map of Surface Eastern Half",
+      "url": "https://images.nasa.gov/details/PIA00256"
     },
     {
       "target": "europa",
       "platform_type": "orbiter",
       "file": "img/europa.jpg",
       "caption": "Крижана поверхня Європи",
-      "credit": "NASA/JPL-Caltech/SETI Institute",
+      "credit": "NASA/Johns Hopkins University Applied Physics Laboratory/Southwest   Research Institute",
       "search": "https://images.nasa.gov/search?q=Europa",
-      "query": "Europa"
+      "query": "Europa",
+      "nasa_id": "PIA09246",
+      "title": "Europa",
+      "url": "https://images.nasa.gov/details/PIA09246"
     }
   ],
   "maps": [
@@ -99,7 +126,11 @@
       "query": "Mars global mosaic",
       "aspect": 2,
       "caption": "Глобальна мозаїка Марса",
-      "search": "https://images.nasa.gov/search?q=Mars%20global%20mosaic"
+      "search": "https://images.nasa.gov/search?q=Mars%20global%20mosaic",
+      "nasa_id": "PIA16454",
+      "title": "Regional Dust Storm Weakening, Nov. 25, 2012",
+      "credit": "NASA/JPL-Caltech/MSSS",
+      "url": "https://images.nasa.gov/details/PIA16454"
     },
     {
       "target": "moon",
