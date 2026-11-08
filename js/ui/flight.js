@@ -100,6 +100,7 @@ function decisionPanel(m) {
 
 function siteMap(m) {
   const sites = m.r.target.sites;
+  const map = (m.data.media.maps || []).find((x) => x.target === m.r.target.id);
   const isMars = m.r.target.id === 'mars';
   const W = 400; const H = 200;
   const X = (lon) => ((lon + 180) / 360) * W;   // проста рівнопроміжна проєкція
@@ -110,6 +111,8 @@ function siteMap(m) {
   return `<svg class="sitemap" viewBox="0 0 ${W} ${H}" role="img" aria-label="Схема майданчиків посадки за реальними координатами">
     <defs><linearGradient id="shade" x1="0" x2="0" y1="0" y2="1"><stop offset="0" stop-color="#000" stop-opacity=".3"/><stop offset=".5" stop-color="#000" stop-opacity="0"/><stop offset="1" stop-color="#000" stop-opacity=".4"/></linearGradient></defs>
     <rect width="${W}" height="${H}" rx="8" fill="${isMars ? '#a65a35' : '#7d838e'}"/>
+    ${map ? `<clipPath id="mapclip"><rect width="${W}" height="${H}" rx="8"/></clipPath>
+    <image href="${esc(map.file)}" width="${W}" height="${H}" preserveAspectRatio="none" clip-path="url(#mapclip)"/>` : ''}
     <rect width="${W}" height="${H}" rx="8" fill="url(#shade)"/>
     <g stroke="#fff" stroke-opacity=".18" stroke-width="1">${grid.join('')}</g>
     ${sites.map((s) => {
@@ -117,10 +120,10 @@ function siteMap(m) {
       const left = x > W * 0.7;
       return `<g><circle cx="${x}" cy="${y}" r="${rr}" fill="#fff" fill-opacity=".2" stroke="#fff" stroke-width="1.5"/>
         <circle cx="${x}" cy="${y}" r="2.5" fill="#fff"/>
-        <text x="${left ? x - rr - 5 : x + rr + 5}" y="${y + 4}" fill="#fff" font-size="12" text-anchor="${left ? 'end' : 'start'}" font-family="IBM Plex Sans, sans-serif">${t(s.name)}</text></g>`;
+        <text x="${left ? x - rr - 5 : x + rr + 5}" y="${y + 4}" fill="#fff" stroke="#000" stroke-opacity=".55" stroke-width="3" paint-order="stroke" font-size="12" text-anchor="${left ? 'end' : 'start'}" font-family="IBM Plex Sans, sans-serif">${t(s.name)}</text></g>`;
     }).join('')}
   </svg>
-  <p class="small muted" style="text-align:center;margin-top:.3rem">Реальні координати, сітка через 30° і 60°. Розмір кола — ризик посадки.</p>`;
+  <p class="small muted" style="text-align:center;margin-top:.3rem">Реальні координати, сітка через 30° і 60°. Розмір кола — ризик посадки.${map?.credit ? ` Карта: ${esc(map.credit)}.` : ''}</p>`;
 }
 
 function telemetry(m, last) {

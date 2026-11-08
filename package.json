@@ -8,7 +8,9 @@
     "start": "python3 -m http.server 8000",
     "check": "node tools/check-data.js",
     "balance": "node tools/montecarlo.js 10000",
-    "build:single": "node tools/build-single.mjs"
+    "build:single": "node tools/build-single.mjs",
+    "images": "node tools/fetch-nasa-images.mjs",
+    "checklist": "node tools/sources-checklist.mjs"
   },
   "devDependencies": {
     "esbuild": "0.24.2"

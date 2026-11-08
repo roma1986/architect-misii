@@ -5,7 +5,7 @@ import {
   resolveBuild, checkBuild, capacityTo, rocketReliability, fits, weight, powerProduced,
   downlinkPerDay, earthDistanceAu, sunShare, solarFactor, isSurface, DESIGN_MARGIN, platformFits, bestLaunch, launchYear,
 } from '../calc.js';
-import { patchSvg } from './visuals.js';
+import { patchSvg, craftSvg } from './visuals.js';
 
 const GAUGES = [
   { key: 'budget', name: 'Бюджет', color: 'var(--budget)' },
@@ -145,6 +145,7 @@ export function render(root, app) {
           ${patchSvg({ ...r, seed: app.seed, year: launchYear(r) }, 104)}
           <div><h2>Готовність місії</h2><p class="small muted">Емблема змінюється разом з апаратом: зірки — це прилади.</p></div>
         </div>
+        <figure class="craft-wrap">${craftSvg(r, r.platform ? `Суха маса ${fmt(c.mass.dry)} кг · на старті ${fmt(c.mass.launch)} кг` : '')}</figure>
         ${GAUGES.map((g) => gauge(g, c.bars[g.key], r, c)).join('')}
         ${massBar(c)}
         <ul class="issues">

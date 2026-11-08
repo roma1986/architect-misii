@@ -1,5 +1,5 @@
 {
-  "_note": "Покладіть файли в папку img/ і заповніть credit та url з images.nasa.gov або photojournal.jpl.nasa.gov. Якщо файлу немає, гра покаже посилання на пошук.",
+  "_note": "Фото й карти завантажує команда: node tools/fetch-nasa-images.mjs (потрібен інтернет). Щоб замінити картинку, впишіть nasa_id з images.nasa.gov і запустіть скрипт з --force. Карти мають бути глобальними (2:1, рівнопроміжна проєкція).",
   "items": [
     {
       "target": "mars",
@@ -7,7 +7,8 @@
       "file": "img/mars_orbit.jpg",
       "caption": "Знімок поверхні Марса з орбіти",
       "credit": "NASA/JPL-Caltech/University of Arizona",
-      "search": "https://images.nasa.gov/search?q=HiRISE"
+      "search": "https://images.nasa.gov/search?q=HiRISE",
+      "query": "HiRISE"
     },
     {
       "target": "mars",
@@ -15,7 +16,8 @@
       "file": "img/mars_lander.jpg",
       "caption": "Поверхня Марса біля посадкової станції",
       "credit": "NASA/JPL-Caltech",
-      "search": "https://images.nasa.gov/search?q=InSight%20lander"
+      "search": "https://images.nasa.gov/search?q=InSight%20lander",
+      "query": "InSight lander"
     },
     {
       "target": "mars",
@@ -23,7 +25,8 @@
       "file": "img/mars_rover.jpg",
       "caption": "Панорама марсохода",
       "credit": "NASA/JPL-Caltech/ASU/MSSS",
-      "search": "https://images.nasa.gov/search?q=Perseverance%20panorama"
+      "search": "https://images.nasa.gov/search?q=Perseverance%20panorama",
+      "query": "Perseverance panorama"
     },
     {
       "target": "moon",
@@ -31,7 +34,8 @@
       "file": "img/moon_orbit.jpg",
       "caption": "Місяць з орбіти LRO",
       "credit": "NASA/GSFC/Arizona State University",
-      "search": "https://images.nasa.gov/search?q=LRO"
+      "search": "https://images.nasa.gov/search?q=LRO",
+      "query": "LRO"
     },
     {
       "target": "moon",
@@ -39,7 +43,8 @@
       "file": "img/moon_surface.jpg",
       "caption": "Поверхня Місяця",
       "credit": "NASA",
-      "search": "https://images.nasa.gov/search?q=lunar%20surface"
+      "search": "https://images.nasa.gov/search?q=lunar%20surface",
+      "query": "lunar surface"
     },
     {
       "target": "moon",
@@ -47,7 +52,8 @@
       "file": "img/moon_surface.jpg",
       "caption": "Поверхня Місяця",
       "credit": "NASA",
-      "search": "https://images.nasa.gov/search?q=lunar%20rover"
+      "search": "https://images.nasa.gov/search?q=lunar%20rover",
+      "query": "lunar rover"
     },
     {
       "target": "asteroid",
@@ -55,7 +61,8 @@
       "file": "img/bennu.jpg",
       "caption": "Астероїд Бенну",
       "credit": "NASA/Goddard/University of Arizona",
-      "search": "https://images.nasa.gov/search?q=Bennu"
+      "search": "https://images.nasa.gov/search?q=Bennu",
+      "query": "Bennu"
     },
     {
       "target": "venus",
@@ -63,7 +70,8 @@
       "file": "img/venus_radar.jpg",
       "caption": "Радарна карта Венери",
       "credit": "NASA/JPL",
-      "search": "https://images.nasa.gov/search?q=Magellan%20Venus"
+      "search": "https://images.nasa.gov/search?q=Magellan%20Venus",
+      "query": "Magellan Venus"
     },
     {
       "target": "venus",
@@ -71,7 +79,8 @@
       "file": "img/venus_surface.jpg",
       "caption": "Поверхня Венери",
       "credit": "NASA",
-      "search": "https://images.nasa.gov/search?q=Venus%20surface"
+      "search": "https://images.nasa.gov/search?q=Venus%20surface",
+      "query": "Venus surface"
     },
     {
       "target": "europa",
@@ -79,7 +88,34 @@
       "file": "img/europa.jpg",
       "caption": "Крижана поверхня Європи",
       "credit": "NASA/JPL-Caltech/SETI Institute",
-      "search": "https://images.nasa.gov/search?q=Europa"
+      "search": "https://images.nasa.gov/search?q=Europa",
+      "query": "Europa"
+    }
+  ],
+  "maps": [
+    {
+      "target": "mars",
+      "file": "img/map_mars.jpg",
+      "query": "Mars global mosaic",
+      "aspect": 2,
+      "caption": "Глобальна мозаїка Марса",
+      "search": "https://images.nasa.gov/search?q=Mars%20global%20mosaic"
+    },
+    {
+      "target": "moon",
+      "file": "img/map_moon.jpg",
+      "query": "Moon global mosaic LRO",
+      "aspect": 2,
+      "caption": "Глобальна мозаїка Місяця",
+      "search": "https://images.nasa.gov/search?q=Moon%20global%20mosaic"
+    },
+    {
+      "target": "venus",
+      "file": "img/map_venus.jpg",
+      "query": "Venus Magellan global map",
+      "aspect": 2,
+      "caption": "Радарна карта Венери (Magellan)",
+      "search": "https://images.nasa.gov/search?q=Venus%20Magellan%20map"
     }
   ]
 }

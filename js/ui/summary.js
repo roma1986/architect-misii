@@ -109,7 +109,7 @@ function photo(media, m) {
   return `<section class="panel"><h2>Знімок з місії</h2>
     <figure class="photo">
       ${media ? `<img src="${esc(media.file)}" alt="${esc(media.caption)}" loading="lazy">` : placeholder(media)}
-      ${media ? `<figcaption>${esc(media.caption)}. Фото: ${esc(media.credit)}. Справжній знімок NASA, подібний до того, що зробив би ваш апарат.</figcaption>` : ''}
+      ${media ? `<figcaption>${esc(media.title || media.caption)}. Фото: ${esc(media.credit)}${media.url ? ` (<a href="${esc(media.url)}" target="_blank" rel="noopener">NASA Image Library</a>)` : ''}. Справжній знімок NASA, подібний до того, що зробив би ваш апарат.</figcaption>` : ''}
     </figure></section>`;
 }
 

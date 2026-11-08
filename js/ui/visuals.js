@@ -167,3 +167,123 @@ export function countdown(done, sfx = null) {
   };
   tick();
 }
+
+// ---------- схема апарата в конструкторі ----------
+const PANEL_LEN = { solar_s: 34, solar_m: 56, solar_l: 78, solar_xl: 104 };
+const INSTR_COLOR = {
+  cam_hires: '#3556a8', panorama_cam: '#3556a8', ir_spectrometer: '#7b4ba6', laser_spectrometer: '#7b4ba6', mass_spectrometer: '#7b4ba6',
+  orbital_radar: '#2e7d5b', sar: '#2e7d5b', gpr: '#2e7d5b', neutron: '#b8790c', magnetometer: '#b8790c', lidar: '#c8352b',
+  seismometer: '#8a5a3c', weather: '#4a86d8', drill: '#566176', sample_arm: '#566176', moxie: '#c1572e',
+};
+let lastParts = new Set();
+
+/**
+ * Схема апарата, що «росте» з кожним вибором: корпус за типом платформи,
+ * панелі за площею, РІТЕГ, антена за розміром, прилади, резервування.
+ */
+export function craftSvg(r, massText = '') {
+  const parts = [];
+  const add = (key, svg, title = '') => parts.push({ key, svg: title ? `<g><title>${esc(title)}</title>${svg}</g>` : svg });
+  const p = r.platform;
+  const W = 300; const H = 170;
+  if (!p) {
+    return `<svg class="craft" viewBox="0 0 ${W} ${H}" role="img" aria-label="Апарат ще не зібрано">
+      <rect x="110" y="60" width="80" height="50" rx="4" fill="none" stroke="var(--line)" stroke-dasharray="5 4"/>
+      <text x="150" y="140" text-anchor="middle" font-size="12" fill="var(--muted)">Оберіть платформу</text></svg>`;
+  }
+  const foil = '#d4a84a'; const ink = 'var(--ink)';
+  const panelLen = r.power?.type === 'solar' ? PANEL_LEN[r.power.id] || 50 : 0;
+  const surface = p.type !== 'orbiter';
+  const groundY = 150;
+  let body; let deckY; let deckX; let deckW; let antX; let antY;
+
+  if (!surface) {
+    body = { x: 122, y: 58, w: 56, h: 46 };
+    add('body', `<rect x="${body.x}" y="${body.y}" width="${body.w}" height="${body.h}" rx="3" fill="${foil}" stroke="#8a6a24"/>
+      <path d="M${body.x} ${body.y + 15} H${body.x + body.w} M${body.x} ${body.y + 31} H${body.x + body.w}" stroke="#8a6a24" opacity=".5"/>`, tr(p.name));
+    deckX = body.x + 4; deckW = body.w - 8; deckY = body.y + body.h; antX = 150; antY = body.y;
+    if (panelLen) {
+      const ph = 22; const y = body.y + body.h / 2 - ph / 2;
+      const wing = (x, dir) => `<line x1="${dir > 0 ? body.x + body.w : body.x}" y1="${y + ph / 2}" x2="${x}" y2="${y + ph / 2}" stroke="${ink}" stroke-width="2"/>
+        <rect x="${dir > 0 ? x : x - panelLen}" y="${y}" width="${panelLen}" height="${ph}" fill="#2b4a8a" stroke="#9fb4e0" stroke-width=".8"/>
+        ${Array.from({ length: Math.max(1, Math.floor(panelLen / 14)) }, (_, i) => `<line x1="${(dir > 0 ? x : x - panelLen) + (i + 1) * 14}" y1="${y}" x2="${(dir > 0 ? x : x - panelLen) + (i + 1) * 14}" y2="${y + ph}" stroke="#9fb4e0" stroke-width=".5"/>`).join('')}`;
+      add(`power-${r.power.id}`, wing(body.x + body.w + 6, 1) + wing(body.x - 6, -1), tr(r.power.name));
+    }
+  } else if (p.type === 'lander') {
+    body = { x: 112, y: 92, w: 76, h: 24 };
+    add('body', `<path d="M${body.x + 8} ${body.y} H${body.x + body.w - 8} L${body.x + body.w} ${body.y + body.h} H${body.x} Z" fill="${foil}" stroke="#8a6a24"/>
+      <path d="M${body.x + 10} ${body.y + body.h} L${body.x - 4} ${groundY}" stroke="${ink}" stroke-width="2.5"/>
+      <path d="M${body.x + body.w - 10} ${body.y + body.h} L${body.x + body.w + 4} ${groundY}" stroke="${ink}" stroke-width="2.5"/>
+      <path d="M150 ${body.y + body.h} L150 ${groundY - 4}" stroke="${ink}" stroke-width="2"/>
+      <ellipse cx="${body.x - 4}" cy="${groundY}" rx="7" ry="2.5" fill="${ink}"/><ellipse cx="${body.x + body.w + 4}" cy="${groundY}" rx="7" ry="2.5" fill="${ink}"/>`, tr(p.name));
+    deckX = body.x + 10; deckW = body.w - 20; deckY = body.y; antX = body.x + body.w - 14; antY = body.y;
+    if (panelLen) {
+      const rr = 10 + panelLen / 6;
+      add(`power-${r.power.id}`, [body.x - rr + 4, body.x + body.w + rr - 4].map((cx) => `<g><circle cx="${cx}" cy="${body.y + 4}" r="${rr}" fill="#2b4a8a" stroke="#9fb4e0"/>
+        ${Array.from({ length: 6 }, (_, i) => `<line x1="${cx}" y1="${body.y + 4}" x2="${cx + rr * Math.cos(i * Math.PI / 3)}" y2="${body.y + 4 + rr * Math.sin(i * Math.PI / 3)}" stroke="#9fb4e0" stroke-width=".6"/>`).join('')}</g>`).join(''), tr(r.power.name));
+    }
+  } else {
+    body = { x: 98, y: 98, w: 104, h: 20 };
+    const wheels = [108, 150, 192].map((x) => `<circle cx="${x}" cy="${groundY - 9}" r="9" fill="${ink}"/><circle cx="${x}" cy="${groundY - 9}" r="3.5" fill="#999"/>`).join('');
+    add('body', `<path d="M108 ${groundY - 9} L130 ${body.y + body.h} L150 ${groundY - 9} M150 ${groundY - 9} L172 ${body.y + body.h} L192 ${groundY - 9}" stroke="${ink}" stroke-width="2.5" fill="none"/>
+      <rect x="${body.x}" y="${body.y}" width="${body.w}" height="${body.h}" rx="3" fill="#e9e6df" stroke="${ink}"/>${wheels}
+      <path d="M${body.x + body.w - 12} ${body.y} V${body.y - 46}" stroke="${ink}" stroke-width="3"/>
+      <rect x="${body.x + body.w - 22}" y="${body.y - 56}" width="22" height="11" rx="2" fill="#e9e6df" stroke="${ink}"/>
+      <circle cx="${body.x + body.w - 4}" cy="${body.y - 50.5}" r="3" fill="#3556a8"/>`, tr(p.name));
+    deckX = body.x + 6; deckW = body.w - 40; deckY = body.y; antX = body.x + 22; antY = body.y;
+    if (panelLen) {
+      const w = Math.min(150, body.w + panelLen * 0.6);
+      add(`power-${r.power.id}`, `<rect x="${150 - w / 2 - 10}" y="${body.y - 6}" width="${w}" height="5" fill="#2b4a8a" stroke="#9fb4e0"/>`, tr(r.power.name));
+    }
+  }
+
+  if (r.power?.type === 'rtg') {
+    const n = r.power.id === 'rtg_2' ? 2 : 1;
+    const bx = surface ? body.x - 6 : body.x - 4; const by = surface ? body.y + 2 : body.y + body.h + 4;
+    add(`power-${r.power.id}`, Array.from({ length: n }, (_, i) => {
+      const x = bx - i * 16;
+      return `<g transform="rotate(${surface ? -35 : 0} ${x} ${by})"><rect x="${x - 12}" y="${by}" width="12" height="22" rx="2" fill="#6b6f78" stroke="${ink}"/>
+        <path d="M${x - 16} ${by + 5} H${x + 4} M${x - 16} ${by + 11} H${x + 4} M${x - 16} ${by + 17} H${x + 4}" stroke="#6b6f78" stroke-width="2"/></g>`;
+    }).join(''), tr(r.power.name));
+  }
+
+  const a = r.antenna;
+  if (a) {
+    let svg;
+    if (a.relay) svg = `<path d="M${antX} ${antY} V${antY - 26}" stroke="${ink}" stroke-width="1.5"/><path d="M${antX - 3} ${antY - 6} l6 -4 l-6 -4 l6 -4 l-6 -4" stroke="${ink}" fill="none"/>`;
+    else if (a.id === 'lga') svg = `<path d="M${antX} ${antY} V${antY - 14}" stroke="${ink}" stroke-width="2"/><circle cx="${antX}" cy="${antY - 16}" r="3" fill="${ink}"/>`;
+    else {
+      const rr = a.id === 'hga_large' ? 26 : 11;
+      svg = `<path d="M${antX} ${antY} V${antY - 8}" stroke="${ink}" stroke-width="2"/>
+        <path d="M${antX - rr} ${antY - 8 - rr * 0.55} Q${antX} ${antY - 8 + rr * 0.35} ${antX + rr} ${antY - 8 - rr * 0.55}" fill="#f3efe4" stroke="${ink}" stroke-width="1.5"/>
+        <path d="M${antX} ${antY - 8} L${antX} ${antY - 8 - rr * 0.7}" stroke="${ink}"/>`;
+    }
+    add(`ant-${a.id}`, svg, tr(a.name));
+  }
+
+  r.instruments.forEach((ins, i) => {
+    const n = r.instruments.length;
+    const w = Math.min(14, (deckW - 2) / n - 2);
+    const x = deckX + i * (w + 2);
+    const y = surface ? deckY - 10 : deckY + 1;
+    let extra = '';
+    if (ins.id === 'drill' || ins.id === 'sample_arm') extra = `<path d="M${x + w / 2} ${y + 10} L${x + w / 2 + (surface ? 18 : 0)} ${y + (surface ? 30 : 34)}" stroke="${ink}" stroke-width="2"/>`;
+    if (ins.id === 'orbital_radar' && !surface) extra = `<path d="M${x + w / 2} ${y + 10} L${x - 30} ${y + 40} M${x + w / 2} ${y + 10} L${x + w + 30} ${y + 40}" stroke="${ink}" stroke-width="1"/>`;
+    add(`ins-${ins.id}`, `${extra}<rect x="${x}" y="${y}" width="${w}" height="9" rx="1.5" fill="${INSTR_COLOR[ins.id] || '#566176'}" stroke="${ink}" stroke-width=".6"/>`, tr(ins.name));
+  });
+
+  r.extras.forEach((e) => {
+    if (e.effect === 'backup_antenna') add('ex-backup', `<path d="M${antX - 22} ${antY} V${antY - 10}" stroke="${ink}" stroke-width="1.5"/><circle cx="${antX - 22}" cy="${antY - 12}" r="2.5" fill="${ink}"/>`, tr(e.name));
+    if (e.effect === 'big_battery') add('ex-battery', `<rect x="${body.x + body.w - 18}" y="${body.y + body.h - 9}" width="12" height="6" rx="1" fill="#2e7d5b"/>`, tr(e.name));
+    if (e.effect === 'radiation_vault') add('ex-vault', `<rect x="${body.x + body.w / 2 - 10}" y="${body.y + body.h / 2 - 8}" width="20" height="16" rx="2" fill="#9aa0aa" stroke="${ink}"/>`, tr(e.name));
+  });
+
+  const keys = new Set(parts.map((x) => x.key));
+  const out = parts.map((x) => `<g class="part${lastParts.size && !lastParts.has(x.key) ? ' is-new' : ''}">${x.svg}</g>`).join('');
+  lastParts = keys;
+  return `<svg class="craft" viewBox="0 0 ${W} ${H}" role="img" aria-label="Схема апарата: ${esc(tr(p.name))}, приладів ${r.instruments.length}">
+    ${surface ? `<path d="M0 ${groundY + 2} H${W}" stroke="var(--line)" stroke-width="2"/>` : ''}
+    ${out}
+    ${massText ? `<text x="${W / 2}" y="${H - 2}" text-anchor="middle" font-size="11" fill="var(--muted)">${esc(massText)}</text>` : ''}
+  </svg>`;
+}

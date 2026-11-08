@@ -280,6 +280,11 @@ body::before {
 
 .balance-chart svg { width: 100%; height: auto; display: block; margin: .5rem 0 1.5rem; }
 
+.craft-wrap { margin: 0 0 1rem; background: var(--sunken); border-radius: var(--radius-s); padding: .3rem; }
+.craft { display: block; width: 100%; height: auto; }
+.craft .is-new { animation: pop .45s ease-out both; transform-box: fill-box; transform-origin: center; }
+@keyframes pop { from { opacity: 0; transform: scale(.6); } to { opacity: 1; transform: scale(1); } }
+
 /* ---------- вікна запуску ---------- */
 .windows { display: grid; grid-template-columns: repeat(48, minmax(0, 1fr)); gap: 2px; align-items: end; height: 92px; padding-bottom: 18px; position: relative; }
 .win { position: relative; height: 100%; padding: 0; border: 0; background: var(--sunken); border-radius: 2px; cursor: pointer; display: flex; align-items: flex-end; }
