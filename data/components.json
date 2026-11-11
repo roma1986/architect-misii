@@ -919,5 +919,118 @@
       "source": "https://science.nasa.gov/mission/juno/",
       "simplified": "у Juno сейф важить ~200 кг; ігрова механіка"
     }
+  ],
+  "propulsion": [
+    {
+      "id": "chem",
+      "name": {
+        "uk": "Хімічні двигуни",
+        "en": "Chemical"
+      },
+      "prototype": "більшість апаратів",
+      "isp_s": 320,
+      "mass_kg": 0,
+      "cost_musd": 0,
+      "time_mult": 1,
+      "summary": {
+        "uk": "Потужний короткий імпульс. Багато палива, зате швидко.",
+        "en": "High thrust, lots of propellant."
+      },
+      "source": "https://science.nasa.gov/learn/basics-of-space-flight/chapter11-4/",
+      "simplified": "питомий імпульс 320 с"
+    },
+    {
+      "id": "ion",
+      "name": {
+        "uk": "Іонний двигун",
+        "en": "Ion engine"
+      },
+      "prototype": "Dawn, Psyche",
+      "isp_s": 3000,
+      "mass_kg": 60,
+      "cost_musd": 50,
+      "time_mult": 1.5,
+      "min_p1au_w": 7000,
+      "platform_types": [
+        "orbiter"
+      ],
+      "summary": {
+        "uk": "У 10 разів економніший за паливом, але тяга як вага аркуша паперу: політ довший і потрібні великі сонячні панелі.",
+        "en": "10x more efficient, tiny thrust, needs big solar arrays."
+      },
+      "source": "https://science.nasa.gov/mission/dawn/",
+      "simplified": "питомий імпульс 3000 с; потребує панелей від 20 м²; ігрові маса й ціна"
+    }
+  ],
+  "orbits": [
+    {
+      "id": "standard",
+      "name": {
+        "uk": "Стандартна орбіта",
+        "en": "Standard orbit"
+      },
+      "science_mult": 1,
+      "solar_mult": 1,
+      "dv_extra_kms": 0,
+      "summary": {
+        "uk": "Безпечна висота з малою тінню.",
+        "en": "Safe altitude."
+      }
+    },
+    {
+      "id": "low",
+      "name": {
+        "uk": "Низька орбіта",
+        "en": "Low orbit"
+      },
+      "science_mult": 1.2,
+      "solar_mult": 0.85,
+      "dv_extra_kms": 0.15,
+      "summary": {
+        "uk": "Ближче до поверхні: детальніші знімки (+20% науки), але більше часу в тіні й більше палива на гальмування.",
+        "en": "Sharper data, more eclipse and fuel."
+      }
+    }
+  ],
+  "dsn": [
+    {
+      "id": "less",
+      "name": {
+        "uk": "2 години на добу",
+        "en": "2 h/day"
+      },
+      "hours_mult": 0.5,
+      "ops_musd_per_step": -2,
+      "summary": {
+        "uk": "Дешевше, але вдвічі менше даних.",
+        "en": "Cheaper, half the data."
+      }
+    },
+    {
+      "id": "std",
+      "name": {
+        "uk": "4 години на добу",
+        "en": "4 h/day"
+      },
+      "hours_mult": 1,
+      "ops_musd_per_step": 0,
+      "summary": {
+        "uk": "Типовий графік.",
+        "en": "Typical."
+      }
+    },
+    {
+      "id": "more",
+      "name": {
+        "uk": "8 годин на добу",
+        "en": "8 h/day"
+      },
+      "hours_mult": 2,
+      "ops_musd_per_step": 6,
+      "summary": {
+        "uk": "Удвічі більше даних, але час антен 70 м дорогий: їх ділять усі місії.",
+        "en": "Double the data, expensive."
+      }
+    }
   ]
 }

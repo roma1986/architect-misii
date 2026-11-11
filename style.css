@@ -325,6 +325,14 @@ p.unverified { margin-top: .7rem; color: var(--warn); }
 .craft .is-new { animation: pop .45s ease-out both; transform-box: fill-box; transform-origin: center; }
 @keyframes pop { from { opacity: 0; transform: scale(.6); } to { opacity: 1; transform: scale(1); } }
 
+.eng-tag { font-family: var(--body); font-size: .7rem; font-weight: 500; padding: .1rem .45rem; border-radius: 999px; border: 1px solid var(--line); color: var(--muted); vertical-align: middle; margin-left: .3rem; }
+.pp-note { font-size: .9rem; padding: .7rem .9rem; border-radius: var(--radius-s); background: color-mix(in srgb, var(--data) 10%, var(--surface)); border: 1px solid color-mix(in srgb, var(--data) 35%, var(--line)); margin-bottom: 2rem; }
+.seg-track { display: flex; }
+.seg-track .seg { height: 100%; }
+.gauge-track .tb-mark { top: -3px; bottom: -3px; }
+.axis .gauge-track { overflow: visible; }
+.axis .th-mark { position: absolute; top: -4px; bottom: -4px; width: 2px; background: var(--ink); opacity: .55; }
+
 /* ---------- вікна запуску ---------- */
 .windows { display: grid; grid-template-columns: repeat(48, minmax(0, 1fr)); gap: 2px; align-items: end; height: 92px; padding-bottom: 18px; position: relative; }
 .win { position: relative; height: 100%; padding: 0; border: 0; background: var(--sunken); border-radius: 2px; cursor: pointer; display: flex; align-items: flex-end; }
@@ -345,6 +353,36 @@ p.unverified { margin-top: .7rem; color: var(--warn); }
 .tb-fill { position: absolute; inset: 0 auto 0 0; border-radius: 8px; background: var(--good); transition: width .2s ease; }
 .tb-fill.over { background: var(--bad); }
 .tb-mark { position: absolute; top: -5px; bottom: -5px; width: 2px; background: var(--ink); }
+
+/* ---------- демо-показ ---------- */
+.demo-bar {
+  position: fixed; left: 0; right: 0; bottom: 0; z-index: 40;
+  display: grid; grid-template-columns: minmax(0, 1fr) auto; gap: 1rem 2rem; align-items: center;
+  padding: 1rem clamp(1rem, 3vw, 2rem) calc(1rem + env(safe-area-inset-bottom, 0px));
+  background: var(--ink); color: var(--surface);
+  box-shadow: 0 -6px 24px rgb(0 0 0 / .25);
+}
+.demo-act { display: block; font-family: var(--display); font-weight: 500; font-size: .8rem; opacity: .75; margin-bottom: .25rem; }
+.demo-caption { margin: 0; font-size: 1.08rem; line-height: 1.45; max-width: 78ch; min-height: 2.9em; }
+.demo-ctl { display: flex; align-items: center; gap: .8rem; flex-wrap: wrap; justify-content: flex-end; }
+.demo-progress { font-size: .85rem; opacity: .75; }
+.demo-bar .mode-switch { color: inherit; }
+.demo-bar .btn { background: var(--surface); color: var(--ink); border-color: var(--surface); min-width: 7.5rem; }
+.demo-bar .btn.secondary { background: transparent; color: var(--surface); border-color: color-mix(in srgb, var(--surface) 50%, transparent); min-width: 0; }
+.demo-bar :focus-visible { outline-color: var(--surface); }
+body.demo-on #screen { padding-bottom: 12rem; }
+body.demo-on .minibar { display: none; }
+body.demo-on .toast { bottom: calc(9.5rem + env(safe-area-inset-bottom, 0px)); }
+.demo-focus { outline: 3px solid var(--power); outline-offset: 5px; border-radius: var(--radius-s); transition: outline-color .3s; }
+@media (max-width: 760px) {
+  .demo-bar { grid-template-columns: 1fr; gap: .6rem; padding-top: .7rem; }
+  .demo-caption { font-size: .98rem; min-height: 0; }
+  .demo-ctl { justify-content: space-between; flex-wrap: nowrap; gap: .6rem; }
+  .demo-bar .btn, .demo-bar .btn.secondary { min-width: 0; padding: .55rem .9rem; }
+  .demo-bar .mode-switch { font-size: .8rem; }
+  body.demo-on #screen { padding-bottom: 16rem; }
+  body.demo-on .toast { bottom: calc(14rem + env(safe-area-inset-bottom, 0px)); }
+}
 
 /* ---------- про дані ---------- */
 dialog { width: min(900px, 94vw); max-height: 86vh; border: 1px solid var(--line); border-radius: var(--radius-m); padding: 0; background: var(--surface); color: var(--ink); }

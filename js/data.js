@@ -1,5 +1,5 @@
 // Завантаження даних. У браузері — через fetch, у Node.js (tools/) — через fs.
-export const DATA_FILES = ['targets', 'mission', 'rockets', 'components', 'events', 'missions', 'media', 'colony', 'balance', 'photos'];
+export const DATA_FILES = ['targets', 'mission', 'rockets', 'components', 'events', 'missions', 'media', 'colony', 'balance', 'photos', 'dev'];
 
 export async function loadData(base = 'data/') {
   if (typeof window !== 'undefined' && window.__GAME_DATA__) return window.__GAME_DATA__;

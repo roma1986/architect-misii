@@ -4,14 +4,18 @@
 import {
   resolveBuild, checkBuild, isSurface, hasExtra, powerProduced, busPower, instrumentPower,
   earthDistanceAu, conjunctionBetween, downlinkPerDay, rocketReliability, stepFailProb,
-  weight, idealSciencePerStep, clamp, byId, MARGIN_PENALTY, opsSteps, flightDays,
+  weight, idealSciencePerStep, clamp, byId, MARGIN_PENALTY, opsSteps, flightDays, siteSolarMult, siteHeaterMult,
 } from './calc.js';
 import { makeRng } from './rng.js';
 import { rollEvents } from './events.js';
+import { Development } from './dev.js';
 
 export class Mission {
-  constructor(data, build, seed) {
+  constructor(data, build, seed, dev = null) {
     this.data = data;
+    // Етап розробки міг змінити конструкцію (зняті прилади, нова дата запуску, приріст маси)
+    this.dev = dev || new Development(data, build, seed).runAuto();
+    build = this.dev.build;
     this.build = build;
     this.seed = seed;
     this.rng = makeRng(`${seed}`);
@@ -22,6 +26,9 @@ export class Mission {
     const t = this.r.target;
     // Радіація (Юпітер): прилади й платформа ламаються частіше, сейф зменшує ефект
     this.radPenalty = t.radiation_mult ? (hasExtra(this.r, 'radiation_vault') ? 1.2 : t.radiation_mult) : 1;
+    // Клас ризику і обсяг випробувань (з етапу розробки) множать шанс відмов
+    this.relMult = this.dev.relMult;
+    this.spent = this.dev.spent;
 
     this.s = {
       phase: 'launch',
@@ -30,7 +37,9 @@ export class Mission {
       alive: true,
       lost: null,             // причина втрати місії
       site: null,
-      siteMult: t.science_value || 1,   // цінність цілі (Європа — океанічний світ)
+      siteMult: (t.science_value || 1) * (isSurface(this.r) ? 1 : (this.r.orbit?.science_mult ?? 1)),   // цінність цілі й висота орбіти
+      siteSolar: 1,
+      heater: 1,
       dust: 1,
       powerMult: 1,
       mobility: 1,
@@ -56,6 +65,13 @@ export class Mission {
     this.pending = null;
     this.entries = [];
     this.timeline = [];
+    if (this.dev.cancelled) {
+      // Проєкт закрили ще до старту: перевитрата бюджету
+      const s = this.s;
+      s.alive = false; s.lost = 'cancelled'; s.phase = 'done';
+      s.ideal = this.idealPerStep(true) * s.steps;
+      this.loss('lost_cancelled', s.ideal, s.steps);
+    }
   }
 
   // ---------- журнал ----------
@@ -155,10 +171,12 @@ export class Mission {
             const site = byId(t.sites, id);
             this.s.site = site;
             this.s.siteMult = (t.science_value || 1) * site.science_mult * (t.surface_science_mult || 1);
+            this.s.siteSolar = siteSolarMult(site);
+            this.s.heater = siteHeaterMult(site);
           },
         });
       }
-      const p = clamp(this.s.site.risk * this.penalty + (this.s.navError ? 0.4 : 0), 0, 0.95);
+      const p = clamp(this.s.site.risk * this.penalty * (0.7 + 0.3 * this.relMult) + (this.s.navError ? 0.4 : 0), 0, 0.95);
       this.log('landing', { site: this.s.site, p }, 'info');
       if (this.rng() < p) return this.lose('landing');
       this.log('landing_ok', { site: this.s.site }, 'good');
@@ -221,7 +239,7 @@ export class Mission {
       done.prio = true;
       if (!s.priorityAsked) {
         const dist = earthDistanceAu(t, d0 + t.step_days / 2);
-        const down = downlinkPerDay(s.antenna, t, dist);
+        const down = downlinkPerDay(s.antenna, t, dist, r.dsn);
         const coll = this.aliveInstruments.reduce((a, i) => a + i.data_mbit_per_day, 0);
         if (coll > 0 && down / coll < 0.6) {
           s.priorityAsked = true;
@@ -288,8 +306,8 @@ export class Mission {
 
     // Енергія
     const stormSolar = s.storm > 0 && solar && surface ? 0.4 : 1;
-    const produced = powerProduced(r, { years, dust: surface && solar ? s.dust : 1, solarMult: stormSolar }) * s.powerMult;
-    const bus = busPower(r);
+    const produced = powerProduced(r, { years, dust: surface && solar ? s.dust : 1, solarMult: stormSolar * (surface && solar ? s.siteSolar : 1) }) * s.powerMult;
+    const bus = busPower(r) * (surface ? s.heater : 1);
     const instrDemand = instrumentPower(aliveBefore);
     let u = instrDemand > 0 ? clamp((produced - bus) / instrDemand, 0, 1) : 0;
 
@@ -327,7 +345,7 @@ export class Mission {
     this.loss(s.storm > 0 && solar && surface ? 'storm' : 'power', envSum - workedSum);
 
     // Зв'язок: скільки даних встигнемо передати
-    let capacity = downlinkPerDay(s.antenna, t, dist) * stepDays;
+    let capacity = downlinkPerDay(s.antenna, t, dist, r.dsn) * stepDays;
     const fullCapacity = capacity;
     let idleFactor = 1;
     if (s.conjunctionNow) {
@@ -353,14 +371,14 @@ export class Mission {
     // Відмови після кроку
     const steps = s.steps;
     s.instruments.forEach((x) => {
-      if (x.alive && this.rng() < stepFailProb(x.def.reliability, steps, this.penalty * this.radPenalty)) {
+      if (x.alive && this.rng() < stepFailProb(x.def.reliability, steps, this.penalty * this.radPenalty * this.relMult)) {
         x.alive = false;
         this.log('instrument_fail', { instr: x.def }, 'bad');
         if (!s.happened.has('fact_instr')) { s.happened.add('fact_instr'); this.fact('instrument_fail'); }
       }
     });
-    if (this.rng() < stepFailProb(s.antenna.reliability, steps, this.penalty * this.radPenalty)) this.failAntenna('wear');
-    if (s.alive && this.rng() < stepFailProb(r.platform.reliability, steps, this.penalty * this.radPenalty)) { this.lose('platform'); return tele; }
+    if (this.rng() < stepFailProb(s.antenna.reliability, steps, this.penalty * this.radPenalty * this.relMult)) this.failAntenna('wear');
+    if (s.alive && this.rng() < stepFailProb(r.platform.reliability, steps, this.penalty * this.radPenalty * this.relMult)) { this.lose('platform'); return tele; }
 
     if (s.alive) rollEvents(this, 'ops');
     if (s.alive && surface && solar) s.dust = Math.max(0.2, s.dust * (1 - t.dust_per_step));

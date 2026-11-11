@@ -6,7 +6,7 @@
         "uk": "Discovery",
         "en": "Discovery"
       },
-      "budget_musd": 900,
+      "budget_musd": 1150,
       "science_target": 90,
       "summary": {
         "uk": "Невелика сфокусована місія. Приклад: InSight.",
@@ -20,7 +20,7 @@
         "uk": "New Frontiers",
         "en": "New Frontiers"
       },
-      "budget_musd": 1500,
+      "budget_musd": 1900,
       "science_target": 160,
       "summary": {
         "uk": "Середня місія. Приклад: OSIRIS-REx.",
@@ -34,7 +34,7 @@
         "uk": "Flagship",
         "en": "Flagship"
       },
-      "budget_musd": 3000,
+      "budget_musd": 3700,
       "science_target": 260,
       "summary": {
         "uk": "Велика місія з найвищими очікуваннями. Приклад: Perseverance.",
@@ -99,5 +99,130 @@
         "en": "Organics and ancient habitable environments."
       }
     }
-  ]
+  ],
+  "risk_classes": [
+    {
+      "id": "A",
+      "name": {
+        "uk": "Клас A",
+        "en": "Class A"
+      },
+      "cost_mult": 1.35,
+      "mass_mult": 1.12,
+      "fail_mult": 0.45,
+      "dev_event_mult": 0.8,
+      "summary": {
+        "uk": "Усі критичні системи дублюються, найсуворіший контроль якості. Дуже дорого і важко, зате відмови рідкісні.",
+        "en": "Full redundancy, strictest quality control."
+      }
+    },
+    {
+      "id": "B",
+      "name": {
+        "uk": "Клас B",
+        "en": "Class B"
+      },
+      "cost_mult": 1.15,
+      "mass_mult": 1.06,
+      "fail_mult": 0.7,
+      "dev_event_mult": 0.9,
+      "summary": {
+        "uk": "Дублюється найважливіше. Типовий вибір для великих наукових місій.",
+        "en": "Key systems are redundant."
+      }
+    },
+    {
+      "id": "C",
+      "name": {
+        "uk": "Клас C",
+        "en": "Class C"
+      },
+      "cost_mult": 1.0,
+      "mass_mult": 1.0,
+      "fail_mult": 1.0,
+      "dev_event_mult": 1.0,
+      "summary": {
+        "uk": "Помірний ризик: резерв лише там, де він дешевий. Типово для місій середнього розміру.",
+        "en": "Moderate risk."
+      }
+    },
+    {
+      "id": "D",
+      "name": {
+        "uk": "Клас D",
+        "en": "Class D"
+      },
+      "cost_mult": 0.8,
+      "mass_mult": 0.95,
+      "fail_mult": 1.6,
+      "dev_event_mult": 1.25,
+      "summary": {
+        "uk": "Одна лінія систем без резерву, спрощений контроль. Дешево й швидко, але ризиковано. Так роблять малі експериментальні апарати.",
+        "en": "Single-string, cheap and risky."
+      }
+    }
+  ],
+  "risk_note": {
+    "uk": "NASA ділить місії на класи ризику від A до D залежно від важливості, ціни й тривалості (документ NPR 8705.4). Множники ціни, маси й відмов — ігрові.",
+    "source": "https://nodis3.gsfc.nasa.gov/displayDir.cfm?t=NPR&c=8705&s=4"
+  },
+  "reserves": [
+    {
+      "id": 15,
+      "name": {
+        "uk": "15% — оптимістично"
+      }
+    },
+    {
+      "id": 25,
+      "name": {
+        "uk": "25% — як радить NASA"
+      }
+    },
+    {
+      "id": 35,
+      "name": {
+        "uk": "35% — обережно"
+      }
+    }
+  ],
+  "testing": [
+    {
+      "id": "min",
+      "name": {
+        "uk": "Мінімальні випробування"
+      },
+      "cost_pct": -3,
+      "months": 0,
+      "fail_mult": 1.4,
+      "summary": {
+        "uk": "Лише обов'язкові перевірки. Швидко й дешево, але дефекти вилізуть уже в космосі."
+      }
+    },
+    {
+      "id": "std",
+      "name": {
+        "uk": "Стандартні випробування"
+      },
+      "cost_pct": 0,
+      "months": 2,
+      "fail_mult": 1.0,
+      "summary": {
+        "uk": "Вібростенд і термовакуумна камера для всього апарата."
+      }
+    },
+    {
+      "id": "full",
+      "name": {
+        "uk": "Повна програма"
+      },
+      "cost_pct": 6,
+      "months": 4,
+      "fail_mult": 0.7,
+      "summary": {
+        "uk": "«Випробовуй так, як літатимеш»: повні прогони програм, запасні комплекти, додаткові тести посадки."
+      }
+    }
+  ],
+  "threshold_share": 0.6
 }

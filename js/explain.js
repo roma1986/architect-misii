@@ -1,7 +1,7 @@
 // Пояснення результату: оцінка, причини людською мовою, тексти журналу і рішень.
 // Тексти зараз українською; для англійської версії додайте переклади в цьому файлі.
 
-import { clamp, sunShare, isSurface, instrumentPower, busPower, opsSteps } from './calc.js';
+import { clamp, sunShare, isSurface, instrumentPower, busPower, opsSteps, siteSolarMult } from './calc.js';
 import { tr } from './i18n.js';
 
 const pct = (x) => Math.round(x * 100);
@@ -12,7 +12,7 @@ export function score(m) {
   const s = m.s;
   const r = m.r;
   const target = r.cls.science_target;
-  const cost = m.check.cost.total;
+  const cost = m.spent ?? m.check.cost.total;
   const science = clamp((s.science / target) * 100, 0, 150);
   const efficiency = clamp(((s.science / cost) / (target / r.cls.budget_musd)) * 100, 0, 150);
   const done = m.timeline.length / opsSteps(r);
@@ -37,9 +37,9 @@ export function score(m) {
 }
 
 export const OUTCOMES = {
-  success: 'Місія виконана',
-  partial: 'Місія виконана частково',
-  weak: 'Науки зібрано замало',
+  success: 'Базову місію виконано',
+  partial: 'Виконано порогову місію, але не базову',
+  weak: 'Не виконано навіть порогову місію',
   lost: 'Місію втрачено',
 };
 export const TITLES = {
@@ -65,6 +65,7 @@ function stats(m) {
 
 const LOST_TEXT = {
   launch: (m) => `Ракета ${tr(m.r.rocket.name)} зазнала аварії на старті. Її надійність за історією польотів — ${pct((m.r.rocket.successes + 1) / (m.r.rocket.flights + 2))}%: навіть такий шанс іноді не спрацьовує.`,
+  cancelled: (m) => `Проєкт закрили до старту: витрати сягнули ${fmt(m.spent)} млн $ при бюджеті ${fmt(m.r.cls.budget_musd)} млн $, а додаткових грошей не дали. Більший резерв або простіший апарат дали б шанс.`,
   capture: (m) => (m.s.navError
     ? 'Помилка в одиницях під час поправки курсу: апарат підійшов до цілі не тим курсом і не вийшов на орбіту. Саме так у 1999 році загинув Mars Climate Orbiter.'
     : 'Апарат не вийшов на орбіту цілі. Гальмування біля планети — один із найризикованіших моментів місії.'),
@@ -95,6 +96,7 @@ export function reasons(m) {
         const sun = pct(sunShare(r.target));
         let t = `Енергії вистачало лише на ${pct(st.avgU)}% роботи приладів. Біля цілі «${tr(r.target.name)}» Сонце дає ${sun}% земного світла`;
         if (isSurface(r) && r.target.dust_per_step > 0) t += `, а пил на панелях знизив вироблення до ${pct(st.minDust)}%`;
+        if (isSurface(r) && s.site && s.siteSolar < 0.95) t += `. Майданчик на широті ${fmt(Math.abs(s.site.lat))}° отримує лише ${pct(s.siteSolar)}% сонця порівняно з екватором`;
         return t + '.';
       }
       return `РІТЕГ давав у середньому ${fmt(st.avgProduced)} Вт, а платформі й приладам потрібно ${fmt(busPower(r) + instrumentPower(r.instruments))} Вт. Прилади працювали ${pct(st.avgU)}% часу.`;
@@ -124,6 +126,16 @@ export function reasons(m) {
   list.sort((a, b) => b.share - a.share);
 
   const extra = [];
+  const dev = m.dev;
+  if (dev) {
+    if (dev.descoped.length) extra.push({ key: 'descoped', text: `Під час розробки довелося зняти: ${dev.descoped.map((i) => tr(i.name)).join(', ')}. Це мінус наука, яку ці прилади могли дати.`, tone: 'bad' });
+    if (dev.flags.waited) extra.push({ key: 'waited', text: `Розробка затрималась, і старт перенесли на наступне вікно (${dev.build.launch}). Очікування з'їло частину резерву.`, tone: 'bad' });
+    if (dev.flags.rush) extra.push({ key: 'rush', text: 'Щоб встигнути у вікно, скоротили випробування: відмови в польоті траплялися на 30% частіше.', tone: 'bad' });
+    if (dev.flags.hiddenDefect) extra.push({ key: 'defect', text: 'Через мінімальні випробування один дефект не знайшли на Землі, і він полетів разом з апаратом.', tone: 'bad' });
+    if (dev.overrun > 0 && !dev.cancelled) extra.push({ key: 'overrun', text: `Резерву не вистачило: перевитрата ${fmt(dev.overrun)} млн $ знизила оцінку ефективності.`, tone: 'bad' });
+    if (m.r.risk.id === 'A' || m.r.risk.id === 'B') extra.push({ key: 'class', text: `${tr(m.r.risk.name)}: дубльовані системи зменшили шанс відмов до ${pct(m.r.risk.fail_mult)}% від звичайного.`, tone: 'good' });
+    if (m.r.risk.id === 'D') extra.push({ key: 'class', text: 'Клас D: дешево, але без резерву відмови траплялися в 1,6 раза частіше.', tone: 'bad' });
+  }
   if (m.penalty > 1) extra.push({ key: 'margin', text: 'Запас маси або енергії був менший за 15%, тому збої траплялися в 1,5 раза частіше. Реальні інженери закладають 15–30% запасу.', tone: 'bad' });
   if (s.bonusScience > 0) extra.push({ key: 'bonus', text: `Несподівана знахідка додала ${fmt(s.bonusScience)} балів науки.`, tone: 'good' });
   if (s.sampleScience) extra.push({ key: 'sample', text: `Зразок з району «${tr(s.sampleSite.name)}» дав ${fmt(s.sampleScience)} балів науки: лабораторії на Землі точніші за будь-який прилад у космосі.`, tone: 'good' });
@@ -149,7 +161,7 @@ export function mediaFor(m) {
 }
 
 // ---------- журнал ----------
-const CAUSE_SHORT = { touch: 'зонд пошкоджено під час торкання', launch: 'аварія ракети', capture: 'не вдалося вийти на орбіту', landing: 'аварійна посадка', storm: 'буря розрядила акумулятор', night: 'апарат замерз уночі', power: 'забракло енергії', platform: 'відмова платформи', comms: 'зв\'язок втрачено' };
+const CAUSE_SHORT = { cancelled: 'проєкт скасовано через перевитрати', touch: 'зонд пошкоджено під час торкання', launch: 'аварія ракети', capture: 'не вдалося вийти на орбіту', landing: 'аварійна посадка', storm: 'буря розрядила акумулятор', night: 'апарат замерз уночі', power: 'забракло енергії', platform: 'відмова платформи', comms: 'зв\'язок втрачено' };
 
 export function logText(e, m) {
   const p = e.params;
@@ -246,7 +258,8 @@ export function optionInfo(decisionId, option, m) {
   switch (decisionId) {
     case 'site': {
       const site = m.r.target.sites.find((x) => x.id === id);
-      return { label: tr(site.name), hint: `Ризик ${pct(site.risk * m.penalty)}%, наука ×${fmt(site.science_mult, 1)}. ${tr(site.note)}` };
+      const solar = m.r.power.type === 'solar' ? ` Сонце ${pct(siteSolarMult(site))}% від екваторіального.` : '';
+      return { label: tr(site.name), hint: `Ризик ${pct(site.risk * m.penalty * (0.7 + 0.3 * m.relMult))}%, наука ×${fmt(site.science_mult, 1)}.${solar} ${tr(site.note)}` };
     }
     case 'storm': return id === 'sleep'
       ? { label: 'Сплячий режим', hint: 'Безпечно, але без науки, поки триває буря.' }

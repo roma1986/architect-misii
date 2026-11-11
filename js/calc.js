@@ -25,6 +25,34 @@ export function resolveBuild(data, build) {
     antenna: byId(c.antennas, build.antenna),
     extras: (build.extras || []).map((id) => byId(c.extras, id)).filter(Boolean),
     launch: build.launch || null,
+    ...projectChoices(data, build),
+  };
+}
+
+/**
+ * Рішення рівня проєкту: клас ризику, резерв, випробування — для всіх;
+ * траєкторія, двигун, орбіта, час антен — лише в «Режимі інженера» (інакше типові варіанти).
+ */
+function projectChoices(data, build) {
+  const c = data.components;
+  const m = data.mission;
+  const eng = !!build.engineer;
+  const target = byId(data.targets, build.target);
+  const platform = byId(c.platforms, build.platform);
+  const orbiter = !!platform && platform.type === 'orbiter';
+  const pick = (list, id, fallback) => (eng && byId(list, id)) || byId(list, fallback) || (list || [])[0] || null;
+  let propulsion = pick(c.propulsion, build.propulsion, 'chem');
+  if (propulsion && propulsion.platform_types && !(platform && propulsion.platform_types.includes(platform.type))) propulsion = byId(c.propulsion, 'chem');
+  return {
+    engineer: eng,
+    risk: byId(m.risk_classes, build.riskClass) || byId(m.risk_classes, 'C'),
+    reservePct: build.reserve ?? 25,
+    testing: byId(m.testing, build.testing) || byId(m.testing, 'std'),
+    trajectory: target ? pick(target.trajectories, build.trajectory, 'direct') : null,
+    propulsion,
+    orbit: orbiter ? pick(c.orbits, build.orbit, 'standard') : byId(c.orbits, 'standard'),
+    dsn: pick(c.dsn, build.dsn, 'std'),
+    massGrowth: build.massGrowth || 0,
   };
 }
 
@@ -67,7 +95,9 @@ export function bestLaunch(target) {
 
 export function flightDays(r) {
   const f = windowInfo(r.target, r.launch).factor;
-  return Math.round(r.target.flight_days * (1 + 0.4 * (1 - f)));
+  const traj = r.trajectory?.time_mult ?? 1;
+  const prop = r.propulsion?.time_mult ?? 1;
+  return Math.round(r.target.flight_days * (1 + 0.4 * (1 - f)) * traj * prop);
 }
 export const launchYear = (r) => (r.launch ? Number(r.launch.slice(0, 4)) : 2026);
 
@@ -77,59 +107,80 @@ export const opsSteps = (r) => (isSurface(r) && r.target.surface_ops_steps ? r.t
 export const hasExtra = (r, effect) => r.extras.some((e) => e.effect === effect);
 
 /** Рівняння Ціолковського: яку частку від сухої маси становить паливо для Δv (км/с). */
-export function fuelFraction(dvKms) {
-  return Math.exp((dvKms * 1000) / (ISP_S * G0)) - 1;
+export function fuelFraction(dvKms, isp = ISP_S) {
+  return Math.exp((dvKms * 1000) / (isp * G0)) - 1;
 }
 
 /** Маса: сума компонентів → суха маса з запасом → паливо / система посадки → маса на старті. */
 export function massBreakdown(r) {
-  const parts = [r.platform, ...r.instruments, r.power, r.antenna, ...r.extras].filter(Boolean);
-  const sum = parts.reduce((s, p) => s + (p.mass_kg || 0), 0);
+  const parts = [r.platform, ...r.instruments, r.power, r.antenna, ...r.extras, r.propulsion].filter(Boolean);
+  // Клас ризику: дубльовані системи важать більше
+  const sum = parts.reduce((s, p) => s + (p.mass_kg || 0), 0) * (r.risk?.mass_mult ?? 1);
   const margin = sum * DESIGN_MARGIN;
-  const dry = sum + margin;
+  const growth = sum * (r.massGrowth || 0);   // зростання маси під час розробки понад запас
+  const dry = sum + margin + growth;
+  const isp = r.propulsion?.isp_s ?? ISP_S;
+  const dvOrbit = r.orbit?.dv_extra_kms ?? 0;
   let fuel = 0;
   let edl = 0;
   const t = r.target;
   if (t && r.platform) {
     if (!isSurface(r)) {
-      fuel = dry * fuelFraction(t.dv_capture_kms);
+      fuel = dry * fuelFraction(t.dv_capture_kms + dvOrbit, isp);
     } else if (t.landing.type === 'aeroshell') {
       edl = dry * t.landing.edl_factor; // теплозахист, парашут, гальмівна ступінь, перелітний модуль
     } else {
       fuel = dry * fuelFraction(t.dv_capture_kms + t.landing.dv_kms); // посадка на двигунах
     }
   }
-  return { sum, margin, dry, fuel, edl, launch: dry + fuel + edl };
+  return { sum, margin, growth, dry, fuel, edl, launch: dry + fuel + edl };
 }
 
 /**
  * Скільки ракета доставить до цілі у найкраще вікно. Якщо є точне число виробника — беремо його,
  * інакше НОО × k цілі. Поза вікном — менше (множник windowInfo).
  */
-export function capacityTo(rocket, target, launch = null) {
+export function capacityTo(rocket, target, launch = null, trajectory = null) {
   if (!rocket || !target) return 0;
   if (rocket.max_target && !rocket.max_target.includes(target.id)) return 0;
   const base = rocket.to_kg && rocket.to_kg[target.id] ? rocket.to_kg[target.id] : rocket.leo_kg * target.k_capacity;
-  return Math.round(base * windowInfo(target, launch).factor);
+  return Math.round(base * windowInfo(target, launch).factor * (trajectory?.k_mult ?? 1));
 }
 
 export function costBreakdown(r) {
   const items = [];
   const add = (label, cost) => { if (cost) items.push({ label, cost }); };
+  const k = r.risk?.cost_mult ?? 1;   // клас ризику множить вартість «заліза»
   add('rocket', r.rocket?.cost_musd);
-  add('platform', r.platform?.cost_musd);
-  add('instruments', r.instruments.reduce((s, i) => s + i.cost_musd, 0));
-  add('power', r.power?.cost_musd);
-  add('antenna', r.antenna?.cost_musd);
-  add('extras', r.extras.reduce((s, e) => s + e.cost_musd, 0));
+  add('platform', (r.platform?.cost_musd || 0) * k);
+  add('instruments', r.instruments.reduce((s, i) => s + i.cost_musd, 0) * k);
+  add('power', (r.power?.cost_musd || 0) * k);
+  add('antenna', (r.antenna?.cost_musd || 0) * k);
+  add('extras', r.extras.reduce((s, e) => s + e.cost_musd, 0) * k);
+  add('propulsion', r.propulsion?.cost_musd);
   if (r.target && isSurface(r)) add('landing', r.target.landing.cost_musd);
-  if (r.target && r.platform) add('operations', r.platform.ops_musd_per_step * opsSteps(r));
+  if (r.target && r.platform) add('operations', Math.max(0, r.platform.ops_musd_per_step + (r.dsn?.ops_musd_per_step || 0)) * opsSteps(r));
   if (r.target) add('cruise', r.target.cruise_ops_musd || 0);
-  return { items, total: items.reduce((s, i) => s + i.cost, 0) };
+  const pp = r.engineer && r.target?.planetary_protection;
+  if (pp && r.platform) add('protection', isSurface(r) ? pp.surface_musd : pp.orbiter_musd);
+  const total = items.reduce((s, i) => s + i.cost, 0);
+  return { items, total, reserve: total * ((r.reservePct ?? 0) / 100) };
 }
 
 export function solarFactor(r) {
-  return isSurface(r) ? r.target.surface_solar_factor : r.target.orbit_solar_factor;
+  return isSurface(r) ? r.target.surface_solar_factor : r.target.orbit_solar_factor * (r.orbit?.solar_mult ?? 1);
+}
+
+/** Широта майданчика: далі від екватора Сонце нижче. Майданчик може задати власний множник. */
+export function siteSolarMult(site) {
+  if (!site) return 1;
+  if (site.solar_mult !== undefined) return site.solar_mult;
+  return Math.max(0.3, Math.cos((site.lat || 0) * Math.PI / 180));
+}
+/** Холодніші (високоширотні) майданчики потребують більше енергії на обігрів. */
+export function siteHeaterMult(site) {
+  if (!site) return 1;
+  return 1 + 0.3 * (1 - Math.cos((site.lat || 0) * Math.PI / 180));
 }
 
 /** Середня потужність біля цілі, Вт. Сонце слабшає як 1/r², РІТЕГ — на 4% на рік. */
@@ -173,11 +224,11 @@ export function conjunctionBetween(target, d0, d1) {
 }
 
 /** Скільки Мбіт на добу можна передати на Землю. */
-export function downlinkPerDay(antenna, target, distAu) {
+export function downlinkPerDay(antenna, target, distAu, dsn = null) {
   if (!antenna || !target) return 0;
   if (antenna.relay) return target.has_relay ? antenna.relay_mbit_per_day : 0;
   const rate = Math.min(antenna.rate_1au_mbps / (distAu ** 2), RATE_CAP_MBPS);
-  return rate * antenna.contact_h * 3600;
+  return rate * antenna.contact_h * (dsn?.hours_mult ?? 1) * 3600;
 }
 
 export function dataPerDay(instruments) {
@@ -255,25 +306,26 @@ export function checkBuild(r) {
   if (r.rocket && r.target && r.rocket.max_target) need(r.rocket.max_target.includes(r.target.id), 'rocket_target');
 
   const mass = massBreakdown(r);
-  const capacity = capacityTo(r.rocket, r.target, r.launch);
+  const capacity = capacityTo(r.rocket, r.target, r.launch, r.trajectory);
   const win = windowInfo(r.target, r.launch);
   const cost = costBreakdown(r);
   const budget = r.cls ? r.cls.budget_musd : 0;
   const produced = powerProduced(r);
   const demand = powerDemand(r);
   const dist = r.target ? earthDistanceAu(r.target, 0) : 1;
-  const downlink = downlinkPerDay(r.antenna, r.target, dist);
+  const downlink = downlinkPerDay(r.antenna, r.target, dist, r.dsn);
   const collected = dataPerDay(r.instruments);
 
   const bars = {
-    budget: { used: cost.total, limit: budget, unit: 'млн $', status: barStatus(cost.total, budget) },
+    budget: { used: cost.total + cost.reserve, limit: budget, unit: 'млн $', status: barStatus(cost.total + cost.reserve, budget) },
     mass: { used: mass.launch, limit: capacity, unit: 'кг', status: barStatus(mass.launch, capacity) },
     power: { used: demand, limit: produced, unit: 'Вт', status: barStatus(demand, produced) },
     data: { used: collected, limit: downlink, unit: 'Мбіт/добу', status: barStatus(collected, downlink, true) },
   };
 
   // Нижче — помилки, через які запуск неможливий. Шкала «дані» лише попереджає.
-  if (r.cls && cost.total > budget) issues.push({ code: 'over_budget' });
+  if (r.cls && cost.total + cost.reserve > budget) issues.push({ code: 'over_budget' });
+  if (r.propulsion?.min_p1au_w && !(r.power?.type === 'solar' && r.power.p1au_w >= r.propulsion.min_p1au_w)) issues.push({ code: 'ion_power' });
   if (r.rocket && r.target && r.platform && mass.launch > capacity) issues.push({ code: 'over_mass' });
   if (r.power && r.platform && demand > produced) issues.push({ code: 'over_power' });
 

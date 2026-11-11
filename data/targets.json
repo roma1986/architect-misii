@@ -103,6 +103,37 @@
         "https://nssdc.gsfc.nasa.gov/planetary/factsheet/",
         "https://en.wikipedia.org/wiki/Mars_sample-return_mission"
       ]
+    },
+    "trajectories": [
+      {
+        "id": "direct",
+        "name": {
+          "uk": "Пряма траєкторія (~7 місяців)"
+        },
+        "k_mult": 1,
+        "time_mult": 1,
+        "summary": {
+          "uk": "Типовий варіант для цієї цілі."
+        }
+      },
+      {
+        "id": "alt",
+        "name": {
+          "uk": "Довга економна траєкторія"
+        },
+        "k_mult": 1.12,
+        "time_mult": 1.45,
+        "summary": {
+          "uk": "Більше ніж пів оберту навколо Сонця: ракета довезе на 12% більше, але політ на 45% довший."
+        }
+      }
+    ],
+    "planetary_protection": {
+      "surface_musd": 40,
+      "orbiter_musd": 0,
+      "note": {
+        "uk": "Апарати, що сідають на Марс, стерилізують, щоб не занести земні мікроби туди, де шукають життя."
+      }
     }
   },
   {
@@ -159,11 +190,12 @@
         "risk": 0.3,
         "science_mult": 1.8,
         "note": {
-          "uk": "У вічно затінених кратерах є водяний лід. Рельєф складний, світло низьке.",
+          "uk": "У вічно затінених кратерах є водяний лід. Рельєф складний, світло низьке. На гребенях кратерів сонце світить майже постійно, але низько над обрієм.",
           "en": "Water ice in permanently shadowed craters. Rough terrain, low sun."
         },
         "lat": -85,
-        "lon": 0
+        "lon": 0,
+        "solar_mult": 0.75
       }
     ],
     "source": "https://science.nasa.gov/moon/facts/",
@@ -181,7 +213,31 @@
       "urls": [
         "https://nssdc.gsfc.nasa.gov/planetary/factsheet/"
       ]
-    }
+    },
+    "trajectories": [
+      {
+        "id": "direct",
+        "name": {
+          "uk": "Прямий політ (5 діб)"
+        },
+        "k_mult": 1,
+        "time_mult": 1,
+        "summary": {
+          "uk": "Типовий варіант для цієї цілі."
+        }
+      },
+      {
+        "id": "alt",
+        "name": {
+          "uk": "Економна траєкторія через далекий космос"
+        },
+        "k_mult": 1.15,
+        "time_mult": 24,
+        "summary": {
+          "uk": "Сонце допомагає загальмувати: на 15% більше маси, але політ ~4 місяці замість 5 діб. Так летіли CAPSTONE і SLIM."
+        }
+      }
+    ]
   },
   {
     "id": "asteroid",
@@ -256,7 +312,31 @@
       "synodic_days": 2226,
       "sigma_days": 90,
       "note": "OSIRIS-REx стартував у вересні 2016 року. Вікна до Бенну рідкісні: раз на ~6 років."
-    }
+    },
+    "trajectories": [
+      {
+        "id": "direct",
+        "name": {
+          "uk": "З гравітаційним маневром біля Землі (як OSIRIS-REx)"
+        },
+        "k_mult": 1,
+        "time_mult": 1,
+        "summary": {
+          "uk": "Типовий варіант для цієї цілі."
+        }
+      },
+      {
+        "id": "alt",
+        "name": {
+          "uk": "Швидкий прямий політ"
+        },
+        "k_mult": 0.7,
+        "time_mult": 0.6,
+        "summary": {
+          "uk": "Без гравітаційного маневру біля Землі: на 40% швидше, але ракета довезе на 30% менше."
+        }
+      }
+    ]
   },
   {
     "id": "venus",
@@ -352,7 +432,31 @@
       "urls": [
         "https://nssdc.gsfc.nasa.gov/planetary/factsheet/"
       ]
-    }
+    },
+    "trajectories": [
+      {
+        "id": "direct",
+        "name": {
+          "uk": "Пряма траєкторія"
+        },
+        "k_mult": 1,
+        "time_mult": 1,
+        "summary": {
+          "uk": "Типовий варіант для цієї цілі."
+        }
+      },
+      {
+        "id": "alt",
+        "name": {
+          "uk": "Довга економна траєкторія"
+        },
+        "k_mult": 1.1,
+        "time_mult": 1.4,
+        "summary": {
+          "uk": "На 10% більше маси, політ на 40% довший."
+        }
+      }
+    ]
   },
   {
     "id": "europa",
@@ -414,6 +518,37 @@
       "urls": [
         "https://nssdc.gsfc.nasa.gov/planetary/factsheet/"
       ]
+    },
+    "trajectories": [
+      {
+        "id": "direct",
+        "name": {
+          "uk": "З маневрами біля Марса і Землі (як Europa Clipper)"
+        },
+        "k_mult": 1,
+        "time_mult": 1,
+        "summary": {
+          "uk": "Типовий варіант для цієї цілі."
+        }
+      },
+      {
+        "id": "alt",
+        "name": {
+          "uk": "Прямий політ до Юпітера"
+        },
+        "k_mult": 0.55,
+        "time_mult": 0.5,
+        "summary": {
+          "uk": "Без маневрів біля Марса і Землі: ~2,7 року замість 5,5, але ракета довезе майже вдвічі менше."
+        }
+      }
+    ],
+    "planetary_protection": {
+      "surface_musd": 0,
+      "orbiter_musd": 30,
+      "note": {
+        "uk": "Європа може мати океан із життям, тому навіть орбітальний апарат має бути чистим на випадок падіння."
+      }
     }
   }
 ]

@@ -31,7 +31,8 @@ const ISSUE_TEXT = {
   no_relay: 'Біля цієї цілі немає орбітера-ретранслятора.',
   rocket_target: 'Ця ракета не долетить до обраної цілі.',
   platform_target: 'Ця платформа не підходить для обраної цілі.',
-  over_budget: 'Перевищено бюджет. Дешевша ракета, менше приладів або простіша платформа.',
+  ion_power: 'Іонному двигуну потрібні сонячні панелі від 20 м². РІТЕГ чи малі панелі не дадуть досить енергії.',
+  over_budget: 'Перевищено бюджет разом з резервом. Дешевша ракета, менше приладів або простіша платформа.',
   over_mass: 'Апарат заважкий для ракети. Візьміть потужнішу ракету або легші компоненти.',
   over_power: 'Приладам бракує енергії біля цілі. Більші панелі, РІТЕГ або менше приладів.',
 };
@@ -61,22 +62,57 @@ export function render(root, app) {
     const selected = multi ? build[field].includes(item.id) : build[field] === item.id;
     const kind = KIND[field];
     return `<div class="choice-wrap">
-      <button type="button" class="choice has-thumb" data-field="${field}" data-id="${esc(item.id)}" data-multi="${multi}"
+      <button type="button" class="choice${kind ? ' has-thumb' : ''}" data-field="${field}" data-id="${esc(item.id)}" data-multi="${multi}"
         aria-pressed="${selected}" ${disabled && !selected ? 'disabled' : ''}>
-        ${thumbHtml(kind, item, data)}
+        ${kind ? thumbHtml(kind, item, data) : ''}
         <span class="choice-name">${t(item.name)}</span>
         ${item.prototype ? `<span class="choice-proto">Прототип: ${esc(item.prototype)}</span>` : ''}
         ${desc ? `<span class="choice-desc">${desc}</span>` : ''}
         <span class="choice-stats">${stats}</span>
         ${why ? `<span class="choice-why">${why}</span>` : ''}
-      </button>${zoomButton(kind, item)}</div>`;
+      </button>${kind ? zoomButton(kind, item) : ''}</div>`;
   };
+  // Рішення рівня проєкту (без фото): вибір порівнюємо з уже розв'язаним значенням r
+  const pcard = (field, item, current, { stats = '', disabled = false, why = '' } = {}) => `<div class="choice-wrap">
+      <button type="button" class="choice" data-field="${field}" data-id="${esc(item.id)}" data-multi="false"
+        aria-pressed="${current === item.id}" ${disabled && current !== item.id ? 'disabled' : ''}>
+        <span class="choice-name">${t(item.name)}</span>
+        ${item.prototype ? `<span class="choice-proto">Приклади: ${esc(item.prototype)}</span>` : ''}
+        ${item.summary ? `<span class="choice-desc">${t(item.summary)}</span>` : ''}
+        <span class="choice-stats">${stats}</span>
+        ${why ? `<span class="choice-why">${why}</span>` : ''}
+      </button></div>`;
+  const M = data.mission;
+  const riskHtml = M.risk_classes.map((x) => pcard('riskClass', x, r.risk.id, {
+    stats: `<span class="stat-cost">ціна ×${fmt(x.cost_mult, 2)}</span><span class="stat-mass">маса ×${fmt(x.mass_mult, 2)}</span><span>відмови ×${fmt(x.fail_mult, 2)}</span>`,
+  })).join('');
+  const reserveHtml = M.reserves.map((x) => pcard('reserve', x, r.reservePct, { stats: `<span class="stat-cost">${fmt(c.cost.total * x.id / 100)} млн $ відкладено</span>` })).join('');
+  const orbiter = r.platform?.type === 'orbiter';
+  const engHtml = !build.engineer ? '' : `
+        <fieldset class="choice-group"><legend>Траєкторія <span class="eng-tag">інженер</span></legend>
+          <p class="group-hint">Довший шлях дозволяє ракеті довезти більше, швидший — менше.</p>
+          <div class="choices">${r.target.trajectories.map((x) => pcard('trajectory', x, r.trajectory.id, { stats: `<span class="stat-mass">маса ×${fmt(x.k_mult, 2)}</span><span>час польоту ×${fmt(x.time_mult, 2)}</span>` })).join('')}</div></fieldset>
+        <fieldset class="choice-group"><legend>Двигун апарата <span class="eng-tag">інженер</span></legend>
+          <div class="choices">${C.propulsion.map((x) => pcard('propulsion', x, r.propulsion.id, {
+            disabled: !!x.platform_types && !orbiter, why: x.platform_types && !orbiter ? 'Лише для орбітальних апаратів' : '',
+            stats: `<span>питомий імпульс ${fmt(x.isp_s)} с</span>${x.mass_kg ? `<span class="stat-mass">${fmt(x.mass_kg)} кг</span><span class="stat-cost">${fmt(x.cost_musd)} млн $</span><span>політ ×${fmt(x.time_mult, 1)}</span>` : ''}`,
+          })).join('')}</div></fieldset>
+        <fieldset class="choice-group"><legend>Орбіта біля цілі <span class="eng-tag">інженер</span></legend>
+          <div class="choices">${C.orbits.map((x) => pcard('orbit', x, r.orbit.id, {
+            disabled: !orbiter && x.id !== 'standard', why: !orbiter && x.id !== 'standard' ? 'Лише для орбітальних апаратів' : '',
+            stats: x.id === 'standard' ? '' : `<span>наука ×${fmt(x.science_mult, 2)}</span><span class="stat-power">сонце ×${fmt(x.solar_mult, 2)}</span><span>+${fmt(x.dv_extra_kms, 2)} км/с</span>`,
+          })).join('')}</div></fieldset>
+        <fieldset class="choice-group"><legend>Час антен Deep Space Network <span class="eng-tag">інженер</span></legend>
+          <p class="group-hint">Три комплекси антен на Землі обслуговують усі далекі місії. Не діє на ретрансляцію через орбітер.</p>
+          <div class="choices">${C.dsn.map((x) => pcard('dsn', x, r.dsn.id, { stats: `<span class="stat-data">дані ×${fmt(x.hours_mult, 1)}</span>${x.ops_musd_per_step ? `<span class="stat-cost">${x.ops_musd_per_step > 0 ? '+' : ''}${fmt(x.ops_musd_per_step)} млн $ за крок</span>` : ''}` })).join('')}</div></fieldset>`;
+  const pp = build.engineer && r.target.planetary_protection;
+  const ppCost = pp && r.platform ? (isSurface(r) ? pp.surface_musd : pp.orbiter_musd) : 0;
   const baseStats = (x) => `
     ${x.mass_kg !== undefined ? `<span class="stat-mass">${fmt(x.mass_kg)} кг</span>` : ''}
     ${x.cost_musd !== undefined ? `<span class="stat-cost">${fmt(x.cost_musd)} млн $</span>` : ''}`;
 
   const rocketsHtml = data.rockets.map((x) => {
-    const cap = capacityTo(x, r.target, r.launch);
+    const cap = capacityTo(x, r.target, r.launch, r.trajectory);
     return card('rocket', x, {
       disabled: cap === 0,
       why: cap === 0 ? 'Не долетить до цієї цілі' : '',
@@ -113,7 +149,7 @@ export function render(root, app) {
 
   const antennaHtml = C.antennas.map((x) => {
     const ok = (r.platform ? fits(x, r) : true) && (!x.relay || r.target.has_relay);
-    const down = downlinkPerDay(x, r.target, dist0);
+    const down = downlinkPerDay(x, r.target, dist0, r.dsn);
     return card('antenna', x, {
       disabled: !ok,
       why: !ok ? (x.relay && !r.target.has_relay ? 'Немає ретранслятора біля цілі' : 'Не для цієї платформи') : '',
@@ -129,6 +165,12 @@ export function render(root, app) {
         <h1>Конструктор</h1>
         <p class="muted">Місія: ${t(r.target.name)}, ${t(r.cls.name)}, «${t(r.goal.name)}», старт ${esc(new Date(`${build.launch}-15T00:00:00Z`).toLocaleDateString('uk-UA', { month: 'long', year: 'numeric', timeZone: 'UTC' }))}. <button type="button" class="link-btn" id="back">Змінити</button></p>
 
+        <fieldset class="choice-group"><legend>Клас ризику місії</legend>
+          <p class="group-hint">${t(M.risk_note)}</p>
+          <div class="choices">${riskHtml}</div></fieldset>
+        <fieldset class="choice-group"><legend>Резерв бюджету</legend>
+          <p class="group-hint">Гроші, відкладені на несподіванки під час розробки. Резерв входить у бюджет: що він більший, то менше лишається на апарат.</p>
+          <div class="choices">${reserveHtml}</div></fieldset>
         <fieldset class="choice-group"><legend>Ракета-носій</legend>
           <p class="group-hint">До далекої цілі ракета везе лише частку маси, яку виводить на орбіту Землі${c.win.factor < 0.99 ? `, а поза вікном запуску — ще й ${pct(c.win.factor)} від неї` : ''}.</p>
           <div class="choices">${rocketsHtml}</div></fieldset>
@@ -143,6 +185,8 @@ export function render(root, app) {
           <p class="group-hint">Швидкість падає з квадратом відстані. Зараз до Землі ${fmt(dist0, dist0 < 0.01 ? 4 : 2)} а.о.</p>
           <div class="choices">${antennaHtml}</div></fieldset>
         <fieldset class="choice-group"><legend>Резервування</legend><div class="choices">${extrasHtml}</div></fieldset>
+        ${engHtml}
+        ${ppCost ? `<p class="pp-note"><b>Планетарний захист: +${fmt(ppCost)} млн $.</b> ${t(pp.note)}</p>` : ''}
       </div>
 
       <aside class="board" aria-label="Готовність місії">
@@ -161,7 +205,7 @@ export function render(root, app) {
           ${c.issues.map((i) => `<li>${esc(typeof ISSUE_TEXT[i.code] === 'function' ? ISSUE_TEXT[i.code](i) : ISSUE_TEXT[i.code] || i.code)}</li>`).join('')}
           ${c.warnings.map((w) => `<li class="warn">${esc(WARN_TEXT[w.code])}</li>`).join('')}
         </ul>
-        <button type="button" class="btn launch" id="launch" ${c.ok ? '' : 'disabled'}>Запуск</button>
+        <button type="button" class="btn launch" id="launch" ${c.ok ? '' : 'disabled'}>До розробки</button>
         <div class="btn-row" style="margin-top:.6rem">
           <button type="button" class="link-btn" id="share">Скопіювати посилання на місію</button>
         </div>
@@ -170,13 +214,13 @@ export function render(root, app) {
     </div>
     <div class="minibar" aria-hidden="true">
       ${GAUGES.map((g) => { const b = c.bars[g.key]; const w = b.limit > 0 ? Math.min(1, b.used / b.limit) : (b.used > 0 ? 1 : 0); return `<span class="mini" title="${g.name}"><i style="width:${w * 100}%;background:${b.status === 'fail' ? 'var(--bad)' : g.color}"></i></span>`; }).join('')}
-      <button type="button" class="btn launch" data-launch ${c.ok ? '' : 'disabled'}>Запуск</button>
+      <button type="button" class="btn launch" data-launch ${c.ok ? '' : 'disabled'}>Далі</button>
     </div>`;
 
   root.querySelector('#back').addEventListener('click', () => app.go('briefing'));
   bindZoom(root, app);
   root.querySelectorAll('.choice').forEach((btn) => btn.addEventListener('click', () => select(app, r, btn)));
-  const launch = () => { app.mission = null; app.go('flight'); };
+  const launch = () => { app.mission = null; app.dev = null; app.go('dev'); };
   root.querySelector('#launch').addEventListener('click', launch);
   root.querySelector('[data-launch]').addEventListener('click', launch);
   root.querySelector('#share').addEventListener('click', async () => {
@@ -192,7 +236,7 @@ function select(app, r, btn) {
     const list = build[field];
     build[field] = list.includes(id) ? list.filter((x) => x !== id) : [...list, id];
   } else {
-    build[field] = id;
+    build[field] = field === 'reserve' ? Number(id) : id;
   }
   if (field === 'platform') {
     // Прибираємо те, що не стає на нову платформу
@@ -209,7 +253,7 @@ function gauge(g, b, r, c) {
   const ratio = b.limit > 0 ? b.used / b.limit : (b.used > 0 ? 1.01 : 0);
   const width = Math.min(1, ratio) * 100;
   let note = '';
-  if (g.key === 'budget') note = b.used <= b.limit ? `Залишок ${fmt(b.limit - b.used)} млн $` : `Перевищено на ${fmt(b.used - b.limit)} млн $`;
+  if (g.key === 'budget') note = `${b.used <= b.limit ? `Залишок ${fmt(b.limit - b.used)} млн $` : `Перевищено на ${fmt(b.used - b.limit)} млн $`}. З них резерв ${fmt(c.cost.reserve)} млн $ (${r.reservePct}%)`;
   if (g.key === 'mass') note = r.rocket ? `Ракета везе до цілі ${fmt(b.limit)} кг` : 'Оберіть ракету';
   if (g.key === 'power') note = r.power ? `Вироблення біля цілі ${fmt(b.limit)} Вт` : 'Оберіть джерело енергії';
   if (g.key === 'data') note = r.antenna ? `Антена передасть ${fmt(b.limit)} Мбіт/добу` : 'Оберіть антену';
@@ -229,8 +273,8 @@ function formula(key, r, c) {
   const m = c.mass;
   if (key === 'mass') {
     if (!r.platform) return 'Оберіть платформу';
-    let s = `Σ ${fmt(m.sum)} кг + ${DESIGN_MARGIN * 100}% запасу = ${fmt(m.dry)} кг`;
-    if (m.fuel) s += `<br>+ паливо (Ціолковський, Isp 320 с): ${fmt(m.fuel)} кг`;
+    let s = `Σ ${fmt(m.sum)} кг${r.risk.mass_mult !== 1 ? ` (клас ризику ×${fmt(r.risk.mass_mult, 2)})` : ''} + ${DESIGN_MARGIN * 100}% запасу = ${fmt(m.dry)} кг`;
+    if (m.fuel) s += `<br>+ паливо (Ціолковський, Isp ${fmt(isSurface(r) ? 320 : r.propulsion.isp_s)} с): ${fmt(m.fuel)} кг`;
     if (m.edl) s += `<br>+ система входу й посадки ×${r.target.landing.edl_factor}: ${fmt(m.edl)} кг`;
     return s;
   }
@@ -242,9 +286,9 @@ function formula(key, r, c) {
   if (key === 'data') {
     if (!r.antenna) return 'Оберіть антену';
     if (r.antenna.relay) return `Ретранслятор: ~${fmt(r.antenna.relay_mbit_per_day)} Мбіт/добу`;
-    return `R = ${r.antenna.rate_1au_mbps} Мбіт/с × 1/${fmt(c.dist, 3)}² × ${r.antenna.contact_h} год сеансу`;
+    return `R = ${r.antenna.rate_1au_mbps} Мбіт/с × 1/${fmt(c.dist, 3)}² × ${fmt(r.antenna.contact_h * r.dsn.hours_mult)} год сеансу`;
   }
-  return c.cost.items.map((i) => `${({ rocket: 'ракета', platform: 'платформа', instruments: 'прилади', power: 'енергія', antenna: 'антена', extras: 'резерв', landing: 'посадка', operations: 'робота команди', cruise: 'супровід перельоту' })[i.label]}: ${fmt(i.cost)}`).join(' · ');
+  return c.cost.items.map((i) => `${({ rocket: 'ракета', platform: 'платформа', instruments: 'прилади', power: 'енергія', antenna: 'антена', extras: 'резерв', landing: 'посадка', operations: 'робота команди', cruise: 'супровід перельоту', propulsion: 'двигун', protection: 'планетарний захист' })[i.label]}: ${fmt(i.cost)}`).join(' · ');
 }
 
 function massBar(c) {

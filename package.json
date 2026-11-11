@@ -10,7 +10,8 @@
     "balance": "node tools/montecarlo.js 10000",
     "build:single": "node tools/build-single.mjs",
     "images": "node tools/fetch-nasa-images.mjs",
-    "checklist": "node tools/sources-checklist.mjs"
+    "checklist": "node tools/sources-checklist.mjs",
+    "demo-check": "node tools/demo-check.mjs"
   },
   "devDependencies": {
     "esbuild": "0.24.2"

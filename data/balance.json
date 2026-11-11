@@ -1,221 +1,268 @@
 {
-  "date": "2026-11-08",
+  "date": "2026-11-10",
   "n": 10000,
-  "valid_share": 0.3943684189770083,
+  "valid_share": 0.366905155017428,
   "bins": [
-    2597,
-    479,
-    2666,
-    998,
-    724,
-    638,
-    497,
-    398,
-    295,
-    708
+    2736,
+    516,
+    2564,
+    1008,
+    708,
+    619,
+    546,
+    368,
+    265,
+    670
   ],
   "classes": [
     {
       "id": "discovery",
-      "n": 2049,
-      "success": 0.23621278672523183
+      "n": 1921,
+      "success": 0.2243623112961999
     },
     {
       "id": "new_frontiers",
-      "n": 3715,
-      "success": 0.10551816958277255
+      "n": 3682,
+      "success": 0.10103204780010863
     },
     {
       "id": "flagship",
-      "n": 4236,
-      "success": 0.03895184135977337
+      "n": 4397,
+      "success": 0.034114168751421425
     }
   ],
   "causes": [
     {
       "key": "none",
-      "share": 0.2821
+      "share": 0.2752
     },
     {
       "key": "downlink",
-      "share": 0.1906
+      "share": 0.1828
     },
     {
       "key": "lost_night",
-      "share": 0.1029
+      "share": 0.1096
     },
     {
       "key": "clouds",
-      "share": 0.0847
+      "share": 0.0772
     },
     {
       "key": "reset",
-      "share": 0.0669
-    },
-    {
-      "key": "lost_launch",
-      "share": 0.0616
+      "share": 0.0696
     },
     {
       "key": "lost_landing",
-      "share": 0.0592
+      "share": 0.0688
+    },
+    {
+      "key": "lost_launch",
+      "share": 0.0596
     },
     {
       "key": "failure",
-      "share": 0.0314
+      "share": 0.0293
     },
     {
       "key": "mobility",
-      "share": 0.0239
+      "share": 0.0268
     },
     {
       "key": "sleep",
-      "share": 0.021
+      "share": 0.0219
     },
     {
       "key": "lost_capture",
-      "share": 0.0195
+      "share": 0.0184
     },
     {
       "key": "lost_platform",
-      "share": 0.0171
+      "share": 0.015
     },
     {
       "key": "night",
-      "share": 0.0156
+      "share": 0.0133
     },
     {
       "key": "conjunction",
-      "share": 0.011
-    },
-    {
-      "key": "skipped",
-      "share": 0.004
+      "share": 0.0097
     },
     {
       "key": "power",
-      "share": 0.0027
+      "share": 0.0046
     },
     {
-      "key": "lost_comms",
-      "share": 0.0023
+      "key": "skipped",
+      "share": 0.0042
     },
     {
       "key": "lost_storm",
-      "share": 0.002
-    },
-    {
-      "key": "storm",
-      "share": 0.0012
-    },
-    {
-      "key": "lost_touch",
-      "share": 0.0002
+      "share": 0.0039
     },
     {
       "key": "lost_power",
-      "share": 0.0001
+      "share": 0.0027
+    },
+    {
+      "key": "storm",
+      "share": 0.0024
+    },
+    {
+      "key": "lost_cancelled",
+      "share": 0.0022
+    },
+    {
+      "key": "lost_comms",
+      "share": 0.0021
+    },
+    {
+      "key": "lost_touch",
+      "share": 0.0007
     }
   ],
   "best": [
     {
       "total": 100,
-      "target": "moon",
+      "target": "venus",
       "cls": "discovery",
       "goal": "map",
       "rocket": "falcon9",
       "platform": "orbiter",
       "instruments": [
-        "cam_hires",
-        "ir_spectrometer"
-      ],
-      "power": "solar_s",
-      "antenna": "hga_large",
-      "extras": [
-        "radiation_vault"
-      ],
-      "launch": "2026-11"
-    },
-    {
-      "total": 100,
-      "target": "moon",
-      "cls": "discovery",
-      "goal": "water",
-      "rocket": "atlas_v_541",
-      "platform": "orbiter",
-      "instruments": [
         "sar",
         "magnetometer",
-        "cam_hires",
-        "orbital_radar"
-      ],
-      "power": "solar_l",
-      "antenna": "lga",
-      "extras": [
-        "radiation_vault"
-      ],
-      "launch": "2026-11"
-    },
-    {
-      "total": 100,
-      "target": "venus",
-      "cls": "discovery",
-      "goal": "map",
-      "rocket": "falcon_heavy",
-      "platform": "orbiter",
-      "instruments": [
-        "sar",
-        "magnetometer"
-      ],
-      "power": "solar_xl",
-      "antenna": "hga_large",
-      "extras": [
-        "big_battery"
-      ],
-      "launch": "2028-01"
-    },
-    {
-      "total": 100,
-      "target": "moon",
-      "cls": "new_frontiers",
-      "goal": "map",
-      "rocket": "falcon_heavy",
-      "platform": "orbiter",
-      "instruments": [
-        "cam_hires",
+        "mass_spectrometer",
         "lidar",
-        "magnetometer",
-        "neutron",
-        "mass_spectrometer"
+        "cam_hires"
       ],
       "power": "solar_l",
       "antenna": "hga_large",
       "extras": [
-        "backup_antenna",
-        "big_battery"
+        "radiation_vault"
       ],
-      "launch": "2026-11"
+      "launch": "2028-01",
+      "riskClass": "C",
+      "reserve": 15,
+      "testing": "std",
+      "engineer": false,
+      "trajectory": "alt",
+      "propulsion": "chem",
+      "orbit": "low",
+      "dsn": "more"
     },
     {
       "total": 100,
       "target": "moon",
-      "cls": "new_frontiers",
-      "goal": "water",
-      "rocket": "falcon_heavy",
+      "cls": "discovery",
+      "goal": "life",
+      "rocket": "vulcan",
       "platform": "orbiter",
       "instruments": [
         "sar",
         "magnetometer",
-        "orbital_radar",
-        "ir_spectrometer",
-        "neutron"
+        "cam_hires",
+        "neutron",
+        "ir_spectrometer"
       ],
       "power": "solar_l",
       "antenna": "lga",
       "extras": [
         "backup_antenna"
       ],
-      "launch": "2027-12"
+      "launch": "2026-11",
+      "riskClass": "A",
+      "reserve": 15,
+      "testing": "min",
+      "engineer": false,
+      "trajectory": "alt",
+      "propulsion": "chem",
+      "orbit": "standard",
+      "dsn": "std"
+    },
+    {
+      "total": 100,
+      "target": "venus",
+      "cls": "discovery",
+      "goal": "water",
+      "rocket": "falcon_heavy",
+      "platform": "orbiter",
+      "instruments": [
+        "orbital_radar",
+        "ir_spectrometer",
+        "mass_spectrometer",
+        "neutron"
+      ],
+      "power": "solar_s",
+      "antenna": "lga",
+      "extras": [
+        "big_battery"
+      ],
+      "launch": "2028-01",
+      "riskClass": "D",
+      "reserve": 35,
+      "testing": "std",
+      "engineer": false,
+      "trajectory": "alt",
+      "propulsion": "chem",
+      "orbit": "standard",
+      "dsn": "std"
+    },
+    {
+      "total": 100,
+      "target": "asteroid",
+      "cls": "discovery",
+      "goal": "water",
+      "rocket": "falcon9",
+      "platform": "orbiter",
+      "instruments": [
+        "orbital_radar",
+        "lidar",
+        "cam_hires",
+        "mass_spectrometer"
+      ],
+      "power": "solar_m",
+      "antenna": "hga_large",
+      "extras": [
+        "backup_antenna"
+      ],
+      "launch": "2028-10",
+      "riskClass": "B",
+      "reserve": 15,
+      "testing": "std",
+      "engineer": false,
+      "trajectory": "direct",
+      "propulsion": "ion",
+      "orbit": "low",
+      "dsn": "more"
+    },
+    {
+      "total": 100,
+      "target": "asteroid",
+      "cls": "discovery",
+      "goal": "atmosphere",
+      "rocket": "vulcan",
+      "platform": "orbiter",
+      "instruments": [
+        "mass_spectrometer",
+        "sar",
+        "orbital_radar",
+        "ir_spectrometer"
+      ],
+      "power": "solar_s",
+      "antenna": "hga_large",
+      "extras": [
+        "backup_antenna"
+      ],
+      "launch": "2028-10",
+      "riskClass": "D",
+      "reserve": 35,
+      "testing": "full",
+      "engineer": true,
+      "trajectory": "direct",
+      "propulsion": "chem",
+      "orbit": "standard",
+      "dsn": "std"
     }
   ]
 }

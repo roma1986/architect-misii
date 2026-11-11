@@ -8,7 +8,8 @@ import { rocketSvg } from './stack.js';
 import { sfx } from './sound.js';
 
 export function render(root, app) {
-  if (!app.mission) app.mission = new Mission(app.data, app.build, app.seed);
+  if (!app.dev || !app.dev.done || app.dev.cancelled) { app.go('dev'); return; }
+  if (!app.mission) app.mission = new Mission(app.data, app.dev.build, app.seed, app.dev);
   const m = app.mission;
   const s = m.s;
   const started = m.entries.length > 0;
@@ -40,7 +41,7 @@ export function render(root, app) {
     after(m, app);
   });
   root.querySelector('[data-act="summary"]')?.addEventListener('click', () => app.go('summary'));
-  root.querySelector('[data-act="rebuild"]')?.addEventListener('click', () => { app.mission = null; app.go('builder'); });
+  root.querySelector('[data-act="rebuild"]')?.addEventListener('click', () => { app.mission = null; app.dev = null; app.go('builder'); });
   root.querySelectorAll('[data-option]').forEach((b) => b.addEventListener('click', () => {
     m.choose(b.dataset.option);
     m.advance();

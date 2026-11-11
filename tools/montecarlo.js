@@ -31,6 +31,8 @@ function randomBuild() {
     rocket: rng.pick(data.rockets).id, platform: platform.id, instruments,
     power: rng.pick(C.power).id, antenna: rng.pick(antennas).id, extras,
     launch: rng() < 0.7 ? bestLaunch(target) : rng.pick(launchMonths()),
+    riskClass: rng.pick(['A', 'B', 'C', 'D']), reserve: rng.pick([15, 25, 35]), testing: rng.pick(['min', 'std', 'full']),
+    engineer: rng() < 0.3, trajectory: rng.pick(['direct', 'alt']), propulsion: rng.pick(['chem', 'ion']), orbit: rng.pick(['standard', 'low']), dsn: rng.pick(['less', 'std', 'more']),
   };
 }
 

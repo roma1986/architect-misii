@@ -4,20 +4,25 @@ import { randomSeed } from './rng.js';
 import { decodeMission, toast } from './ui/dom.js';
 import * as briefing from './ui/briefing.js';
 import * as builder from './ui/builder.js';
+import * as devScreen from './ui/dev.js';
 import * as flight from './ui/flight.js';
 import * as summary from './ui/summary.js';
 import * as colony from './ui/colony.js';
 import { renderAbout } from './ui/about.js';
 import { setSound } from './ui/sound.js';
+import { startDemo } from './ui/demo.js';
+import { DEMO_BUILDS, DEMO_SEED } from './demo-script.js';
 
-const SCREENS = { briefing, builder, flight, summary, colony };
-const ORDER = ['briefing', 'builder', 'flight', 'summary'];
+const SCREENS = { briefing, builder, dev: devScreen, flight, summary, colony };
+const ORDER = ['briefing', 'builder', 'dev', 'flight', 'summary'];
 
 export const app = {
   data: null,
   build: emptyBuild(),
   seed: randomSeed(),
   mission: null,
+  dev: null,
+  demo: null,
   screen: 'briefing',
   root: document.getElementById('screen'),
 
@@ -37,11 +42,15 @@ export const app = {
     });
   },
   newSeed() { this.seed = randomSeed(); },
-  reset() { this.build = emptyBuild(); this.newSeed(); this.mission = null; },
+  reset() { const engineer = this.build.engineer; this.build = { ...emptyBuild(), engineer }; this.newSeed(); this.mission = null; this.dev = null; },
 };
 
 export function emptyBuild() {
-  return { target: null, cls: null, goal: null, rocket: null, platform: null, instruments: [], power: null, antenna: null, extras: [] };
+  return {
+    target: null, cls: null, goal: null, rocket: null, platform: null, instruments: [], power: null, antenna: null, extras: [],
+    riskClass: 'C', reserve: 25, testing: 'std',
+    engineer: false, trajectory: 'direct', propulsion: 'chem', orbit: 'standard', dsn: 'std',
+  };
 }
 
 async function start() {
@@ -54,9 +63,22 @@ async function start() {
   }
 
   const modeToggle = document.getElementById('mode-toggle');
+  const applyMode = (on) => {
+    modeToggle.checked = on;
+    document.body.classList.toggle('mode-engineer', on);
+    document.body.classList.toggle('mode-cadet', !on);
+  };
+  app.applyMode = applyMode;
   modeToggle.addEventListener('change', () => {
-    document.body.classList.toggle('mode-engineer', modeToggle.checked);
-    document.body.classList.toggle('mode-cadet', !modeToggle.checked);
+    applyMode(modeToggle.checked);
+    app.build.engineer = modeToggle.checked;
+    // Режим змінює правила (траєкторії, двигуни, планетарний захист), тому розробку починаємо заново
+    if (app.screen === 'briefing' || app.screen === 'builder' || (app.screen === 'dev' && !(app.dev && app.dev.started))) {
+      app.dev = null;
+      app.render();
+    } else {
+      toast('Нові правила режиму почнуть діяти з наступної місії');
+    }
   });
 
   const soundToggle = document.getElementById('sound-toggle');
@@ -71,15 +93,19 @@ async function start() {
   const viewer = document.getElementById('viewer');
   viewer.addEventListener('click', (e) => { if (e.target === viewer || e.target.closest('[data-close]')) viewer.close(); });
 
-  // Демо для презентації: #demo1 — «жадібна» місія, яка провалиться; #demo2 — виправлена.
-  const DEMOS = {
-    demo1: { target: 'mars', cls: 'flagship', goal: 'life', launch: '2026-11', rocket: 'atlas_v_541', platform: 'rover_large', instruments: ['panorama_cam', 'laser_spectrometer', 'drill', 'gpr', 'weather', 'mass_spectrometer'], power: 'solar_l', antenna: 'hga_small', extras: [] },
-    demo2: { target: 'mars', cls: 'flagship', goal: 'life', launch: '2026-11', rocket: 'atlas_v_541', platform: 'rover_large', instruments: ['panorama_cam', 'laser_spectrometer', 'drill', 'gpr', 'mass_spectrometer'], power: 'rtg_2', antenna: 'relay_uhf', extras: ['big_battery'] },
-  };
-  const demo = DEMOS[location.hash.slice(1)];
-  if (demo) {
-    app.build = { ...emptyBuild(), ...demo };
-    app.seed = 'DBCA';
+  document.getElementById('demo-btn').addEventListener('click', () => startDemo(app));
+
+  // Демо для презентації: #demo — показ з підписами; #demo1 і #demo2 — готові конструкції для гри вручну.
+  const hash = location.hash.slice(1);
+  if (hash === 'demo') {
+    app.go('briefing', { focus: false });
+    startDemo(app);
+    return;
+  }
+  if (DEMO_BUILDS[hash]) {
+    app.build = { ...emptyBuild(), ...DEMO_BUILDS[hash] };
+    app.seed = DEMO_SEED;
+    applyMode(false);
     app.go('builder', { focus: false });
     toast(`Демо-місія ${app.seed}`);
     return;
@@ -91,6 +117,7 @@ async function start() {
     if (decoded) {
       app.build = { ...emptyBuild(), ...decoded.build };
       app.seed = decoded.seed || app.seed;
+      applyMode(!!app.build.engineer);
       history.replaceState(null, '', location.pathname + location.search);
       app.go('builder', { focus: false });
       toast(`Завантажено місію ${app.seed}`);

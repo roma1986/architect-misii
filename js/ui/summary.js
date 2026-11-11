@@ -14,6 +14,7 @@ export function render(root, app) {
   const real = comparison(m);
   const media = mediaFor(m);
   const title = TITLES[sc.title];
+  if (app.demo) m.recordPlace = 0;   // демо-показ не потрапляє в рейтинг
   if (!m.recordPlace && m.recordPlace !== 0) {
     m.recordPlace = saveRecord({
       id: `${app.seed}:${JSON.stringify(app.build)}`, total: sc.total, title: title.name, outcome: sc.outcome,
@@ -37,8 +38,8 @@ export function render(root, app) {
     </div>
 
     <div class="axes">
-      ${axis('Наука', sc.science, `${fmt(m.s.science)} з очікуваних ${fmt(m.r.cls.science_target)}`, 'var(--data)')}
-      ${axis('Ефективність бюджету', sc.efficiency, `${fmt(m.check.cost.total)} млн $ витрачено`, 'var(--budget)')}
+      ${axis('Наука', sc.science, `${fmt(m.s.science)} балів. Поріг ${fmt(m.r.cls.science_target * 0.6)}, база ${fmt(m.r.cls.science_target)} (риски на шкалі)`, 'var(--data)', [{ at: 60, label: 'Порогова місія' }, { at: 100, label: 'Базова місія' }])}
+      ${axis('Ефективність бюджету', sc.efficiency, `${fmt(m.spent)} млн $ витрачено з ${fmt(m.r.cls.budget_musd)}`, 'var(--budget)')}
       ${axis('Надійність', sc.reliability, `${m.s.instruments.filter((i) => i.alive).length} з ${m.s.instruments.length} приладів працюють`, 'var(--mass)')}
     </div>
 
@@ -70,8 +71,8 @@ export function render(root, app) {
       </div>
     </div>`;
 
-  root.querySelector('[data-act="rebuild"]').addEventListener('click', () => { app.mission = null; app.go('builder'); });
-  root.querySelector('[data-act="retry"]').addEventListener('click', () => { app.newSeed(); app.mission = null; app.go('flight'); });
+  root.querySelector('[data-act="rebuild"]').addEventListener('click', () => { app.mission = null; app.dev = null; app.go('builder'); });
+  root.querySelector('[data-act="retry"]').addEventListener('click', () => { app.newSeed(); app.mission = null; app.dev = null; app.go('dev'); });
   root.querySelector('[data-act="new"]').addEventListener('click', () => { app.reset(); app.go('briefing'); });
   root.querySelector('[data-act="share"]').addEventListener('click', async () => {
     const url = missionUrl(app.build, app.seed);
@@ -91,10 +92,11 @@ export function render(root, app) {
   if (img) img.addEventListener('error', () => { img.closest('.photo').innerHTML = placeholder(media); });
 }
 
-function axis(name, value, note, color) {
+function axis(name, value, note, color, marks = []) {
   return `<div class="axis panel" style="margin:0">
     <div class="gauge-head"><span>${name}</span><b class="num">${value}</b></div>
-    <div class="gauge-track"><span class="gauge-fill" style="width:${Math.min(100, value / 1.5)}%;background:${color}"></span></div>
+    <div class="gauge-track"><span class="gauge-fill" style="width:${Math.min(100, value / 1.5)}%;background:${color}"></span>
+      ${marks.map((mk) => `<span class="th-mark" style="left:${mk.at / 1.5}%" title="${mk.label}"></span>`).join('')}</div>
     <div class="gauge-note">${esc(note)}</div>
   </div>`;
 }
@@ -120,7 +122,7 @@ function compareTable(m, real) {
     ['Ракета', t(m.r.rocket.name), esc(real.rocket)],
     ['Маса на старті', `${fmt(c.mass.launch)} кг`, `${fmt(real.launch_mass_kg)} кг`],
     ['Маса апарата', `${fmt(c.mass.dry)} кг`, `${fmt(real.craft_mass_kg)} кг`],
-    ['Вартість', `${fmt(c.cost.total)} млн $`, real.cost_musd ? `~${fmt(real.cost_musd)} млн $` : 'немає даних'],
+    ['Вартість', `${fmt(m.spent)} млн $`, real.cost_musd ? `~${fmt(real.cost_musd)} млн $` : 'немає даних'],
     ['Приладів', m.r.instruments.length, real.instruments],
     ['Енергія', t(m.r.power.name), esc(real.power)],
   ];

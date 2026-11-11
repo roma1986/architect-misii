@@ -2,177 +2,119 @@
   "_note": "Фото для мініатюр. nasa_id підібрано вручну 2026-11-09 на images.nasa.gov; файли завантажує npm run images. Щоб замінити фото, змініть nasa_id і запустіть node tools/fetch-nasa-images.mjs --force.",
   "falcon9": {
     "query": "Falcon 9 launch",
-    "nasa_id": "NHQ202409270003",
-    "file": "img/items/falcon9.jpg",
-    "url": "https://images.nasa.gov/details/NHQ202409270003"
+    "nasa_id": "NHQ202409270003"
   },
   "falcon_heavy": {
     "query": "Falcon Heavy launch Psyche",
-    "nasa_id": "NHQ201906240103",
-    "file": "img/items/falcon_heavy.jpg",
-    "url": "https://images.nasa.gov/details/NHQ201906240103"
+    "nasa_id": "NHQ201906240103"
   },
   "atlas_v_541": {
     "query": "Atlas V Perseverance launch",
-    "nasa_id": "KSC-20200730-PH-FMX01_0042",
-    "file": "img/items/atlas_v_541.jpg",
-    "url": "https://images.nasa.gov/details/KSC-20200730-PH-FMX01_0042"
+    "nasa_id": "KSC-20200730-PH-FMX01_0042"
   },
   "vulcan": {
     "query": "Vulcan Centaur launch",
-    "nasa_id": "KSC-20210826-PH-KLS01_0073",
-    "file": "img/items/vulcan.jpg",
-    "url": "https://images.nasa.gov/details/KSC-20210826-PH-KLS01_0073"
+    "nasa_id": "KSC-20210826-PH-KLS01_0073"
   },
   "antares": {
     "query": "Antares rocket launch",
-    "nasa_id": "201304210020HQ",
-    "file": "img/items/antares.jpg",
-    "url": "https://images.nasa.gov/details/201304210020HQ"
+    "nasa_id": "201304210020HQ"
   },
   "mars": {
     "query": "Mars globe Hubble",
-    "nasa_id": "PIA02992",
-    "file": "img/items/mars.jpg",
-    "url": "https://images.nasa.gov/details/PIA02992"
+    "nasa_id": "PIA02992"
   },
   "moon": {
     "query": "full Moon",
-    "nasa_id": "KSC-20240819-PH-JBS01_0009",
-    "file": "img/items/moon.jpg",
-    "url": "https://images.nasa.gov/details/KSC-20240819-PH-JBS01_0009"
+    "nasa_id": "KSC-20240819-PH-JBS01_0009"
   },
   "asteroid": {
     "query": "Bennu OSIRIS-REx",
-    "nasa_id": "2019-02-25_regolith_image_compilation",
-    "file": "img/items/asteroid.jpg",
-    "url": "https://images.nasa.gov/details/2019-02-25_regolith_image_compilation"
+    "nasa_id": "2019-02-25_regolith_image_compilation"
   },
   "venus": {
     "query": "Venus Mariner 10",
-    "nasa_id": "PIA23791",
-    "file": "img/items/venus.jpg",
-    "url": "https://images.nasa.gov/details/PIA23791"
+    "nasa_id": "PIA23791"
   },
   "europa": {
     "query": "Europa Galileo",
-    "nasa_id": "PIA21431",
-    "file": "img/items/europa.jpg",
-    "url": "https://images.nasa.gov/details/PIA21431"
+    "nasa_id": "PIA21431"
   },
   "orbiter": {
     "query": "Mars Reconnaissance Orbiter",
-    "nasa_id": "PIA04758",
-    "file": "img/items/orbiter.jpg",
-    "url": "https://images.nasa.gov/details/PIA04758"
+    "nasa_id": "PIA04758"
   },
   "lander": {
     "query": "InSight lander",
-    "nasa_id": "PIA22571",
-    "file": "img/items/lander.jpg",
-    "url": "https://images.nasa.gov/details/PIA22571"
+    "nasa_id": "PIA22571"
   },
   "rover_small": {
     "query": "Opportunity rover",
-    "nasa_id": "PIA08812",
-    "file": "img/items/rover_small.jpg",
-    "url": "https://images.nasa.gov/details/PIA08812"
+    "nasa_id": "PIA08812"
   },
   "rover_large": {
     "query": "Perseverance rover",
-    "nasa_id": "PIA24542",
-    "file": "img/items/rover_large.jpg",
-    "url": "https://images.nasa.gov/details/PIA24542"
+    "nasa_id": "PIA24542"
   },
   "sampler": {
     "query": "OSIRIS-REx spacecraft",
-    "nasa_id": "GSFC_20171208_Archive_e000397",
-    "file": "img/items/sampler.jpg",
-    "url": "https://images.nasa.gov/details/GSFC_20171208_Archive_e000397"
+    "nasa_id": "GSFC_20171208_Archive_e000397"
   },
   "cam_hires": {
     "query": "HiRISE camera",
-    "nasa_id": "PIA07210",
-    "file": "img/items/cam_hires.jpg",
-    "url": "https://images.nasa.gov/details/PIA07210"
+    "nasa_id": "PIA07210"
   },
   "ir_spectrometer": {
     "query": "CRISM instrument",
-    "nasa_id": "PIA09343",
-    "file": "img/items/ir_spectrometer.jpg",
-    "url": "https://images.nasa.gov/details/PIA09343"
+    "nasa_id": "PIA09343"
   },
   "orbital_radar": {
     "query": "SHARAD radar",
-    "nasa_id": "PIA26555",
-    "file": "img/items/orbital_radar.jpg",
-    "url": "https://images.nasa.gov/details/PIA26555"
+    "nasa_id": "PIA26555"
   },
   "sar": {
     "query": "Magellan spacecraft",
-    "nasa_id": "s30-71-063",
-    "file": "img/items/sar.jpg",
-    "url": "https://images.nasa.gov/details/s30-71-063"
+    "nasa_id": "s30-71-063"
   },
   "neutron": {
     "query": "DAN instrument Curiosity",
-    "nasa_id": "PIA16082",
-    "file": "img/items/neutron.jpg",
-    "url": "https://images.nasa.gov/details/PIA16082"
+    "nasa_id": "PIA16082"
   },
   "magnetometer": {
     "query": "MAVEN magnetometer",
-    "nasa_id": "PIA24786",
-    "file": "img/items/magnetometer.jpg",
-    "url": "https://images.nasa.gov/details/PIA24786"
+    "nasa_id": "PIA24786"
   },
   "panorama_cam": {
     "query": "Mastcam-Z",
-    "nasa_id": "PIA22101",
-    "file": "img/items/panorama_cam.jpg",
-    "url": "https://images.nasa.gov/details/PIA22101"
+    "nasa_id": "PIA22101"
   },
   "laser_spectrometer": {
     "query": "SuperCam",
-    "nasa_id": "PIA24208",
-    "file": "img/items/laser_spectrometer.jpg",
-    "url": "https://images.nasa.gov/details/PIA24208"
+    "nasa_id": "PIA24208"
   },
   "gpr": {
     "query": "RIMFAX",
-    "nasa_id": "PIA24048",
-    "file": "img/items/gpr.jpg",
-    "url": "https://images.nasa.gov/details/PIA24048"
+    "nasa_id": "PIA24048"
   },
   "seismometer": {
     "query": "InSight SEIS seismometer",
-    "nasa_id": "PIA23177",
-    "file": "img/items/seismometer.jpg",
-    "url": "https://images.nasa.gov/details/PIA23177"
+    "nasa_id": "PIA23177"
   },
   "weather": {
     "query": "MEDA Perseverance",
-    "nasa_id": "PIA24339",
-    "file": "img/items/weather.jpg",
-    "url": "https://images.nasa.gov/details/PIA24339"
+    "nasa_id": "PIA24339"
   },
   "drill": {
     "query": "Perseverance sample tube",
-    "nasa_id": "PIA24808",
-    "file": "img/items/drill.jpg",
-    "url": "https://images.nasa.gov/details/PIA24808"
+    "nasa_id": "PIA24808"
   },
   "moxie": {
     "query": "MOXIE",
-    "nasa_id": "PIA24176",
-    "file": "img/items/moxie.jpg",
-    "url": "https://images.nasa.gov/details/PIA24176"
+    "nasa_id": "PIA24176"
   },
   "mass_spectrometer": {
     "query": "MASPEX",
-    "nasa_id": "PIA26439",
-    "file": "img/items/mass_spectrometer.jpg",
-    "url": "https://images.nasa.gov/details/PIA26439"
+    "nasa_id": "PIA26439"
   },
   "lidar": {
     "query": "OLA laser altimeter",
@@ -181,75 +123,51 @@
   },
   "sample_arm": {
     "query": "TAGSAM",
-    "nasa_id": "jsc2023e058644",
-    "file": "img/items/sample_arm.jpg",
-    "url": "https://images.nasa.gov/details/jsc2023e058644"
+    "nasa_id": "jsc2023e058644"
   },
   "solar_s": {
     "query": "CubeSat solar panels",
-    "nasa_id": "PIA22458",
-    "file": "img/items/solar_s.jpg",
-    "url": "https://images.nasa.gov/details/PIA22458"
+    "nasa_id": "PIA22458"
   },
   "solar_m": {
     "query": "InSight solar array",
-    "nasa_id": "PIA22205",
-    "file": "img/items/solar_m.jpg",
-    "url": "https://images.nasa.gov/details/PIA22205"
+    "nasa_id": "PIA22205"
   },
   "solar_l": {
     "query": "Juno solar array",
-    "nasa_id": "PIA13925",
-    "file": "img/items/solar_l.jpg",
-    "url": "https://images.nasa.gov/details/PIA13925"
+    "nasa_id": "PIA13925"
   },
   "solar_xl": {
     "query": "Europa Clipper solar array",
-    "nasa_id": "PIA26067",
-    "file": "img/items/solar_xl.jpg",
-    "url": "https://images.nasa.gov/details/PIA26067"
+    "nasa_id": "PIA26067"
   },
   "rtg_1": {
     "query": "MMRTG",
-    "nasa_id": "PIA23306",
-    "file": "img/items/rtg_1.jpg",
-    "url": "https://images.nasa.gov/details/PIA23306"
+    "nasa_id": "PIA23306"
   },
   "rtg_2": {
     "query": "Cassini RTG",
-    "nasa_id": "KSC-97PC1066",
-    "file": "img/items/rtg_2.jpg",
-    "url": "https://images.nasa.gov/details/KSC-97PC1066"
+    "nasa_id": "KSC-97PC1066"
   },
   "lga": {
     "query": "low gain antenna spacecraft",
-    "nasa_id": "PIA00661",
-    "file": "img/items/lga.jpg",
-    "url": "https://images.nasa.gov/details/PIA00661"
+    "nasa_id": "PIA00661"
   },
   "hga_small": {
     "query": "Perseverance high-gain antenna",
-    "nasa_id": "PIA24045",
-    "file": "img/items/hga_small.jpg",
-    "url": "https://images.nasa.gov/details/PIA24045"
+    "nasa_id": "PIA24045"
   },
   "hga_large": {
     "query": "Mars Reconnaissance Orbiter antenna",
-    "nasa_id": "05pd1113",
-    "file": "img/items/hga_large.jpg",
-    "url": "https://images.nasa.gov/details/05pd1113"
+    "nasa_id": "05pd1113"
   },
   "relay_uhf": {
     "query": "Mars Odyssey",
-    "nasa_id": "PIA04244",
-    "file": "img/items/relay_uhf.jpg",
-    "url": "https://images.nasa.gov/details/PIA04244"
+    "nasa_id": "PIA04244"
   },
   "backup_antenna": {
     "query": "Galileo high-gain antenna",
-    "nasa_id": "PIA23616",
-    "file": "img/items/backup_antenna.jpg",
-    "url": "https://images.nasa.gov/details/PIA23616"
+    "nasa_id": "PIA23616"
   },
   "big_battery": {
     "query": "spacecraft battery",
@@ -258,8 +176,6 @@
   },
   "radiation_vault": {
     "query": "Juno radiation vault",
-    "nasa_id": "PIA13256",
-    "file": "img/items/radiation_vault.jpg",
-    "url": "https://images.nasa.gov/details/PIA13256"
+    "nasa_id": "PIA13256"
   }
 }
