@@ -183,6 +183,9 @@ body::before {
 .viewer-ill .rocket-big { height: 50vh; width: auto; }
 .viewer-ill .craft { width: 100%; height: auto; }
 .viewer-media figcaption { font-size: .8rem; color: var(--muted); margin-top: .4rem; }
+.viewer-media .cap-ill { display: none; }
+.viewer-media.no-photo .cap-ill, .viewer-media:not(:has(img)) .cap-ill { display: block; }
+.viewer-media.no-photo .cap-photo { display: none; }
 .viewer-info th { width: 42%; font-weight: 500; color: var(--muted); vertical-align: top; }
 p.verified { margin-top: .7rem; color: var(--good); }
 p.verified a { color: inherit; }
