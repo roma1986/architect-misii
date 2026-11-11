@@ -11,9 +11,14 @@
     "build:single": "node tools/build-single.mjs",
     "images": "node tools/fetch-nasa-images.mjs",
     "checklist": "node tools/sources-checklist.mjs",
-    "demo-check": "node tools/demo-check.mjs"
+    "demo-check": "node tools/demo-check.mjs",
+    "lint": "eslint .",
+    "verify": "npm run check && npm run check-text && npm run lint && npm run demo-check",
+    "check-text": "node tools/check-text.mjs"
   },
   "devDependencies": {
-    "esbuild": "0.24.2"
+    "esbuild": "0.24.2",
+    "eslint": "^9.39.5",
+    "globals": "^15.15.0"
   }
 }
