@@ -10,7 +10,7 @@ const VB_H = 380;
 const BASE = 366;      // низ першого ступеня
 const DEFAULT_V = { height_m: 60, core_d_m: 3.7, s1_h_m: 35, fairing_d_m: 5, fairing_h_m: 13, core_color: '#e9e9e4', boosters: 0 };
 
-/** Силует ракети збоку. opts.flame — полум'я двигунів (для старту). */
+/** Силует ракети збоку. opts.flame — полум’я двигунів (для старту). */
 export function rocketSvg(rocket, { flame = false, className = 'rocket-side' } = {}) {
   if (!rocket) {
     return `<svg class="${className}" viewBox="0 0 ${VB_W} ${VB_H}" role="img" aria-label="Ракету не обрано">
@@ -131,8 +131,8 @@ export function fairingSvg(r, c) {
         ${craftMini(r, cx, yShield - 3, pw * 0.5, backH * 0.55)}
         <rect x="${cx - pw * 0.34}" y="${yCruise}" width="${pw * 0.68}" height="${cruiseH}" rx="2" fill="#2b4a8a" stroke="#9fb4e0" stroke-width=".6"/>
         <path d="M${cx - pw * 0.34 + 6} ${yCruise + cruiseH / 2} H${cx + pw * 0.34 - 6}" stroke="#9fb4e0" stroke-width=".5"/>`;
-      labels.push({ y: yShield - backH / 2, text: `Апарат ${fmt(c.mass.dry)} кг` });
-      labels.push({ y: yShield, text: `Посадка ${fmt(c.mass.edl)} кг` });
+      labels.push({ y: yShield - backH / 2, text: `Апарат ${fmt(c.mass.dry)} кг` });
+      labels.push({ y: yShield, text: `Посадка ${fmt(c.mass.edl)} кг` });
       labels.push({ y: yCruise + cruiseH / 2, text: 'Перелітний модуль' });
       labels.push({ y: yBackTop + backH * 0.15, text: 'Капсула' });
     } else {
@@ -154,8 +154,8 @@ export function fairingSvg(r, c) {
         ${r.power?.type === 'rtg' ? `<rect x="${bx + 3}" y="${pTop + 10}" width="7" height="14" rx="1" fill="#6b6f78"/>` : ''}
         ${dish}
         ${r.instruments.slice(0, 6).map((ins, i) => `<rect x="${bx + 3 + i * ((bodyW - 6) / 6)}" y="${pTop + bodyH * 0.18}" width="${(bodyW - 6) / 6 - 2}" height="6" rx="1" fill="#566176"/>`).join('')}`;
-      labels.push({ y: pTop + bodyH * 0.25, text: `Апарат ${fmt(c.mass.dry)} кг` });
-      if (c.mass.fuel > 0) labels.push({ y: adTop - bodyH * 0.35, text: `Паливо ${fmt(c.mass.fuel)} кг` });
+      labels.push({ y: pTop + bodyH * 0.25, text: `Апарат ${fmt(c.mass.dry)} кг` });
+      if (c.mass.fuel > 0) labels.push({ y: adTop - bodyH * 0.35, text: `Паливо ${fmt(c.mass.fuel)} кг` });
       if (r.power?.type === 'solar') labels.push({ y: pTop + bodyH * 0.6, text: 'Панелі складені' });
     }
   }
@@ -173,7 +173,7 @@ export function fairingSvg(r, c) {
   const shell = `<path d="M${x0} ${bottom} V${cylTop} Q${x0} ${tip + fh * 0.12} ${cx} ${tip} Q${x0 + fw} ${tip + fh * 0.12} ${x0 + fw} ${cylTop} V${bottom}"
     fill="none" stroke="${stroke}" stroke-width="${over ? 2 : 1.2}" stroke-dasharray="${over ? '0' : '0'}"/>`;
   const status = c.capacity
-    ? `<text x="${W - 2}" y="${H - 2}" font-size="10" text-anchor="end" fill="${over ? 'var(--bad)' : 'var(--muted)'}">${over ? 'Перевантаження!' : `${fmt(c.mass.launch)} з ${fmt(c.capacity)} кг`}</text>` : '';
+    ? `<text x="${W - 2}" y="${H - 2}" font-size="10" text-anchor="end" fill="${over ? 'var(--bad)' : 'var(--muted)'}">${over ? 'Перевантаження!' : `${fmt(c.mass.launch)} з ${fmt(c.capacity)} кг`}</text>` : '';
   return `<svg class="fairing" viewBox="0 0 ${W} ${H}" role="img" aria-label="Розріз головного обтічника: ${esc(labels.map((l) => l.text).join(', '))}">
     <path d="M${x0 - 4} ${bottom} H${x0 + fw + 4}" stroke="var(--line)" stroke-width="2"/>
     ${adapter}${payload}${shell}${callouts}${status}

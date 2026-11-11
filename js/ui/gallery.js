@@ -1,6 +1,6 @@
 // Мініатюри для карток вибору і вікно «Детальніше».
 // Якщо в data/photos.json є фото (npm run images), показуємо його; інакше — точну ілюстрацію.
-import { tr } from '../i18n.js';
+import { tr, dayWord } from '../i18n.js';
 import { esc, t, fmt, pct } from './dom.js';
 import { planetSvg, craftSvg } from './visuals.js';
 import { rocketSvg } from './stack.js';
@@ -85,36 +85,36 @@ function specRows(kind, x, ctx) {
   if (kind === 'rocket') {
     add('Висота', x.visual ? `${fmt(x.visual.height_m)} м` : '');
     add('Діаметр обтічника', x.visual ? `${fmt(x.visual.fairing_d_m, 1)} м` : '');
-    add('На низьку орбіту', `${fmt(x.leo_kg)} кг`);
-    if (ctx.target) add(`До цілі «${tr(ctx.target.name)}»`, `${fmt(capacityTo(x, ctx.target, ctx.launch))} кг`);
-    add('Ціна запуску', `${fmt(x.cost_musd)} млн $`);
+    add('На низьку орбіту', `${fmt(x.leo_kg)} кг`);
+    if (ctx.target) add(`До цілі «${tr(ctx.target.name)}»`, `${fmt(capacityTo(x, ctx.target, ctx.launch))} кг`);
+    add('Ціна запуску', `${fmt(x.cost_musd)} млн $`);
     add('Історія польотів', `${x.successes} успішних з ${x.flights}`);
     add('Надійність (правило Лапласа)', pct(rocketReliability(x)));
     add('Виробник', x.maker);
   } else if (kind === 'target') {
-    add('Відстань від Сонця', `${x.sun_au} а.о.`);
+    add('Відстань від Сонця', `${x.sun_au} а.о.`);
     add('Сонячного світла', `${Math.round(sunShare(x) * 100)}% земного`);
-    add('Політ у найкраще вікно', `${fmt(x.flight_days)} діб`);
+    add('Політ у найкраще вікно', `${fmt(x.flight_days)} ${dayWord(x.flight_days)}`);
     add('Вікна запуску', x.window ? tr(x.window.note) : 'будь-коли');
     add('Посадка', { aeroshell: 'через атмосферу: теплозахист і парашут', propulsive: 'на двигунах', none: 'неможлива, лише орбіта' }[x.landing.type]);
   } else {
     add('Прототип', x.prototype);
-    add('Маса', x.mass_kg !== undefined ? `${fmt(x.mass_kg)} кг` : '');
-    add('Ціна', x.cost_musd !== undefined ? `${fmt(x.cost_musd)} млн $` : '');
+    add('Маса', x.mass_kg !== undefined ? `${fmt(x.mass_kg)} кг` : '');
+    add('Ціна', x.cost_musd !== undefined ? `${fmt(x.cost_musd)} млн $` : '');
     if (kind === 'instrument') {
-      add('Потужність', `${fmt(x.power_w)} Вт, працює ${pct(x.duty)} часу`);
-      add('Дані', `${fmt(x.data_mbit_per_day)} Мбіт на добу`);
+      add('Потужність', `${fmt(x.power_w)} Вт, працює ${pct(x.duty)} часу`);
+      add('Дані', `${fmt(x.data_mbit_per_day)} Мбіт на добу`);
       add('Надійність за місію', pct(x.reliability));
       add('Цінність для завдань', ctx.data.mission.goals.map((g) => `${tr(g.name)}: ${'★'.repeat(Math.round(x.weights[g.id] || 0)) || '·'}`).join('; '));
       add('Ставиться на', x.platforms.map((p) => ({ orbiter: 'орбітер', lander: 'посадкову станцію', rover: 'ровер' }[p])).join(', '));
     }
     if (kind === 'platform') {
-      add('Споживання платформи', `${fmt(x.bus_power_w)} Вт`);
+      add('Споживання платформи', `${fmt(x.bus_power_w)} Вт`);
       add('Місць для приладів', x.slots);
-      add('Робота команди', `${fmt(x.ops_musd_per_step)} млн $ за крок`);
+      add('Робота команди', `${fmt(x.ops_musd_per_step)} млн $ за крок`);
     }
-    if (kind === 'power') add('Потужність', x.type === 'solar' ? `${fmt(x.p1au_w)} Вт біля Землі; біля Марса ~${fmt(x.p1au_w * 0.43)} Вт, біля Юпітера ~${fmt(x.p1au_w * 0.037)} Вт` : `${fmt(x.p0_w)} Вт удень і вночі, −4% на рік`);
-    if (kind === 'antenna') add('Швидкість', x.relay ? `~${fmt(x.relay_mbit_per_day)} Мбіт на добу через орбітер` : `${x.rate_1au_mbps} Мбіт/с на відстані 1 а.о., падає з квадратом відстані`);
+    if (kind === 'power') add('Потужність', x.type === 'solar' ? `${fmt(x.p1au_w)} Вт біля Землі; біля Марса ~${fmt(x.p1au_w * 0.43)} Вт, біля Юпітера ~${fmt(x.p1au_w * 0.037)} Вт` : `${fmt(x.p0_w)} Вт удень і вночі, −4% на рік`);
+    if (kind === 'antenna') add('Швидкість', x.relay ? `~${fmt(x.relay_mbit_per_day)} Мбіт на добу через орбітер` : `${x.rate_1au_mbps} Мбіт/с на відстані 1 а.о., падає з квадратом відстані`);
   }
   add('Що спрощено в грі', x.simplified);
   if (x.prototype_facts) add('Реальний прототип', x.prototype_facts);
@@ -135,7 +135,7 @@ export function openViewer(app, kind, id) {
       ${ph ? `<img src="${esc(ph.file)}" alt="${esc(ph.title || tr(item.name))}" onerror="this.closest('figure').classList.add('no-photo')">` : ''}
       <div class="viewer-ill${ph ? ' behind' : ''}">${illustration(kind, item, true)}</div>
       <figcaption>${ph ? `${esc(ph.title || '')}${ph.credit ? ` Фото: ${esc(ph.credit)}.` : ''} ${ph.url ? `<a href="${esc(ph.url)}" target="_blank" rel="noopener">Відкрити в NASA Image Library</a>` : ''}`
-        : 'Ілюстрація гри. Фото NASA з\'явиться після <code>npm run images</code>.'}</figcaption>
+        : 'Ілюстрація гри. Фото NASA з’явиться після <code>npm run images</code>.'}</figcaption>
     </figure>
     <div class="viewer-info">
       ${desc ? `<p>${t(desc)}</p>` : ''}

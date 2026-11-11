@@ -1,12 +1,14 @@
 // Графік перевірки балансу (tools/montecarlo.js → data/balance.json).
 // Чистий рядок SVG: той самий код малює графік у грі і файл для слайда.
 
+import { plural } from '../i18n.js';
+
 export const CAUSE_NAMES = {
-  none: 'майже без втрат', downlink: 'зв\'язок не встигав', power: 'бракувало енергії', failure: 'відмови приладів',
-  storm: 'пилова буря', sleep: 'сплячий режим у бурю', conjunction: 'сонячне з\'єднання', mobility: 'ровер повільний',
-  night: 'місячні ночі', skipped: 'порожня пробірка', reset: 'збій комп\'ютера', clouds: 'хмари Венери',
+  none: 'майже без втрат', downlink: 'зв’язок не встигав', power: 'бракувало енергії', failure: 'відмови приладів',
+  storm: 'пилова буря', sleep: 'сплячий режим у бурю', conjunction: 'сонячне з’єднання', mobility: 'ровер повільний',
+  night: 'місячні ночі', skipped: 'порожня пробірка', reset: 'збій комп’ютера', clouds: 'хмари Венери',
   lost_launch: 'аварія ракети', lost_landing: 'аварійна посадка', lost_capture: 'не вийшов на орбіту', lost_night: 'замерз уночі',
-  lost_storm: 'загинув у бурю', lost_platform: 'відмова платформи', lost_comms: 'втрата зв\'язку', lost_power: 'енергія скінчилася',
+  lost_storm: 'загинув у бурю', lost_platform: 'відмова платформи', lost_comms: 'втрата зв’язку', lost_power: 'енергія скінчилася',
   lost_touch: 'пошкоджено при торканні',
 };
 
@@ -31,7 +33,7 @@ export function balanceSvg(b, { ink = 'currentColor', muted = '#8a93a3', bar = '
       <rect x="${rx}" y="${y + 5}" width="${w}" height="9" rx="2" fill="${lost ? bad : bar}"/>
       <text x="${rx + w + 6}" y="${y + 13}" font-size="11" fill="${muted}">${Math.round(c.share * 100)}%</text>`;
   }).join('');
-  return `<svg viewBox="0 0 ${W} ${H}" xmlns="http://www.w3.org/2000/svg" font-family="${font}" role="img" aria-label="Перевірка балансу: ${b.n} місій">
+  return `<svg viewBox="0 0 ${W} ${H}" xmlns="http://www.w3.org/2000/svg" font-family="${font}" role="img" aria-label="Перевірка балансу: ${b.n} ${plural(b.n, ['місія', 'місії', 'місій'])}">
     <text x="${left.x}" y="20" font-size="14" font-weight="600" fill="${ink}">Оцінки ${b.n.toLocaleString('uk-UA')} випадкових місій</text>
     ${hist}
     <line x1="${left.x}" x2="${left.x + left.w}" y1="${left.y + left.h}" y2="${left.y + left.h}" stroke="${muted}"/>

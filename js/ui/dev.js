@@ -61,7 +61,7 @@ function plan(app, dev) {
           <span class="choice-desc">${t(x.summary)}</span>
           <span class="choice-stats">
             <span class="stat-cost">${x.cost_pct > 0 ? '+' : ''}${x.cost_pct}% вартості ${x.cost_pct < 0 ? '(повертається в резерв)' : x.cost_pct > 0 ? 'з резерву' : ''}</span>
-            <span>+${x.months} міс. до графіка</span>
+            <span>+${x.months} міс. до графіка</span>
             <span>відмови ×${fmt(x.fail_mult, 1)}</span>
           </span>
         </button>`).join('')}
@@ -99,17 +99,17 @@ function decisionPanel(dev) {
   const d = dev.pending;
   const p = d.params;
   const info = {
-    overweight: { title: 'Апарат заважкий для ракети', text: `Після зростання маси апарат важить на ${fmt(p.over)} кг більше, ніж ракета довезе до цілі.` },
-    money: { title: 'Резерв вичерпано', text: `Бракує ${fmt(p.deficit)} млн $. Можна зняти прилад (повертається ${pct(dev.cfg.descope_refund)} його ціни) або просити додаткові гроші.` },
-    slip: { title: 'Не встигаємо до вікна запуску', text: `Розробка відстає від графіка на ${p.over} міс. Наступне вікно — ${monthName(p.next)}.` },
+    overweight: { title: 'Апарат заважкий для ракети', text: `Після зростання маси апарат важить на ${fmt(p.over)} кг більше, ніж ракета довезе до цілі.` },
+    money: { title: 'Резерв вичерпано', text: `Бракує ${fmt(p.deficit)} млн $. Можна зняти прилад (повертається ${pct(dev.cfg.descope_refund)} його ціни) або просити додаткові гроші.` },
+    slip: { title: 'Не встигаємо до вікна запуску', text: `Розробка відстає від графіка на ${p.over} міс. Наступне вікно — ${monthName(p.next)}.` },
   }[d.id];
   const opt = (o) => {
-    if (o.id.startsWith('drop:')) return { label: `Зняти: ${tr(o.instr.name)}`, hint: `Мінус ${fmt(o.instr.mass_kg)} кг і вся наука цього приладу. Найменш цінний для завдання — перший у списку.` };
+    if (o.id.startsWith('drop:')) return { label: `Зняти: ${tr(o.instr.name)}`, hint: `Мінус ${fmt(o.instr.mass_kg)} кг і вся наука цього приладу. Найменш цінний для завдання — перший у списку.` };
     return {
-      lightweight: { label: 'Полегшити конструкцію', hint: `Титан замість сталі, тонші кабелі: ${fmt(p.lwCost)} млн $ з резерву.` },
+      lightweight: { label: 'Полегшити конструкцію', hint: `Титан замість сталі, тонші кабелі: ${fmt(p.lwCost)} млн $ з резерву.` },
       ask: { label: 'Просити додаткові гроші', hint: `Шанс ${pct(dev.cfg.extra_money_chance)}. Якщо відмовлять, проєкт закриють.` },
       rush: { label: 'Скоротити випробування і встигнути', hint: 'Стартуємо вчасно, але відмови в польоті на 30% частіші.' },
-      wait: { label: `Чекати наступного вікна (${monthName(p.next || dev.build.launch)})`, hint: `Очікування ~${p.months} міс. коштуватиме ${fmt(p.waitCost)} млн $ з резерву.` },
+      wait: { label: `Чекати наступного вікна (${monthName(p.next || dev.build.launch)})`, hint: `Очікування ~${p.months} міс. коштуватиме ${fmt(p.waitCost)} млн $ з резерву.` },
     }[o.id];
   };
   return `<section class="panel decision" role="dialog" aria-labelledby="dec-title">
@@ -133,21 +133,21 @@ function status(dev) {
   return `<section class="panel">
     <h2>Стан проєкту</h2>
     <div class="gauge" data-status="${dev.reserve < 0 ? 'fail' : dev.reserve < dev.reserve0 * 0.3 ? 'warn' : 'ok'}">
-      <div class="gauge-head"><b>Бюджет</b><span class="num">${fmt(dev.spent)} / ${fmt(budget)} млн $</span></div>
+      <div class="gauge-head"><b>Бюджет</b><span class="num">${fmt(dev.spent)} / ${fmt(budget)} млн $</span></div>
       <div class="gauge-track seg-track">
         <span class="seg" style="width:${spentW}%;background:var(--budget)"></span>
         <span class="seg" style="width:${usedW}%;background:var(--bad)"></span>
         <span class="seg" style="width:${leftW}%;background:color-mix(in srgb, var(--budget) 35%, var(--surface))"></span>
       </div>
-      <div class="gauge-note">${dev.reserve >= 0 ? `Резерву залишилось ${fmt(dev.reserve)} з ${fmt(dev.reserve0)} млн $` : `Перевитрата ${fmt(-dev.reserve)} млн $`}</div>
+      <div class="gauge-note">${dev.reserve >= 0 ? `Резерву залишилось ${fmt(dev.reserve)} з ${fmt(dev.reserve0)} млн $` : `Перевитрата ${fmt(-dev.reserve)} млн $`}</div>
     </div>
     <div class="gauge" data-status="${dev.months > slack ? 'fail' : dev.months > slack * 0.7 ? 'warn' : 'ok'}">
-      <div class="gauge-head"><b>Графік</b><span class="num">затримка ${dev.months} міс. з ${slack} допустимих</span></div>
+      <div class="gauge-head"><b>Графік</b><span class="num">затримка ${dev.months} міс. з ${slack} допустимих</span></div>
       <div class="gauge-track"><span class="gauge-fill" style="width:${mW}%;background:var(--data)"></span><span class="tb-mark" style="left:50%"></span></div>
       <div class="gauge-note">Риска — межа, за якою апарат не встигає до вікна запуску.</div>
     </div>
     <div class="gauge" data-status="${massRatio > 1 ? 'fail' : massRatio > 0.85 ? 'warn' : 'ok'}">
-      <div class="gauge-head"><b>Маса на старті</b><span class="num">${fmt(c.mass.launch)} / ${fmt(c.capacity)} кг</span></div>
+      <div class="gauge-head"><b>Маса на старті</b><span class="num">${fmt(c.mass.launch)} / ${fmt(c.capacity)} кг</span></div>
       <div class="gauge-track"><span class="gauge-warnzone"></span><span class="gauge-fill" style="width:${Math.min(100, massRatio * 100)}%;background:var(--mass)"></span></div>
       <div class="gauge-note">${dev.build.massGrowth > 0 ? `Маса зросла на ${pct(dev.build.massGrowth)} понад закладений запас` : 'Зростання маси поки в межах запасу 20%'}</div>
     </div>
@@ -166,21 +166,21 @@ function logItem(e, dev) {
   const p = e.params;
   let text = '';
   switch (e.code) {
-    case 'testing': text = `${tr(p.level.name)}: +${p.level.months} міс. до графіка.`; break;
-    case 'spend': text = p.amount > 0 ? `Витрачено ${fmt(p.amount)} млн $ з резерву${WHY[p.why] ? ` (${WHY[p.why]})` : ''}. Залишок: ${fmt(p.left)} млн $.` : ''; break;
+    case 'testing': text = `${tr(p.level.name)}: +${p.level.months} міс. до графіка.`; break;
+    case 'spend': text = p.amount > 0 ? `Витрачено ${fmt(p.amount)} млн $ з резерву${WHY[p.why] ? ` (${WHY[p.why]})` : ''}. Залишок: ${fmt(p.left)} млн $.` : ''; break;
     case 'mass_growth': text = p.growth > 0.2
-      ? `Апарат поважчав на ${pct(p.growth)} проти креслень: це більше за запас 20%. Маса на старті ${fmt(p.launch)} з ${fmt(p.capacity)} кг.`
+      ? `Апарат поважчав на ${pct(p.growth)} проти креслень: це більше за запас 20%. Маса на старті ${fmt(p.launch)} з ${fmt(p.capacity)} кг.`
       : `Апарат поважчав на ${pct(p.growth)} проти креслень, але запас 20% це покрив.`; break;
-    case 'event': text = `${tr(p.ev.title)}. ${tr(p.ev.text)}${p.delay ? ` Затримка ${p.delay} міс.` : ''}`; break;
-    case 'on_time': text = `Затримка ${p.months} міс. вкладається в запас графіка (${p.slack} міс.). Встигаємо до вікна.`; break;
-    case 'late_no_window': text = `Розробка затрималась на ${p.over} міс. Старт перенесено на ${monthName(p.launch)}.`; break;
+    case 'event': text = `${tr(p.ev.title)}. ${tr(p.ev.text)}${p.delay ? ` Затримка ${p.delay} міс.` : ''}`; break;
+    case 'on_time': text = `Затримка ${p.months} міс. вкладається в запас графіка (${p.slack} міс.). Встигаємо до вікна.`; break;
+    case 'late_no_window': text = `Розробка затрималась на ${p.over} міс. Старт перенесено на ${monthName(p.launch)}.`; break;
     case 'rushed': text = 'Випробування скорочено, щоб встигнути у вікно.'; break;
     case 'waited': text = `Старт перенесено на ${monthName(p.next)}.`; break;
-    case 'descoped': text = `Прилад «${tr(p.instr.name)}» знято з апарата. Повернуто ${fmt(p.refund)} млн $.`; break;
+    case 'descoped': text = `Прилад «${tr(p.instr.name)}» знято з апарата. Повернуто ${fmt(p.refund)} млн $.`; break;
     case 'lightweighted': text = 'Конструкцію полегшено: апарат знову вміщається в ракету.'; break;
-    case 'money_granted': text = `Додаткові ${fmt(p.amount)} млн $ виділено. Більше просити не можна.`; break;
+    case 'money_granted': text = `Додаткові ${fmt(p.amount)} млн $ виділено. Більше просити не можна.`; break;
     case 'cancelled': text = 'Проєкт закрито через перевитрати.'; break;
-    case 'ready': text = `Розробку завершено. Витрачено ${fmt(p.spent)} млн $.`; break;
+    case 'ready': text = `Розробку завершено. Витрачено ${fmt(p.spent)} млн $.`; break;
     case 'choice': return '';
     default: text = e.code;
   }

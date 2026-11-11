@@ -3,6 +3,7 @@ import { t, esc, fmt } from './dom.js';
 import { sunShare, platformFits, byId, launchMonths, windowInfo, bestLaunch, flightDays } from '../calc.js';
 import { planetSvg } from './visuals.js';
 import { thumbHtml, zoomButton, bindZoom } from './gallery.js';
+import { dayWord } from '../i18n.js';
 
 export function render(root, app) {
   const { data, build } = app;
@@ -24,7 +25,7 @@ export function render(root, app) {
             <span class="choice-name">${t(x.name)}</span>
             <span class="choice-desc">${t(x.summary)}</span>
             <span class="choice-stats">
-              <span>Політ у вікно: ${fmt(x.flight_days)} діб</span>
+              <span>Політ у вікно: ${fmt(x.flight_days)} ${dayWord(x.flight_days)}</span>
               <span class="stat-power">Сонце: ${Math.round(sunShare(x) * 100)}% земного</span>
             </span>
           </button>${zoomButton('target', x)}</div>`).join('')}
@@ -41,7 +42,7 @@ export function render(root, app) {
           <button type="button" class="choice" data-id="${esc(x.id)}" aria-pressed="${build.cls === x.id}">
             <span class="choice-name">${t(x.name)}</span>
             <span class="choice-desc">${t(x.summary)}</span>
-            <span class="choice-stats"><span class="stat-cost">Бюджет ${fmt(x.budget_musd)} млн $</span><span>Мета науки: ${fmt(x.science_target)}</span></span>
+            <span class="choice-stats"><span class="stat-cost">Бюджет ${fmt(x.budget_musd)} млн $</span><span>Мета науки: ${fmt(x.science_target)}</span></span>
           </button>`).join('')}
       </div>
     </fieldset>
@@ -98,7 +99,7 @@ function launchPicker(app) {
   const days = flightDays({ target, launch: sel });
   if (!target.window) {
     return `<fieldset class="choice-group"><legend>Дата запуску</legend>
-      <p class="group-hint">До Місяця можна летіти будь-якого місяця: він завжди поруч. Політ ~${fmt(days)} діб.</p></fieldset>`;
+      <p class="group-hint">До Місяця можна летіти будь-якого місяця: він завжди поруч. Політ ~${fmt(days)} ${dayWord(days)}.</p></fieldset>`;
   }
   const months = launchMonths();
   return `<fieldset class="choice-group">
@@ -111,7 +112,7 @@ function launchPicker(app) {
           <span class="win-bar" style="height:${Math.round(f * 100)}%;opacity:${0.35 + 0.65 * f}"></span>
           ${year ? `<span class="win-year">${ym.slice(0, 4)}</span>` : ''}</button>`; }).join('')}
     </div>
-    <p class="win-info"><b>${esc(monthName(sel))}</b>: ракета довезе <b>${Math.round(info.factor * 100)}%</b> маси від найкращого вікна, політ ~${fmt(days)} діб.
+    <p class="win-info"><b>${esc(monthName(sel))}</b>: ракета довезе <b>${Math.round(info.factor * 100)}%</b> маси від найкращого вікна, політ ~${fmt(days)} ${dayWord(days)}.
     ${info.factor < 0.9 ? `<span class="muted">Найближче вікно: ${esc(monthName(info.best))}</span>` : ''}</p>
   </fieldset>`;
 }

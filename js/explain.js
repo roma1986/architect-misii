@@ -2,7 +2,7 @@
 // Тексти зараз українською; для англійської версії додайте переклади в цьому файлі.
 
 import { clamp, sunShare, isSurface, instrumentPower, busPower, opsSteps, siteSolarMult } from './calc.js';
-import { tr } from './i18n.js';
+import { tr, dayWord, plural } from './i18n.js';
 
 const pct = (x) => Math.round(x * 100);
 const fmt = (x, d = 0) => Number(x).toLocaleString('uk-UA', { maximumFractionDigits: d, minimumFractionDigits: d });
@@ -65,16 +65,16 @@ function stats(m) {
 
 const LOST_TEXT = {
   launch: (m) => `Ракета ${tr(m.r.rocket.name)} зазнала аварії на старті. Її надійність за історією польотів — ${pct((m.r.rocket.successes + 1) / (m.r.rocket.flights + 2))}%: навіть такий шанс іноді не спрацьовує.`,
-  cancelled: (m) => `Проєкт закрили до старту: витрати сягнули ${fmt(m.spent)} млн $ при бюджеті ${fmt(m.r.cls.budget_musd)} млн $, а додаткових грошей не дали. Більший резерв або простіший апарат дали б шанс.`,
+  cancelled: (m) => `Проєкт закрили до старту: витрати сягнули ${fmt(m.spent)} млн $ при бюджеті ${fmt(m.r.cls.budget_musd)} млн $, а додаткових грошей не дали. Більший резерв або простіший апарат дали б шанс.`,
   capture: (m) => (m.s.navError
     ? 'Помилка в одиницях під час поправки курсу: апарат підійшов до цілі не тим курсом і не вийшов на орбіту. Саме так у 1999 році загинув Mars Climate Orbiter.'
     : 'Апарат не вийшов на орбіту цілі. Гальмування біля планети — один із найризикованіших моментів місії.'),
   landing: (m) => `Посадка в районі «${tr(m.s.site.name)}» закінчилася аварією. Ризик цього майданчика — ${pct(m.s.site.risk * m.penalty)}%.`,
   storm: () => 'Під час пилової бурі апарат працював далі, акумулятор розрядився, і апарат замерз.',
-  night: () => 'Апарат не пережив місячну ніч: сонячні панелі 14 діб не дають енергії, а температура падає нижче −170 °C.',
-  power: () => 'Енергії не вистачало навіть на обігрів і комп\'ютер, і апарат вимкнувся назавжди.',
-  platform: () => 'Відмовила сама платформа апарата (комп\'ютер, двигун або паливна система).',
-  comms: () => 'Зв\'язок втрачено остаточно: резервної антени не було.',
+  night: () => 'Апарат не пережив місячну ніч: сонячні панелі 14 діб не дають енергії, а температура падає нижче −170 °C.',
+  power: () => 'Енергії не вистачало навіть на обігрів і комп’ютер, і апарат вимкнувся назавжди.',
+  platform: () => 'Відмовила сама платформа апарата (комп’ютер, двигун або паливна система).',
+  comms: () => 'Зв’язок втрачено остаточно: резервної антени не було.',
   touch: () => 'Під час торкання астероїда зонд зачепив брилу і пошкодився. Біля тіла з майже нульовою гравітацією кожен дотик — ризик.',
 };
 
@@ -84,7 +84,6 @@ export function reasons(m) {
   const st = stats(m);
   const ideal = Math.max(1, s.ideal);
   const list = [];
-  const share = (k) => (s.losses[k] || 0) / ideal;
 
   const texts = {
     failure: () => {
@@ -99,22 +98,22 @@ export function reasons(m) {
         if (isSurface(r) && s.site && s.siteSolar < 0.95) t += `. Майданчик на широті ${fmt(Math.abs(s.site.lat))}° отримує лише ${pct(s.siteSolar)}% сонця порівняно з екватором`;
         return t + '.';
       }
-      return `РІТЕГ давав у середньому ${fmt(st.avgProduced)} Вт, а платформі й приладам потрібно ${fmt(busPower(r) + instrumentPower(r.instruments))} Вт. Прилади працювали ${pct(st.avgU)}% часу.`;
+      return `РІТЕГ давав у середньому ${fmt(st.avgProduced)} Вт, а платформі й приладам потрібно ${fmt(busPower(r) + instrumentPower(r.instruments))} Вт. Прилади працювали ${pct(st.avgU)}% часу.`;
     },
     storm: () => 'Пилова буря закривала Сонце і камери: панелі давали 40% потужності, а знімки виходили мутними.',
     sleep: () => `Апарат перечікував бурю в сплячому режимі (${s.lossCount.sleep} крок.): безпечно, але без науки.`,
     downlink: () => {
-      if (s.antenna.relay) return `Ретранслятор передає ~${fmt(s.antenna.relay_mbit_per_day)} Мбіт на добу, а прилади збирали більше. Передано лише ${pct(st.sent / Math.max(1, st.collected))}% даних.`;
-      return `Антена «${tr(s.antenna.name)}» передала лише ${pct(st.sent / Math.max(1, st.collected))}% зібраних даних. Найбільша відстань до Землі — ${fmt(st.maxDist, 2)} а.о., і там сигнал слабший у ${fmt(st.maxDist ** 2, 1)} раза, ніж на відстані 1 а.о.`;
+      if (s.antenna.relay) return `Ретранслятор передає ~${fmt(s.antenna.relay_mbit_per_day)} Мбіт на добу, а прилади збирали більше. Передано лише ${pct(st.sent / Math.max(1, st.collected))}% даних.`;
+      return `Антена «${tr(s.antenna.name)}» передала лише ${pct(st.sent / Math.max(1, st.collected))}% зібраних даних. Найбільша відстань до Землі — ${fmt(st.maxDist, 2)} а.о., і там сигнал слабший у ${fmt(st.maxDist ** 2, 1)} раза, ніж на відстані 1 а.о.`;
     },
     conjunction: () => s.conjunctionPlan === 'idle'
-      ? 'Під час сонячного з\'єднання апарат простоював без команд.'
-      : 'Сонячне з\'єднання на ~2 тижні перервало зв\'язок. План, завантажений заздалегідь, зменшив втрати.',
+      ? 'Під час сонячного з’єднання апарат простоював без команд.'
+      : 'Сонячне з’єднання на ~2 тижні перервало зв’язок. План, завантажений заздалегідь, зменшив втрати.',
     clouds: () => 'Хмари Венери непрозорі для світла: оптичні прилади бачили лише верхівки хмар. Радар бачить крізь хмари, тому Magellan склав карту саме ним.',
     mobility: () => 'Заклинило колесо: ровер їздив повільніше і досліджував менше місць.',
-    night: () => 'Місячні ночі: половину часу сонячні панелі не працювали. РІТЕГ або ізотопні обігрівачі розв\'язують цю проблему.',
+    night: () => 'Місячні ночі: половину часу сонячні панелі не працювали. РІТЕГ або ізотопні обігрівачі розв’язують цю проблему.',
     skipped: () => 'Прилад тимчасово не дав науки: пробірка виявилася порожньою, і спробу довелося повторювати.',
-    reset: () => 'Збій комп\'ютера забрав цілий крок роботи.',
+    reset: () => 'Збій комп’ютера забрав цілий крок роботи.',
   };
 
   for (const [key, val] of Object.entries(s.losses)) {
@@ -129,10 +128,10 @@ export function reasons(m) {
   const dev = m.dev;
   if (dev) {
     if (dev.descoped.length) extra.push({ key: 'descoped', text: `Під час розробки довелося зняти: ${dev.descoped.map((i) => tr(i.name)).join(', ')}. Це мінус наука, яку ці прилади могли дати.`, tone: 'bad' });
-    if (dev.flags.waited) extra.push({ key: 'waited', text: `Розробка затрималась, і старт перенесли на наступне вікно (${dev.build.launch}). Очікування з'їло частину резерву.`, tone: 'bad' });
+    if (dev.flags.waited) extra.push({ key: 'waited', text: `Розробка затрималась, і старт перенесли на наступне вікно (${dev.build.launch}). Очікування з’їло частину резерву.`, tone: 'bad' });
     if (dev.flags.rush) extra.push({ key: 'rush', text: 'Щоб встигнути у вікно, скоротили випробування: відмови в польоті траплялися на 30% частіше.', tone: 'bad' });
     if (dev.flags.hiddenDefect) extra.push({ key: 'defect', text: 'Через мінімальні випробування один дефект не знайшли на Землі, і він полетів разом з апаратом.', tone: 'bad' });
-    if (dev.overrun > 0 && !dev.cancelled) extra.push({ key: 'overrun', text: `Резерву не вистачило: перевитрата ${fmt(dev.overrun)} млн $ знизила оцінку ефективності.`, tone: 'bad' });
+    if (dev.overrun > 0 && !dev.cancelled) extra.push({ key: 'overrun', text: `Резерву не вистачило: перевитрата ${fmt(dev.overrun)} млн $ знизила оцінку ефективності.`, tone: 'bad' });
     if (m.r.risk.id === 'A' || m.r.risk.id === 'B') extra.push({ key: 'class', text: `${tr(m.r.risk.name)}: дубльовані системи зменшили шанс відмов до ${pct(m.r.risk.fail_mult)}% від звичайного.`, tone: 'good' });
     if (m.r.risk.id === 'D') extra.push({ key: 'class', text: 'Клас D: дешево, але без резерву відмови траплялися в 1,6 раза частіше.', tone: 'bad' });
   }
@@ -143,7 +142,7 @@ export function reasons(m) {
     ? { key: 'rad', text: `Без радіаційного сейфа електроніка біля Юпітера ламалася в ${fmt(r.target.radiation_mult)} рази частіше.`, tone: 'bad' }
     : { key: 'rad', text: 'Радіаційний сейф захистив електроніку від радіації Юпітера.', tone: 'good' });
   if (r.target.surface_ops_steps && isSurface(r) && s.alive) extra.push({ key: 'heat', text: 'Посадковий апарат пропрацював ~2 години: довше на поверхні Венери не вижив жоден апарат.', tone: 'good' });
-  if (s.backupUsed) extra.push({ key: 'backup', text: 'Резервна антена врятувала зв\'язок.', tone: 'good' });
+  if (s.backupUsed) extra.push({ key: 'backup', text: 'Резервна антена врятувала зв’язок.', tone: 'good' });
   if (s.extended) extra.push({ key: 'extended', text: 'Місію продовжили, бо апарат був у доброму стані.', tone: 'good' });
   if (r.power.type === 'rtg' && isSurface(r) && s.stormsSeen > 0) extra.push({ key: 'rtg', text: 'РІТЕГ не залежить від Сонця і пилу, тому буря не зупинила роботу.', tone: 'good' });
   return { main: list.slice(0, 3), extra, stats: st };
@@ -161,14 +160,14 @@ export function mediaFor(m) {
 }
 
 // ---------- журнал ----------
-const CAUSE_SHORT = { cancelled: 'проєкт скасовано через перевитрати', touch: 'зонд пошкоджено під час торкання', launch: 'аварія ракети', capture: 'не вдалося вийти на орбіту', landing: 'аварійна посадка', storm: 'буря розрядила акумулятор', night: 'апарат замерз уночі', power: 'забракло енергії', platform: 'відмова платформи', comms: 'зв\'язок втрачено' };
+const CAUSE_SHORT = { cancelled: 'проєкт скасовано через перевитрати', touch: 'зонд пошкоджено під час торкання', launch: 'аварія ракети', capture: 'не вдалося вийти на орбіту', landing: 'аварійна посадка', storm: 'буря розрядила акумулятор', night: 'апарат замерз уночі', power: 'забракло енергії', platform: 'відмова платформи', comms: 'зв’язок втрачено' };
 
 export function logText(e, m) {
   const p = e.params;
   switch (e.code) {
     case 'launch': return `Старт на ${tr(p.rocket.name)}. Надійність за історією польотів: ${pct(p.p)}%.`;
     case 'launch_ok': return 'Ракета вивела апарат на траєкторію до цілі.';
-    case 'cruise': return `Переліт триває ${fmt(p.days)} діб.`;
+    case 'cruise': return `Переліт триває ${fmt(p.days)} ${dayWord(p.days)}.`;
     case 'orbit_ok': return 'Гальмування успішне: апарат на орбіті.';
     case 'landing': return `Посадка в районі «${tr(p.site.name)}». Ризик: ${pct(p.p)}%.`;
     case 'landing_ok': return 'Посадка успішна! Перший сигнал з поверхні.';
@@ -179,13 +178,13 @@ export function logText(e, m) {
     case 'lost': return `Місію втрачено: ${CAUSE_SHORT[p.cause] || p.cause}.`;
     case 'instrument_fail': return `Відмовив прилад: ${tr(p.instr.name)}.`;
     case 'backup_antenna': return 'Головна антена відмовила, працює резервна.';
-    case 'antenna_fallback': return 'Головна антена відмовила. Зв\'язок лише через малу антену — дуже повільно.';
-    case 'safe_mode': return `Безпечний режим: вироблено ${fmt(p.produced)} Вт, а платформі потрібно ${fmt(p.bus)} Вт.`;
+    case 'antenna_fallback': return 'Головна антена відмовила. Зв’язок лише через малу антену — дуже повільно.';
+    case 'safe_mode': return `Безпечний режим: вироблено ${fmt(p.produced)} Вт, а платформі потрібно ${fmt(p.bus)} Вт.`;
     case 'night': return 'Місячна ніч: апарат вимкнено до світанку.';
     case 'night_survived': return 'Апарат пережив ніч.';
     case 'sleep': return 'Сплячий режим: чекаємо кінця бурі.';
-    case 'reset': return 'Комп\'ютер перезавантажувався весь крок.';
-    case 'extended': return `NASA продовжило місію ще на ${p.steps} кроки!`;
+    case 'reset': return 'Комп’ютер перезавантажувався весь крок.';
+    case 'extended': return `NASA продовжило місію ще на ${p.steps} ${plural(p.steps, ['крок', 'кроки', 'кроків'])}!`;
     case 'complete': return 'Основну програму місії завершено.';
     case 'units_ok': return 'Одиниці перевірено й перераховано. Курс точний.';
     case 'units_bad': return 'Поправку застосовано з помилкою в одиницях. Апарат іде не тим курсом!';
@@ -233,8 +232,8 @@ export function decisionText(d, m) {
       text: 'Найближчі ~2 тижні сигнал не пройде крізь сонячну корону. Нові команди надіслати не вийде.',
     };
     case 'priority': return {
-      title: 'Канал зв\'язку перевантажений',
-      text: `Антена встигає передати лише ~${pct(d.params.share)}% даних, які збирають прилади. Решта перезапишеться в пам'яті. Що передавати першим?`,
+      title: 'Канал зв’язку перевантажений',
+      text: `Антена встигає передати лише ~${pct(d.params.share)}% даних, які збирають прилади. Решту буде перезаписано в пам’яті. Що передавати першим?`,
     };
     case 'units': return {
       title: 'Перевірте поправку курсу',
@@ -242,7 +241,7 @@ export function decisionText(d, m) {
     };
     case 'wheel': return {
       title: 'Заклинило колесо',
-      text: 'Одне з шести коліс більше не обертається. Попереду цікаві породи, але шлях кам\'янистий.',
+      text: 'Одне з шести коліс більше не обертається. Попереду цікаві породи, але шлях кам’янистий.',
     };
     case 'sample': return {
       title: 'Час брати зразок',

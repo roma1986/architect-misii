@@ -38,7 +38,7 @@
         "en": "Solar panels did not fully deploy"
       },
       "fact": {
-        "uk": "Британський Beagle 2 сів на Марс у 2003 році, але не всі панелі розкрилися, і він не вийшов на зв'язок. Його знайшли на знімках HiRISE у 2015 році.",
+        "uk": "Британський Beagle 2 сів на Марс у 2003 році, але не всі панелі розкрилися, і він не вийшов на зв’язок. Його знайшли на знімках HiRISE у 2015 році.",
         "en": "Beagle 2 landed in 2003 but its panels did not fully open."
       },
       "source": "https://www.esa.int/Science_Exploration/Space_Science/Mars_Express/Beagle_2"
@@ -96,11 +96,11 @@
       "effect": "lose_step",
       "when": {},
       "title": {
-        "uk": "Перезавантаження комп'ютера",
+        "uk": "Перезавантаження комп’ютера",
         "en": "Computer reset"
       },
       "fact": {
-        "uk": "Через кілька тижнів після посадки у 2004 році Spirit почав безкінечно перезавантажуватися через переповнену флеш-пам'ять. Інженери лагодили його з Землі майже два тижні.",
+        "uk": "Через кілька тижнів після посадки у 2004 році Spirit почав безперервно перезавантажуватися через переповнену флеш-пам’ять. Інженери лагодили його з Землі майже два тижні.",
         "en": "Spirit's flash memory filled up in 2004, causing endless reboots."
       },
       "source": "https://science.nasa.gov/mission/mer-spirit/"
@@ -117,7 +117,7 @@
         "en": "Unexpected discovery"
       },
       "fact": {
-        "uk": "Curiosity знайшов органічні молекули у 3-мільярдолітніх породах кратера Ґейл (2018). Найцікавіші відкриття часто не плануються.",
+        "uk": "Curiosity знайшов органічні молекули у породах кратера Ґейл віком 3 мільярди років (2018). Найцікавіші відкриття часто не плануються.",
         "en": "Curiosity found organic molecules in 3-billion-year-old rocks."
       },
       "source": "https://science.nasa.gov/mission/msl-curiosity/"
@@ -199,7 +199,7 @@
         "en": "The rover got stuck in sand"
       },
       "fact": {
-        "uk": "У 2009 році Spirit застряг у м'якому ґрунті. Інженери місяцями намагалися його витягти, а потім перетворили на нерухому станцію.",
+        "uk": "У 2009 році Spirit застряг у м’якому ґрунті. Інженери місяцями намагалися його витягти, а потім перетворили на нерухому станцію.",
         "en": "Spirit got stuck in soft soil in 2009."
       },
       "source": "https://science.nasa.gov/mission/mer-spirit/"
@@ -217,7 +217,7 @@
         "en": "Extra funding"
       },
       "fact": {
-        "uk": "NASA регулярно переглядає діючі місії і продовжує фінансування найпродуктивніших. Так Curiosity, MRO і Mars Odyssey працюють уже понад десятиліття.",
+        "uk": "NASA регулярно переглядає місії, що тривають, і продовжує фінансування найпродуктивніших. Так Curiosity, MRO і Mars Odyssey працюють уже понад десятиліття.",
         "en": "NASA extends its most productive missions."
       },
       "source": "https://science.nasa.gov/mars/"
@@ -237,7 +237,7 @@
       "source": "https://www.esa.int/Science_Exploration/Human_and_Robotic_Exploration/Exploration/ExoMars/Schiaparelli"
     },
     "dust_storm": {
-      "uk": "У 2018 році глобальна пилова буря закрила Сонце над Opportunity. Марсохід замовк і більше не прокинувся, пропрацювавши майже 15 років замість 90 діб.",
+      "uk": "У 2018 році глобальна пилова буря закрила Сонце над Opportunity. Марсохід замовк і більше не прокинувся, пропрацювавши майже 15 років замість 90 діб.",
       "source": "https://science.nasa.gov/mission/mer-opportunity/"
     },
     "conjunction": {
@@ -257,11 +257,11 @@
       "source": "https://nssdc.gsfc.nasa.gov/"
     },
     "extended": {
-      "uk": "Opportunity планували на 90 діб, а він пропрацював майже 15 років. Успішні місії NASA часто продовжує.",
+      "uk": "Opportunity планували на 90 діб, а він пропрацював майже 15 років. Успішні місії NASA часто продовжує.",
       "source": "https://science.nasa.gov/mission/mer-opportunity/"
     },
     "comms_lost": {
-      "uk": "Без зв'язку апарат може працювати, але ми ніколи не дізнаємося, що він побачив.",
+      "uk": "Без зв’язку апарат може працювати, але ми ніколи не дізнаємося, що він побачив.",
       "source": "https://www.nasa.gov/communicating-with-missions/dsn/"
     },
     "sample": {

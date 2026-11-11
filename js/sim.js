@@ -95,7 +95,7 @@ export class Mission {
 
   ask(decision) { this.pending = decision; return { kind: 'decision', decision }; }
 
-  /** Гравець (або автополітика) обирає варіант. */
+  /** Гравець (або автоматична політика) обирає варіант. */
   choose(optionId) {
     const d = this.pending;
     if (!d) return;
@@ -146,7 +146,6 @@ export class Mission {
   }
 
   doCruise() {
-    const t = this.r.target;
     this.log('cruise', { days: flightDays(this.r) }, 'info');
     rollEvents(this, 'cruise');
     if (!this.s.alive) return { kind: 'lost', cause: this.s.lost };
@@ -211,7 +210,7 @@ export class Mission {
       }
     }
 
-    // Сонячне з'єднання
+    // Сонячне з’єднання
     if (!done.conj) {
       done.conj = true;
       s.conjunctionNow = conjunctionBetween(t, d0, d0 + t.step_days);
@@ -234,7 +233,7 @@ export class Mission {
       }
     }
 
-    // Вузьке місце зв'язку: питаємо один раз за місію
+    // Вузьке місце зв’язку: питаємо один раз за місію
     if (!done.prio) {
       done.prio = true;
       if (!s.priorityAsked) {
@@ -322,7 +321,7 @@ export class Mission {
       if (this.rng() < pDie) { this.endStorm(); this.lose('storm'); return tele; }
     }
 
-    // Наука до урахування зв'язку: хмари (Венера), буря (Марс), рухливість ровера
+    // Наука до урахування зв’язку: хмари (Венера), буря (Марс), рухливість ровера
     const cloudF = t.optical_mult ?? 1;
     const stormF = s.storm > 0 ? 0.6 : 1;
     const mob = r.platform.type === 'rover' ? s.mobility : 1;
@@ -344,12 +343,12 @@ export class Mission {
     this.loss('mobility', mobLoss);
     this.loss(s.storm > 0 && solar && surface ? 'storm' : 'power', envSum - workedSum);
 
-    // Зв'язок: скільки даних встигнемо передати
+    // Зв’язок: скільки даних встигнемо передати
     let capacity = downlinkPerDay(s.antenna, t, dist, r.dsn) * stepDays;
     const fullCapacity = capacity;
     let idleFactor = 1;
     if (s.conjunctionNow) {
-      capacity *= 0.5; // ~2 тижні без зв'язку
+      capacity *= 0.5; // ~2 тижні без зв’язку
       if (s.conjunctionPlan === 'idle') idleFactor = 0.5;
     }
     const sentShares = allocate(base, capacity, s.priority);

@@ -94,7 +94,7 @@ const balance = {
   best: best.map((r) => ({ total: r.sc.total, ...r.build })),
 };
 await fs.mkdir(path.join(here, 'out'), { recursive: true });
-await fs.writeFile(path.join(here, '..', 'data', 'balance.json'), JSON.stringify(balance, null, 2));
+await fs.writeFile(path.join(here, '..', 'data', 'balance.json'), JSON.stringify(balance, null, 2) + '\n');
 await fs.writeFile(path.join(here, 'out', 'histogram.csv'), 'оцінка,кількість\n' + bins.map((b, i) => `${i * 10}-${i * 10 + 9},${b}`).join('\n'));
 await fs.writeFile(path.join(here, 'out', 'balance.svg'), balanceSvg(balance, { ink: '#172238' }));
 console.log('\nЗбережено: data/balance.json (графік у грі), tools/out/balance.svg (для слайда), tools/out/histogram.csv');

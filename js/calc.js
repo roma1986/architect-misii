@@ -5,13 +5,13 @@ export const ISP_S = 320;            // питомий імпульс двигу
 export const DESIGN_MARGIN = 0.2;    // інженерний запас маси 20%
 export const WARN_MARGIN = 0.15;     // запас менше 15% — жовта зона
 export const RTG_DECAY = 0.96;       // РІТЕГ втрачає ~4% на рік
-export const RATE_CAP_MBPS = 100;    // стеля швидкості зв'язку (близькі цілі)
+export const RATE_CAP_MBPS = 100;    // стеля швидкості зв’язку (близькі цілі)
 export const MARGIN_PENALTY = 1.5;   // жовта зона збільшує шанс збою
 
 export const byId = (list, id) => (list || []).find((x) => x.id === id) || null;
 export const clamp = (x, a, b) => Math.max(a, Math.min(b, x));
 
-/** Перетворює вибір гравця (id) на повні об'єкти з даних. */
+/** Перетворює вибір гравця (id) на повні об’єкти з даних. */
 export function resolveBuild(data, build) {
   const c = data.components;
   return {
@@ -138,7 +138,7 @@ export function massBreakdown(r) {
 
 /**
  * Скільки ракета доставить до цілі у найкраще вікно. Якщо є точне число виробника — беремо його,
- * інакше НОО × k цілі. Поза вікном — менше (множник windowInfo).
+ * інакше (маса на низьку навколоземну орбіту) × k цілі. Поза вікном — менше (множник windowInfo).
  */
 export function capacityTo(rocket, target, launch = null, trajectory = null) {
   if (!rocket || !target) return 0;
@@ -209,7 +209,7 @@ export function earthDistanceAu(target, dayFromArrival = 0) {
   return Math.sqrt(1 + a * a - 2 * a * Math.cos(theta));
 }
 
-/** Кут між Землею і ціллю, якщо дивитися від Сонця. 180° — сонячне з'єднання. */
+/** Кут між Землею і ціллю, якщо дивитися від Сонця. 180° — сонячне з’єднання. */
 export function phaseDeg(target, dayFromArrival) {
   const rel = 360 / 365.25 - 360 / target.period_days;
   return target.theta0_deg + rel * dayFromArrival;
@@ -317,7 +317,7 @@ export function checkBuild(r) {
   const collected = dataPerDay(r.instruments);
 
   const bars = {
-    budget: { used: cost.total + cost.reserve, limit: budget, unit: 'млн $', status: barStatus(cost.total + cost.reserve, budget) },
+    budget: { used: cost.total + cost.reserve, limit: budget, unit: 'млн $', status: barStatus(cost.total + cost.reserve, budget) },
     mass: { used: mass.launch, limit: capacity, unit: 'кг', status: barStatus(mass.launch, capacity) },
     power: { used: demand, limit: produced, unit: 'Вт', status: barStatus(demand, produced) },
     data: { used: collected, limit: downlink, unit: 'Мбіт/добу', status: barStatus(collected, downlink, true) },

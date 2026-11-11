@@ -46,7 +46,7 @@ function fits(seed) {
 if (process.argv.includes('--find')) {
   const abc = 'ABCDEFGHJKLMNPQRSTUVWXYZ23456789';
   let found = 0;
-  console.log('Шукаю коди місії, з якими сценарій працює...');
+  console.log('Шукаю коди місії, з якими сценарій працює…');
   for (let i = 0; i < 40000 && found < 8; i++) {
     const seed = `D${abc[i % 32]}${abc[(i >> 5) % 32]}${abc[(i >> 10) % 32]}`;
     const r = fits(seed);

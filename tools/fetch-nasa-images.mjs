@@ -93,16 +93,16 @@ if (process.argv[1] === fileURLToPath(import.meta.url)) {
       item.maxBytes = 2_500_000;
       await fetchItem(item);
       delete item.maxBytes;
-      await fs.writeFile(photosPath, JSON.stringify(photos, null, 2));
+      await fs.writeFile(photosPath, JSON.stringify(photos, null, 2) + '\n');
     }
   } catch (e) {
     console.error(`Помилка: ${e.message}. Перевірте інтернет.`);
   }
-  await fs.writeFile(mediaPath, JSON.stringify(media, null, 2));
+  await fs.writeFile(mediaPath, JSON.stringify(media, null, 2) + '\n');
   // Записуємо file лише для тих фото, що справді завантажено
   for (const [id, item] of Object.entries(photos)) {
     if (!id.startsWith('_') && item.file && !(await exists(item.file))) delete item.file;
   }
-  await fs.writeFile(photosPath, JSON.stringify(photos, null, 2));
+  await fs.writeFile(photosPath, JSON.stringify(photos, null, 2) + '\n');
   console.log('\nГотово. Перегляньте картинки в img/: якщо якась не підходить, впишіть інший nasa_id у data/media.json і запустіть з --force.');
 }

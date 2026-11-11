@@ -7,13 +7,13 @@
     <text x="380" y="20" font-size="14" font-weight="600" fill="#172238">Головна причина втрат</text>
     <text x="380" y="52" font-size="12" fill="#172238">майже без втрат</text>
       <rect x="380" y="57" width="180" height="9" rx="2" fill="#3556a8"/>
-      <text x="566" y="65" font-size="11" fill="#8a93a3">28%</text><text x="380" y="84" font-size="12" fill="#172238">зв'язок не встигав</text>
+      <text x="566" y="65" font-size="11" fill="#8a93a3">28%</text><text x="380" y="84" font-size="12" fill="#172238">зв’язок не встигав</text>
       <rect x="380" y="89" width="119.56395348837208" height="9" rx="2" fill="#3556a8"/>
       <text x="505.5639534883721" y="97" font-size="11" fill="#8a93a3">18%</text><text x="380" y="116" font-size="12" fill="#172238">замерз уночі</text>
       <rect x="380" y="121" width="71.68604651162791" height="9" rx="2" fill="#c8352b"/>
       <text x="457.6860465116279" y="129" font-size="11" fill="#8a93a3">11%</text><text x="380" y="148" font-size="12" fill="#172238">хмари Венери</text>
       <rect x="380" y="153" width="50.49418604651163" height="9" rx="2" fill="#3556a8"/>
-      <text x="436.49418604651163" y="161" font-size="11" fill="#8a93a3">8%</text><text x="380" y="180" font-size="12" fill="#172238">збій комп'ютера</text>
+      <text x="436.49418604651163" y="161" font-size="11" fill="#8a93a3">8%</text><text x="380" y="180" font-size="12" fill="#172238">збій комп’ютера</text>
       <rect x="380" y="185" width="45.52325581395349" height="9" rx="2" fill="#3556a8"/>
       <text x="431.5232558139535" y="193" font-size="11" fill="#8a93a3">7%</text><text x="380" y="212" font-size="12" fill="#172238">аварійна посадка</text>
       <rect x="380" y="217" width="45" height="9" rx="2" fill="#c8352b"/>

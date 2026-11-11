@@ -39,7 +39,7 @@ export function render(root, app) {
 
     <div class="axes">
       ${axis('Наука', sc.science, `${fmt(m.s.science)} балів. Поріг ${fmt(m.r.cls.science_target * 0.6)}, база ${fmt(m.r.cls.science_target)} (риски на шкалі)`, 'var(--data)', [{ at: 60, label: 'Порогова місія' }, { at: 100, label: 'Базова місія' }])}
-      ${axis('Ефективність бюджету', sc.efficiency, `${fmt(m.spent)} млн $ витрачено з ${fmt(m.r.cls.budget_musd)}`, 'var(--budget)')}
+      ${axis('Ефективність бюджету', sc.efficiency, `${fmt(m.spent)} млн $ витрачено з ${fmt(m.r.cls.budget_musd)}`, 'var(--budget)')}
       ${axis('Надійність', sc.reliability, `${m.s.instruments.filter((i) => i.alive).length} з ${m.s.instruments.length} приладів працюють`, 'var(--mass)')}
     </div>
 
@@ -120,9 +120,9 @@ function compareTable(m, real) {
   const rows = [
     ['Рік запуску', launchYear(m.r), real.year],
     ['Ракета', t(m.r.rocket.name), esc(real.rocket)],
-    ['Маса на старті', `${fmt(c.mass.launch)} кг`, `${fmt(real.launch_mass_kg)} кг`],
-    ['Маса апарата', `${fmt(c.mass.dry)} кг`, `${fmt(real.craft_mass_kg)} кг`],
-    ['Вартість', `${fmt(m.spent)} млн $`, real.cost_musd ? `~${fmt(real.cost_musd)} млн $` : 'немає даних'],
+    ['Маса на старті', `${fmt(c.mass.launch)} кг`, `${fmt(real.launch_mass_kg)} кг`],
+    ['Маса апарата', `${fmt(c.mass.dry)} кг`, `${fmt(real.craft_mass_kg)} кг`],
+    ['Вартість', `${fmt(m.spent)} млн $`, real.cost_musd ? `~${fmt(real.cost_musd)} млн $` : 'немає даних'],
     ['Приладів', m.r.instruments.length, real.instruments],
     ['Енергія', t(m.r.power.name), esc(real.power)],
   ];

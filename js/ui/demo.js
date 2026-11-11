@@ -32,7 +32,7 @@ const STEPS = [
   },
   {
     act: 'demo1', focus: '.log',
-    caption: (d) => `Програмне забезпечення запізнилося, як у місії Psyche. Резерв тане: залишилось ${Math.round(Math.max(0, d.app.dev.reserve))} млн $. Але апарат готовий.`,
+    caption: (d) => `Програмне забезпечення запізнилося, як у місії Psyche. Резерв тане: залишилось ${Math.round(Math.max(0, d.app.dev.reserve))} млн $. Але апарат готовий.`,
     run: (d) => d.devRun(),
   },
   {
@@ -62,7 +62,7 @@ const STEPS = [
   },
   {
     act: 'demo2', focus: '.board',
-    caption: 'Виправляємо помилки. Клас ризику B, резерв 25%, два РІТЕГи замість панелей, великий акумулятор, зв\'язок через орбітер. Одним приладом жертвуємо.',
+    caption: 'Виправляємо помилки. Клас ризику B, резерв 25%, два РІТЕГи замість панелей, великий акумулятор, зв’язок через орбітер. Одним приладом жертвуємо.',
     run: (d) => d.load('demo2', 'builder'),
   },
   {
@@ -82,7 +82,7 @@ const STEPS = [
   },
   {
     act: 'end', focus: null, last: true,
-    caption: 'Ідеального апарата немає, є компроміси. У грі п\'ять цілей — від Місяця до Європи, а в «Режимі інженера» можна керувати траєкторією, двигуном і орбітою. Спробуйте самі.',
+    caption: 'Ідеального апарата немає, є компроміси. У грі п’ять цілей — від Місяця до Європи, а в «Режимі інженера» можна керувати траєкторією, двигуном і орбітою. Спробуйте самі.',
     run: () => {},
   },
 ];
@@ -120,7 +120,7 @@ class Demo {
     this.bar.querySelector('[data-demo="exit"]').addEventListener('click', () => this.exit());
     this.bar.querySelector('[data-demo="auto"]').addEventListener('change', (e) => { this.auto = e.target.checked; this.schedule(); });
 
-    // Під час показу гравець не керує грою сам: випадковий клік зіб'є сценарій
+    // Під час показу гравець не керує грою сам: випадковий клік зіб’є сценарій
     this.onClick = (e) => {
       if (this.acting) return;
       if (e.target.closest('a, .zoom, [data-close]')) return;
@@ -182,7 +182,7 @@ class Demo {
     throw new Error('старт не завершився');
   }
 
-  /** Летіти далі, поки не з'явиться рішення stopId (або до кінця місії, якщо null). */
+  /** Летіти далі, поки не з’явиться рішення stopId (або до кінця місії, якщо null). */
   flightUntil(stopId) {
     const policy = demoFlightPolicy(this.act);
     for (let guard = 0; guard < 300; guard++) {

@@ -6,12 +6,12 @@ import { busPower, instrumentPower, opsSteps } from '../calc.js';
 import { orbitSvg, countdown } from './visuals.js';
 import { rocketSvg } from './stack.js';
 import { sfx } from './sound.js';
+import { dayWord } from '../i18n.js';
 
 export function render(root, app) {
   if (!app.dev || !app.dev.done || app.dev.cancelled) { app.go('dev'); return; }
   if (!app.mission) app.mission = new Mission(app.data, app.dev.build, app.seed, app.dev);
   const m = app.mission;
-  const s = m.s;
   const started = m.entries.length > 0;
   const last = m.timeline[m.timeline.length - 1];
 
@@ -59,7 +59,7 @@ function after(m, app) {
 function controls(m, started) {
   if (m.done) {
     return `<section class="panel">
-      <h2>${m.s.lost ? 'Зв\'язок з апаратом втрачено' : 'Місію завершено'}</h2>
+      <h2>${m.s.lost ? 'Зв’язок з апаратом втрачено' : 'Місію завершено'}</h2>
       <div class="btn-row"><button type="button" class="btn" data-act="summary">Подивитися підсумок</button></div>
     </section>`;
   }
@@ -144,11 +144,11 @@ function telemetry(m, last) {
     <div class="track" aria-label="Кроки наукової програми: ${done} з ${total}">${cells}</div>
     <dl class="tele">
       <div><dt>Наука</dt><dd><span class="science-big num">${fmt(s.science)}</span> <span class="muted small">з ${fmt(target)}</span></dd></div>
-      <div><dt>Крок</dt><dd>${done} з ${total} <span class="muted small">(${fmt(m.r.target.step_days)} діб кожен)</span></dd></div>
-      <div><dt>Енергія</dt><dd>${last ? `${fmt(last.produced)} Вт з потрібних ${fmt(need)} Вт` : '—'}</dd></div>
+      <div><dt>Крок</dt><dd>${done} з ${total} <span class="muted small">(${fmt(m.r.target.step_days)} ${dayWord(m.r.target.step_days)} кожен)</span></dd></div>
+      <div><dt>Енергія</dt><dd>${last ? `${fmt(last.produced)} Вт з потрібних ${fmt(need)} Вт` : '—'}</dd></div>
       <div><dt>Прилади працюють</dt><dd>${last ? pct(last.u) : '—'} часу</dd></div>
-      <div><dt>Дані за крок</dt><dd>${last && last.collected ? `передано ${pct(last.sent / last.collected)} з ${fmt(last.collected / 1000, 1)} Гбіт` : '—'}</dd></div>
-      <div><dt>Відстань до Землі</dt><dd>${last ? `${fmt(last.dist, last.dist < 0.01 ? 4 : 2)} а.о.` : '—'}</dd></div>
+      <div><dt>Дані за крок</dt><dd>${last && last.collected ? `передано ${pct(last.sent / last.collected)} з ${fmt(last.collected / 1000, 1)} Гбіт` : '—'}</dd></div>
+      <div><dt>Відстань до Землі</dt><dd>${last ? `${fmt(last.dist, last.dist < 0.01 ? 4 : 2)} а.о.` : '—'}</dd></div>
       ${m.r.power.type === 'solar' && m.r.target.dust_per_step > 0 && m.r.platform.type !== 'orbiter' ? `<div><dt>Чистота панелей</dt><dd>${pct(s.dust)}</dd></div>` : ''}
       <div><dt>Антена</dt><dd>${t(s.antenna.name)}</dd></div>
     </dl>

@@ -20,12 +20,12 @@
       "reliability": 0.97,
       "source": "https://science.nasa.gov/mission/mars-reconnaissance-orbiter/",
       "simplified": "маса — суха платформа без приладів, округлено",
-      "prototype_facts": "MRO: суха маса 1031 кг, на старті 2180 кг",
+      "prototype_facts": "MRO: суха маса 1031 кг, на старті 2180 кг",
       "verified": {
         "fields": [
           "prototype_facts"
         ],
-        "note": "перевірено 2026-11-09: MRO: суха маса 1031 кг, на старті 2180 кг (Wikipedia)",
+        "note": "перевірено 2026-11-09: MRO: суха маса 1031 кг, на старті 2180 кг (Wikipedia)",
         "urls": [
           "https://en.wikipedia.org/wiki/Mars_Reconnaissance_Orbiter"
         ]
@@ -51,12 +51,12 @@
       "reliability": 0.97,
       "source": "https://science.nasa.gov/mission/insight/",
       "simplified": "маса — без приладів і системи посадки",
-      "prototype_facts": "InSight: на старті 694 кг, панелі 600 Вт",
+      "prototype_facts": "InSight: на старті 694 кг, панелі 600 Вт",
       "verified": {
         "fields": [
           "prototype_facts"
         ],
-        "note": "перевірено 2026-11-09: InSight: на старті 694 кг, панелі 600 Вт (Wikipedia)",
+        "note": "перевірено 2026-11-09: InSight: на старті 694 кг, панелі 600 Вт (Wikipedia)",
         "urls": [
           "https://en.wikipedia.org/wiki/InSight"
         ]
@@ -82,12 +82,12 @@
       "reliability": 0.95,
       "source": "https://science.nasa.gov/mission/mer-opportunity/",
       "simplified": "маса — без приладів",
-      "prototype_facts": "Opportunity: 185 кг, панелі 140 Вт",
+      "prototype_facts": "Opportunity: 185 кг, панелі 140 Вт",
       "verified": {
         "fields": [
           "prototype_facts"
         ],
-        "note": "перевірено 2026-11-09: Opportunity: 185 кг, панелі 140 Вт (Wikipedia)",
+        "note": "перевірено 2026-11-09: Opportunity: 185 кг, панелі 140 Вт (Wikipedia)",
         "urls": [
           "https://en.wikipedia.org/wiki/Opportunity_(rover)"
         ]
@@ -112,13 +112,13 @@
       "ops_musd_per_step": 15,
       "reliability": 0.97,
       "source": "https://science.nasa.gov/mission/mars-2020-perseverance/",
-      "simplified": "маса — без приладів (повна маса Perseverance ~1025 кг)",
-      "prototype_facts": "Perseverance: 1025 кг, MMRTG 110 Вт",
+      "simplified": "маса — без приладів (повна маса Perseverance ~1025 кг)",
+      "prototype_facts": "Perseverance: 1025 кг, MMRTG 110 Вт",
       "verified": {
         "fields": [
           "prototype_facts"
         ],
-        "note": "перевірено 2026-11-09: Perseverance: 1025 кг, MMRTG 110 Вт (Wikipedia)",
+        "note": "перевірено 2026-11-09: Perseverance: 1025 кг, MMRTG 110 Вт (Wikipedia)",
         "urls": [
           "https://en.wikipedia.org/wiki/Perseverance_(rover)"
         ]
@@ -148,12 +148,12 @@
       "reliability": 0.96,
       "source": "https://science.nasa.gov/mission/osiris-rex/",
       "simplified": "капсула повернення включена в масу платформи",
-      "prototype_facts": "OSIRIS-REx: суха маса 880 кг, на старті 2110 кг",
+      "prototype_facts": "OSIRIS-REx: суха маса 880 кг, на старті 2110 кг",
       "verified": {
         "fields": [
           "prototype_facts"
         ],
-        "note": "перевірено 2026-11-09: OSIRIS-REx: суха маса 880 кг, на старті 2110 кг (Wikipedia)",
+        "note": "перевірено 2026-11-09: OSIRIS-REx: суха маса 880 кг, на старті 2110 кг (Wikipedia)",
         "urls": [
           "https://en.wikipedia.org/wiki/OSIRIS-REx"
         ]
@@ -193,7 +193,7 @@
           "cost_musd",
           "mass_kg"
         ],
-        "note": "перевірено 2026-11-09: маса 65 кг, вартість ~40 млн $ (Wikipedia: HiRISE)",
+        "note": "перевірено 2026-11-09: маса 65 кг, вартість ~40 млн $ (Wikipedia: HiRISE)",
         "urls": [
           "https://en.wikipedia.org/wiki/HiRISE"
         ]
@@ -371,7 +371,7 @@
           "mass_kg",
           "power_w"
         ],
-        "note": "перевірено 2026-11-09: Mastcam-Z: 1,38 кг і 11,8 Вт на кожну з двох камер (Wikipedia)",
+        "note": "перевірено 2026-11-09: Mastcam-Z: 1,38 кг і 11,8 Вт на кожну з двох камер (Wikipedia)",
         "urls": [
           "https://en.wikipedia.org/wiki/Mastcam-Z"
         ]
@@ -408,7 +408,7 @@
           "mass_kg",
           "power_w"
         ],
-        "note": "перевірено 2026-11-09: SuperCam: 10,4 кг, 17,9 Вт (Wikipedia)",
+        "note": "перевірено 2026-11-09: SuperCam: 10,4 кг, 17,9 Вт (Wikipedia)",
         "urls": [
           "https://en.wikipedia.org/wiki/SuperCam"
         ]
@@ -472,7 +472,7 @@
           "mass_kg",
           "power_w"
         ],
-        "note": "перевірено 2026-11-09: 29,5 кг, 8,5 Вт (Wikipedia: SEIS)",
+        "note": "перевірено 2026-11-09: 29,5 кг, 8,5 Вт (Wikipedia: SEIS)",
         "urls": [
           "https://en.wikipedia.org/wiki/Seismic_Experiment_for_Interior_Structure"
         ]
@@ -569,7 +569,7 @@
           "mass_kg",
           "power_w"
         ],
-        "note": "перевірено 2026-11-09: 15 кг, 300 Вт (Wikipedia: MOXIE)",
+        "note": "перевірено 2026-11-09: 15 кг, 300 Вт (Wikipedia: MOXIE)",
         "urls": [
           "https://en.wikipedia.org/wiki/Mars_Oxygen_ISRU_Experiment"
         ]
@@ -667,7 +667,7 @@
       "id": "solar_s",
       "type": "solar",
       "name": {
-        "uk": "Сонячні панелі, 2 м²",
+        "uk": "Сонячні панелі, 2 м²",
         "en": "Solar arrays, 2 m²"
       },
       "prototype": "малі апарати",
@@ -676,13 +676,13 @@
       "p1au_w": 760,
       "reliability": 0.98,
       "source": "https://science.nasa.gov/learn/basics-of-space-flight/chapter11-3/",
-      "simplified": "ККД ~28%, 1361 Вт/м² біля Землі"
+      "simplified": "ККД ~28%, 1361 Вт/м² біля Землі"
     },
     {
       "id": "solar_m",
       "type": "solar",
       "name": {
-        "uk": "Сонячні панелі, 7 м²",
+        "uk": "Сонячні панелі, 7 м²",
         "en": "Solar arrays, 7 m²"
       },
       "prototype": "InSight",
@@ -697,7 +697,7 @@
       "id": "solar_l",
       "type": "solar",
       "name": {
-        "uk": "Сонячні панелі, 20 м²",
+        "uk": "Сонячні панелі, 20 м²",
         "en": "Solar arrays, 20 m²"
       },
       "prototype": "великі орбітери",
@@ -712,7 +712,7 @@
       "id": "solar_xl",
       "type": "solar",
       "name": {
-        "uk": "Сонячні панелі, ~100 м²",
+        "uk": "Сонячні панелі, ~100 м²",
         "en": "Solar arrays, ~100 m²"
       },
       "prototype": "Europa Clipper: два крила по 14,2 × 4,1 м",
@@ -721,13 +721,13 @@
       "p1au_w": 17100,
       "reliability": 0.97,
       "source": "https://science.nasa.gov/mission/europa-clipper/",
-      "simplified": "біля Юпітера дає ~600 Вт, як Europa Clipper; маса — ігрова оцінка",
+      "simplified": "біля Юпітера дає ~600 Вт, як Europa Clipper; маса — ігрова оцінка",
       "verified": {
         "fields": [
           "p1au_w",
           "prototype"
         ],
-        "note": "перевірено 2026-11-09: кожне крило ~14,2 × 4,1 м (опис фото PIA26067, NASA); Europa Clipper: ~600 Вт біля Юпітера (Wikipedia)",
+        "note": "перевірено 2026-11-09: кожне крило ~14,2 × 4,1 м (опис фото PIA26067, NASA); Europa Clipper: ~600 Вт біля Юпітера (Wikipedia)",
         "urls": [
           "https://en.wikipedia.org/wiki/Europa_Clipper"
         ]
@@ -752,7 +752,7 @@
           "mass_kg",
           "p0_w"
         ],
-        "note": "перевірено 2026-11-09: ~110 Вт на старті (опис фото PIA23306, NASA); 45 кг; ~110 Вт на старті за NASA, 125 Вт за проєктом, ~100 Вт через 14 років (Wikipedia)",
+        "note": "перевірено 2026-11-09: ~110 Вт на старті (опис фото PIA23306, NASA); 45 кг; ~110 Вт на старті за NASA, 125 Вт за проєктом, ~100 Вт через 14 років (Wikipedia)",
         "urls": [
           "https://en.wikipedia.org/wiki/Multi-mission_radioisotope_thermoelectric_generator"
         ]
@@ -778,7 +778,7 @@
     {
       "id": "lga",
       "name": {
-        "uk": "Мала всенаправлена антена",
+        "uk": "Мала всеспрямована антена",
         "en": "Low-gain antenna"
       },
       "prototype": "аварійні антени всіх апаратів",
@@ -798,7 +798,7 @@
     {
       "id": "hga_small",
       "name": {
-        "uk": "Остронаправлена антена 0,3 м",
+        "uk": "Гостроспрямована антена 0,3 м",
         "en": "High-gain antenna 0.3 m"
       },
       "prototype": "антени марсоходів",
@@ -817,7 +817,7 @@
     {
       "id": "hga_large",
       "name": {
-        "uk": "Остронаправлена антена 3 м",
+        "uk": "Гостроспрямована антена 3 м",
         "en": "High-gain antenna 3 m"
       },
       "prototype": "MRO",
@@ -830,12 +830,12 @@
       "contact_h": 4,
       "reliability": 0.98,
       "source": "https://science.nasa.gov/mission/mars-reconnaissance-orbiter/",
-      "simplified": "MRO: до ~6 Мбіт/с, коли Марс близько",
+      "simplified": "MRO: до ~6 Мбіт/с, коли Марс близько",
       "verified": {
         "fields": [
           "rate_1au_mbps"
         ],
-        "note": "перевірено 2026-11-09: MRO передає до 6 Мбіт/с, у середньому 0,5–4 Мбіт/с (Wikipedia)",
+        "note": "перевірено 2026-11-09: MRO передає до 6 Мбіт/с, у середньому 0,5–4 Мбіт/с (Wikipedia)",
         "urls": [
           "https://en.wikipedia.org/wiki/Mars_Reconnaissance_Orbiter"
         ]
@@ -863,7 +863,7 @@
         "fields": [
           "relay_mbit_per_day"
         ],
-        "note": "перевірено 2026-11-09: радіо Electra на MRO: зв'язок з апаратами на поверхні 1 кбіт/с – 2 Мбіт/с (Wikipedia)",
+        "note": "перевірено 2026-11-09: радіо Electra на MRO: зв’язок з апаратами на поверхні 1 кбіт/с – 2 Мбіт/с (Wikipedia)",
         "urls": [
           "https://en.wikipedia.org/wiki/Mars_Reconnaissance_Orbiter"
         ]
@@ -879,7 +879,7 @@
         "en": "Backup antenna"
       },
       "summary": {
-        "uk": "Якщо головна антена відмовить, зв'язок не зникне.",
+        "uk": "Якщо головна антена відмовить, зв’язок не зникне.",
         "en": "Keeps the link if the main antenna fails."
       },
       "mass_kg": 10,
@@ -901,7 +901,7 @@
       "mass_kg": 40,
       "cost_musd": 10,
       "source": "https://science.nasa.gov/mission/insight/",
-      "simplified": "ігрова механіка; Li-ion ~120 Вт·год/кг"
+      "simplified": "ігрова механіка; Li-ion ~120 Вт·год/кг"
     },
     {
       "id": "radiation_vault",
@@ -911,13 +911,13 @@
         "en": "Radiation vault"
       },
       "summary": {
-        "uk": "Титанова камера для електроніки. Майже обов'язкова біля Юпітера.",
+        "uk": "Титанова камера для електроніки. Майже обов’язкова біля Юпітера.",
         "en": "Titanium box for electronics."
       },
       "mass_kg": 150,
       "cost_musd": 40,
       "source": "https://science.nasa.gov/mission/juno/",
-      "simplified": "у Juno сейф важить ~200 кг; ігрова механіка"
+      "simplified": "у Juno сейф важить ~200 кг; ігрова механіка"
     }
   ],
   "propulsion": [
@@ -937,7 +937,7 @@
         "en": "High thrust, lots of propellant."
       },
       "source": "https://science.nasa.gov/learn/basics-of-space-flight/chapter11-4/",
-      "simplified": "питомий імпульс 320 с"
+      "simplified": "питомий імпульс 320 с"
     },
     {
       "id": "ion",
@@ -959,7 +959,7 @@
         "en": "10x more efficient, tiny thrust, needs big solar arrays."
       },
       "source": "https://science.nasa.gov/mission/dawn/",
-      "simplified": "питомий імпульс 3000 с; потребує панелей від 20 м²; ігрові маса й ціна"
+      "simplified": "питомий імпульс 3000 с; потребує панелей від 20 м²; ігрові маса й ціна"
     }
   ],
   "orbits": [

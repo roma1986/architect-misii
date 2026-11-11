@@ -1,7 +1,7 @@
 // Режим «Колонія на Марсі»: кисневий завод на основі результатів MOXIE.
 // Чи встигнемо добути кисень для зворотної ракети й екіпажу, поки триває вікно запуску?
 import { esc, fmt, pct } from './dom.js';
-import { tr } from '../i18n.js';
+import { tr, dayWord, plural } from '../i18n.js';
 
 export function colonyPlan(c, { units, reactors, solarM2 }) {
   const needW = units * c.moxie.power_w;
@@ -28,9 +28,9 @@ export function render(root, app) {
     <section class="briefing-hero">
       <h1>Колонія на Марсі</h1>
       <p>Ваш апарат успішно сів. Наступний крок — експедиція з людьми. Щоб четверо астронавтів змогли повернутися,
-      на Марсі заздалегідь треба добути ~${fmt(c.needs.ascent_o2_t)} т кисню для зворотної ракети. Спроєктуйте кисневий завод,
-      який встигне до прильоту екіпажу: на це є одне вікно запуску, ~${fmt(c.needs.window_days)} діб.</p>
-      ${moxie ? `<p class="small">${moxie.alive ? `Ваш MOXIE відпрацював ${runs} сеансів і добув ~${fmt(runs * c.moxie.o2_g_per_h)} г кисню. Тепер його треба збільшити.` : 'Ваш MOXIE відмовив, але дані встигли довести, що технологія працює.'}</p>` : ''}
+      на Марсі заздалегідь треба добути ~${fmt(c.needs.ascent_o2_t)} т кисню для зворотної ракети. Спроєктуйте кисневий завод,
+      який встигне до прильоту екіпажу: на це є одне вікно запуску, ~${fmt(c.needs.window_days)} ${dayWord(c.needs.window_days)}.</p>
+      ${moxie ? `<p class="small">${moxie.alive ? `Ваш MOXIE відпрацював ${runs} ${plural(runs, ['сеанс', 'сеанси', 'сеансів'])} і добув ~${fmt(runs * c.moxie.o2_g_per_h)} г кисню. Тепер його треба збільшити.` : 'Ваш MOXIE відмовив, але дані встигли довести, що технологія працює.'}</p>` : ''}
     </section>
 
     <div class="flight">
@@ -38,14 +38,14 @@ export function render(root, app) {
         <section class="panel">
           <h2>Кисневий завод</h2>
           ${slider('units', 'Блоки розміру MOXIE', 0, 600, 10, state.units, 'шт.')}
-          <p class="small muted">Кожен блок: ${c.moxie.o2_g_per_h} г кисню на годину, ${c.moxie.power_w} Вт, ${c.moxie.mass_kg} кг.</p>
+          <p class="small muted">Кожен блок: ${c.moxie.o2_g_per_h} г кисню на годину, ${c.moxie.power_w} Вт, ${c.moxie.mass_kg} кг.</p>
         </section>
         <section class="panel">
           <h2>Енергія</h2>
           ${slider('solarM2', 'Сонячне поле', 0, 6000, 100, state.solarM2, 'м²')}
-          <p class="small muted">~${c.power.solar_w_per_m2_avg} Вт з квадратного метра в середньому за добу; бурі забирають у середньому чверть.</p>
+          <p class="small muted">~${c.power.solar_w_per_m2_avg} Вт з квадратного метра в середньому за добу; бурі забирають у середньому чверть.</p>
           ${slider('reactors', 'Реактори Kilopower', 0, 10, 1, state.reactors, 'шт.')}
-          <p class="small muted">${fmt(c.power.reactor_w / 1000)} кВт вдень і вночі, ~${fmt(c.power.reactor_kg)} кг кожен.</p>
+          <p class="small muted">${fmt(c.power.reactor_w / 1000)} кВт вдень і вночі, ~${fmt(c.power.reactor_kg)} кг кожен.</p>
         </section>
       </div>
       <div>
@@ -68,19 +68,19 @@ export function render(root, app) {
     const max = Math.max(W, shownDays) * 1.05;
     root.querySelector('#colony-result').innerHTML = `
       <h2>${p.ok ? 'Кисень буде готовий вчасно' : 'Не встигаємо до прильоту екіпажу'}</h2>
-      <p class="outcome ${p.ok ? 'success' : 'lost'}">${Number.isFinite(p.days) ? `Потрібно ${fmt(p.days)} діб із ${fmt(W)} доступних` : 'Завод не виробляє кисню'}</p>
+      <p class="outcome ${p.ok ? 'success' : 'lost'}">${Number.isFinite(p.days) ? `Потрібно ${fmt(p.days)} ${dayWord(p.days)} із ${fmt(W)} доступних` : 'Завод не виробляє кисню'}</p>
       <div class="timeline-bar" role="img" aria-label="Час виробництва проти вікна запуску">
         <span class="tb-fill ${p.ok ? '' : 'over'}" style="width:${Math.min(100, (shownDays / max) * 100)}%"></span>
         <span class="tb-mark" style="left:${(W / max) * 100}%"></span>
       </div>
       <p class="small muted">Риска — момент, коли екіпаж має вилетіти із Землі.</p>
       <dl class="tele" style="margin-top:1rem">
-        <div><dt>Потрібно кисню</dt><dd>${fmt(p.goalT, 1)} т <span class="muted small">(${fmt(c.needs.ascent_o2_t)} т ракеті + ${fmt(p.crewT, 1)} т на дихання)</span></dd></div>
-        <div><dt>Виробництво</dt><dd>${fmt(p.kgPerDay, 1)} кг/добу</dd></div>
-        <div><dt>Енергії потрібно</dt><dd>${fmt(p.needW / 1000, 1)} кВт</dd></div>
-        <div><dt>Енергії є</dt><dd>${fmt(p.haveW / 1000, 1)} кВт <span class="muted small">(сонце ${fmt(p.solarW / 1000, 1)}, реактори ${fmt(p.reactorW / 1000)})</span></dd></div>
+        <div><dt>Потрібно кисню</dt><dd>${fmt(p.goalT, 1)} т <span class="muted small">(${fmt(c.needs.ascent_o2_t)} т ракеті + ${fmt(p.crewT, 1)} т на дихання)</span></dd></div>
+        <div><dt>Виробництво</dt><dd>${fmt(p.kgPerDay, 1)} кг/добу</dd></div>
+        <div><dt>Енергії потрібно</dt><dd>${fmt(p.needW / 1000, 1)} кВт</dd></div>
+        <div><dt>Енергії є</dt><dd>${fmt(p.haveW / 1000, 1)} кВт <span class="muted small">(сонце ${fmt(p.solarW / 1000, 1)}, реактори ${fmt(p.reactorW / 1000)})</span></dd></div>
         <div><dt>Завод працює</dt><dd>${pct(p.uptime)} часу</dd></div>
-        <div><dt>Маса на Марс</dt><dd>${fmt(p.massKg / 1000, 1)} т <span class="muted small">(≈ ${fmt(p.massKg / app.data.colony.perseverance_kg, 0)} марсоходів Perseverance)</span></dd></div>
+        <div><dt>Маса на Марс</dt><dd>${fmt(p.massKg / 1000, 1)} т <span class="muted small">(≈ ${fmt(p.massKg / app.data.colony.perseverance_kg, 0)} марсоходів Perseverance)</span></dd></div>
       </dl>
       <p class="small" style="margin-top:.8rem">${hint(p)}</p>`;
   };
@@ -104,7 +104,7 @@ function slider(name, label, min, max, step, value, unit) {
 
 function hint(p) {
   if (p.uptime < 1) return `Енергії вистачає лише на ${pct(p.uptime)} роботи заводу. Додайте сонячних панелей або реактор.`;
-  if (!p.ok) return 'Енергії досить, але блоків замало. Більше блоків — швидше, але кожен потребує ще 300 Вт.';
+  if (!p.ok) return 'Енергії досить, але блоків замало. Більше блоків — швидше, але кожен потребує ще 300 Вт.';
   if (p.haveW > p.needW * 1.6) return 'Встигаєте, але енергії набагато більше, ніж треба. Зайві панелі й реактори — це зайві тонни, які треба доставити на Марс.';
   return 'Збалансований завод. Спробуйте зменшити масу: що вигідніше — реактор чи поле панелей?';
 }

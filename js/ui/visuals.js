@@ -105,7 +105,7 @@ export function orbitSvg(target, dayFromArrival = 0) {
       <circle cx="${cx}" cy="${cy}" r="70" fill="none" stroke="var(--line)" stroke-dasharray="3 4"/>
       <circle cx="${cx}" cy="${cy}" r="14" fill="#4a86d8"/>
       <circle cx="${cx + 70 * Math.cos(dayFromArrival / 27.3 * 2 * Math.PI)}" cy="${cy + 70 * Math.sin(dayFromArrival / 27.3 * 2 * Math.PI)}" r="6" fill="${v.base}"/>
-      <text x="${cx}" y="${H - 6}" text-anchor="middle" font-size="11" fill="var(--muted)">Сигнал іде ~1,3 с · 384 тис. км</text>
+      <text x="${cx}" y="${H - 6}" text-anchor="middle" font-size="11" fill="var(--muted)">Сигнал іде ~1,3 с · 384 тис. км</text>
     </svg>`;
   }
   const scale = 82 / target.orbit_au;
@@ -120,7 +120,7 @@ export function orbitSvg(target, dayFromArrival = 0) {
   const off = Math.abs((((phase - 180) % 360) + 540) % 360 - 180);
   const conj = off < 12;
   const dist = earthDistanceAu(target, dayFromArrival);
-  return `<svg class="orbit" viewBox="0 0 ${W} ${H}" role="img" aria-label="Схема орбіт: до Землі ${fmt(dist, 2)} а.о.${conj ? ', сонячне з\'єднання' : ''}">
+  return `<svg class="orbit" viewBox="0 0 ${W} ${H}" role="img" aria-label="Схема орбіт: до Землі ${fmt(dist, 2)} а.о.${conj ? ', сонячне з’єднання' : ''}">
     <defs><radialGradient id="${id}-sun"><stop offset="0" stop-color="#fff3c4"/><stop offset=".6" stop-color="#f4b63f"/><stop offset="1" stop-color="#f4b63f" stop-opacity="0"/></radialGradient></defs>
     <circle cx="${cx}" cy="${cy}" r="${re}" fill="none" stroke="var(--line)"/>
     <circle cx="${cx}" cy="${cy}" r="${rt}" fill="none" stroke="var(--line)"/>
@@ -131,7 +131,7 @@ export function orbitSvg(target, dayFromArrival = 0) {
     <text x="${ex}" y="${ey - 10}" text-anchor="middle" font-size="11" fill="var(--ink)">Земля</text>
     ${notToScale ? `<text x="4" y="12" font-size="10" fill="var(--muted)">Орбіта Землі не в масштабі</text>` : ''}
     <text x="${tx}" y="${ty - 10}" text-anchor="middle" font-size="11" fill="var(--ink)">${esc(tr(target.name))}</text>
-    <text x="${cx}" y="${H - 4}" text-anchor="middle" font-size="11" fill="${conj ? 'var(--bad)' : 'var(--muted)'}">${conj ? 'Сонце між Землею і ціллю' : `До Землі ${fmt(dist, 2)} а.о. · сигнал ${fmt(dist * 8.32, 0)} хв`}</text>
+    <text x="${cx}" y="${H - 4}" text-anchor="middle" font-size="11" fill="${conj ? 'var(--bad)' : 'var(--muted)'}">${conj ? 'Сонце між Землею і ціллю' : `До Землі ${fmt(dist, 2)} а.о. · сигнал ${fmt(dist * 8.32, 0)} хв`}</text>
   </svg>`;
 }
 

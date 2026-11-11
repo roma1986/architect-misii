@@ -21,7 +21,7 @@ for (const t of d.targets) {
   add('targets.json', t, 'sun_au', t.sun_au, 'а.о.');
   add('targets.json', t, 'period_days', t.period_days, 'діб');
   add('targets.json', t, 'flight_days', t.flight_days, 'діб', 'важливо');
-  add('targets.json', t, 'k_capacity', t.k_capacity, 'частка від НОО', 'важливо');
+  add('targets.json', t, 'k_capacity', t.k_capacity, 'частка від маси на низьку орбіту', 'важливо');
   add('targets.json', t, 'dv_capture_kms', t.dv_capture_kms, 'км/с');
   if (t.window) {
     add('targets.json', t, 'window.ref (дата найкращого вікна)', t.window.ref, 'дата', 'важливо');
@@ -33,7 +33,7 @@ for (const t of d.targets) {
 for (const r of d.rockets) {
   add('rockets.json', r, 'leo_kg', r.leo_kg, 'кг', 'важливо');
   for (const [k, v] of Object.entries(r.to_kg || {})) add('rockets.json', r, `to_kg.${k}`, v, 'кг', 'важливо');
-  add('rockets.json', r, 'cost_musd', r.cost_musd, 'млн $');
+  add('rockets.json', r, 'cost_musd', r.cost_musd, 'млн $');
   add('rockets.json', r, 'flights / successes', `${r.flights} / ${r.successes}`, 'польотів', 'важливо');
 }
 const C = d.components;
@@ -43,8 +43,8 @@ for (const [group, list] of Object.entries(C)) {
     add('components.json', x, 'power_w', x.power_w, 'Вт');
     add('components.json', x, 'p1au_w', x.p1au_w, 'Вт біля Землі');
     add('components.json', x, 'p0_w', x.p0_w, 'Вт', 'важливо');
-    add('components.json', x, 'cost_musd', x.cost_musd, 'млн $');
-    add('components.json', x, 'rate_1au_mbps', x.rate_1au_mbps, 'Мбіт/с на 1 а.о.');
+    add('components.json', x, 'cost_musd', x.cost_musd, 'млн $');
+    add('components.json', x, 'rate_1au_mbps', x.rate_1au_mbps, 'Мбіт/с на 1 а.о.');
     add('components.json', x, 'relay_mbit_per_day', x.relay_mbit_per_day, 'Мбіт/добу');
     add('components.json', x, 'data_mbit_per_day', x.data_mbit_per_day, 'Мбіт/добу');
     void group;
@@ -55,7 +55,7 @@ for (const m of d.missions) {
   add('missions.json', o, 'year', m.year, 'рік');
   add('missions.json', o, 'launch_mass_kg', m.launch_mass_kg, 'кг', 'важливо');
   add('missions.json', o, 'craft_mass_kg', m.craft_mass_kg, 'кг');
-  add('missions.json', o, 'cost_musd', m.cost_musd, 'млн $');
+  add('missions.json', o, 'cost_musd', m.cost_musd, 'млн $');
   add('missions.json', o, 'instruments', m.instruments, 'шт.');
 }
 const col = d.colony;

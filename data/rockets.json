@@ -18,7 +18,7 @@
       "en": "Cheapest per kg. Expendable figures."
     },
     "source": "https://www.spacex.com/vehicles/falcon-9/",
-    "simplified": "ціна для NASA вища за прайс; розміри для малюнка округлені",
+    "simplified": "ціна для NASA вища за публічну; розміри для малюнка округлені",
     "visual": {
       "height_m": 70,
       "core_d_m": 3.7,
@@ -39,7 +39,7 @@
         "visual.core_d_m",
         "visual.height_m"
       ],
-      "note": "перевірено 2026-11-09 на spacex.com: НОО 22 800 кг, Марс 4 020 кг, висота 70 м, діаметр 3,7 м; 701 запуск, 698 успішних станом на листопад 2026 (Wikipedia)",
+      "note": "перевірено 2026-11-09 на spacex.com: на низьку орбіту 22 800 кг, Марс 4 020 кг, висота 70 м, діаметр 3,7 м; 701 запуск, 698 успішних станом на листопад 2026 (Wikipedia)",
       "urls": [
         "https://en.wikipedia.org/wiki/Falcon_9"
       ]
@@ -61,7 +61,7 @@
     "flights": 14,
     "successes": 14,
     "note": {
-      "uk": "Запускала Psyche і Europa Clipper (~6 т до Юпітера з гравітаційними маневрами). Польотів поки мало.",
+      "uk": "Запускала Psyche і Europa Clipper (~6 т до Юпітера з гравітаційними маневрами). Польотів поки мало.",
       "en": "Launched Psyche and Europa Clipper. Few flights so far."
     },
     "source": "https://www.spacex.com/vehicles/falcon-heavy/",
@@ -89,7 +89,7 @@
         "to_kg.mars",
         "visual.height_m"
       ],
-      "note": "перевірено 2026-11-09 на spacex.com: НОО 63 800 кг, Марс 16 800 кг, висота 70 м, ширина 12,2 м; 14 запусків, 14 успішних; ціна 150 млн $ у варіанті без повернення (2017), контракти NASA: Psyche 117 млн $, Europa Clipper ~178 млн $ (Wikipedia)",
+      "note": "перевірено 2026-11-09 на spacex.com: на низьку орбіту 63 800 кг, Марс 16 800 кг, висота 70 м, ширина 12,2 м; 14 запусків, 14 успішних; ціна 150 млн $ у варіанті без повернення (2017), контракти NASA: Psyche 117 млн $, Europa Clipper ~178 млн $ (Wikipedia)",
       "urls": [
         "https://en.wikipedia.org/wiki/Falcon_Heavy"
       ]
@@ -135,7 +135,7 @@
         "flights / successes",
         "visual.height_m"
       ],
-      "note": "перевірено 2026-11-09: 110 польотів, 109 успішних; висота 58,3 м, діаметр 3,81 м (Wikipedia); запуск Perseverance коштував NASA 243 млн $ (Wikipedia: Mars 2020); прайс Atlas V 110–153 млн $ (2016)",
+      "note": "перевірено 2026-11-09: 110 польотів, 109 успішних; висота 58,3 м, діаметр 3,81 м (Wikipedia); запуск Perseverance коштував NASA 243 млн $ (Wikipedia: Mars 2020); прайс Atlas V 110–153 млн $ (2016)",
       "urls": [
         "https://en.wikipedia.org/wiki/Atlas_V",
         "https://en.wikipedia.org/wiki/Mars_2020"
@@ -179,7 +179,7 @@
         "leo_kg",
         "visual.height_m"
       ],
-      "note": "перевірено 2026-11-09: НОО 27 200 кг; 4 польоти, 4 успішні; висота 61,6 м, діаметр 5,4 м (Wikipedia)",
+      "note": "перевірено 2026-11-09: на низьку орбіту 27 200 кг; 4 польоти, 4 успішні; висота 61,6 м, діаметр 5,4 м (Wikipedia)",
       "urls": [
         "https://en.wikipedia.org/wiki/Vulcan_Centaur"
       ]
